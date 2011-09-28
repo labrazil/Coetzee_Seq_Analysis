@@ -58,7 +58,7 @@ mkdir -p haploview_results
 		vcftools --vcf ALL.$riskname.$ethnic.$region.vcf --plink --out plinkformat --positions $DIR/intersect.ALL.$riskname.$ethnic.$region.$(basename ${file%.bed}).pos
 		cut -f2,4 plinkformat.map > $DIR/plinkformat.ALL.$riskname.$ethnic.$region.$(basename ${file%.bed}).markers
 		mv plinkformat.ped $DIR/plinkformat.ALL.$riskname.$ethnic.$region.$(basename ${file%.bed}).ped
-		java -jar /usr/local/bin/Haploview.jar -nogui -log haploview_results/ALL.$riskname.$ethnic.$region.$(basename ${file%.bed})_hap.log -out haploview_results/ALL.$riskname.$ethnic.$region.$(basename ${file%.bed}) -pedfile $DIR/plinkformat.ALL.$riskname.$ethnic.$region.$(basename ${file%.bed}).ped -info $DIR/plinkformat.ALL.$riskname.$ethnic.$region.$(basename ${file%.bed}).markers -svg -ldcolorscheme RSQ -ldvalues RSQ -skipcheck -dprime -memory 1500
+		java -jar /usr/local/bin/Haploview.jar -nogui -log haploview_results/ALL.$riskname.$ethnic.$region.$(basename ${file%.bed})_hap.log -out haploview_results/ALL.$riskname.$ethnic.$region.$(basename ${file%.bed}) -pedfile $DIR/plinkformat.ALL.$riskname.$ethnic.$region.$(basename ${file%.bed}).ped -info $DIR/plinkformat.ALL.$riskname.$ethnic.$region.$(basename ${file%.bed}).markers -ldcolorscheme RSQ -ldvalues RSQ -skipcheck -dprime -memory 1500
 	done
 ##AFR
 	tabix -h /media/bigboy/shared_data/public/SNP/1000_genomes_AFR_20100804.genotypes.vcf.gz $region > AFR.$riskname.$ethnic.$region.vcf
@@ -76,7 +76,7 @@ mkdir -p haploview_results
 		vcftools --vcf AFR.$riskname.$ethnic.$region.vcf --plink --out plinkformat --positions $DIR/intersect.AFR.$riskname.$ethnic.$region.$(basename ${file%.bed}).pos
 		cut -f2,4 plinkformat.map > $DIR/plinkformat.AFR.$riskname.$ethnic.$region.$(basename ${file%.bed}).markers
 		mv plinkformat.ped $DIR/plinkformat.AFR.$riskname.$ethnic.$region.$(basename ${file%.bed}).ped
-		java -jar /usr/local/bin/Haploview.jar -nogui -log haploview_results/AFR.$riskname.$ethnic.$region.$(basename ${file%.bed})_hap.log -out haploview_results/AFR.$riskname.$ethnic.$region.$(basename ${file%.bed}) -pedfile $DIR/plinkformat.AFR.$riskname.$ethnic.$region.$(basename ${file%.bed}).ped -info $DIR/plinkformat.AFR.$riskname.$ethnic.$region.$(basename ${file%.bed}).markers -svg -ldcolorscheme RSQ -ldvalues RSQ -skipcheck -dprime -memory 1500
+		java -jar /usr/local/bin/Haploview.jar -nogui -log haploview_results/AFR.$riskname.$ethnic.$region.$(basename ${file%.bed})_hap.log -out haploview_results/AFR.$riskname.$ethnic.$region.$(basename ${file%.bed}) -pedfile $DIR/plinkformat.AFR.$riskname.$ethnic.$region.$(basename ${file%.bed}).ped -info $DIR/plinkformat.AFR.$riskname.$ethnic.$region.$(basename ${file%.bed}).markers -ldcolorscheme RSQ -ldvalues RSQ -skipcheck -dprime -memory 1500
 	done
 ##EUR
 	tabix -h /media/bigboy/shared_data/public/SNP/1000_genomes_EUR_20100804.genotypes.vcf.gz $region > EUR.$riskname.$ethnic.$region.vcf
@@ -94,7 +94,7 @@ mkdir -p haploview_results
 		vcftools --vcf EUR.$riskname.$ethnic.$region.vcf --plink --out plinkformat --positions $DIR/intersect.EUR.$riskname.$ethnic.$region.$(basename ${file%.bed}).pos
 		cut -f2,4 plinkformat.map > $DIR/plinkformat.EUR.$riskname.$ethnic.$region.$(basename ${file%.bed}).markers
 		mv plinkformat.ped $DIR/plinkformat.EUR.$riskname.$ethnic.$region.$(basename ${file%.bed}).ped
-		java -jar /usr/local/bin/Haploview.jar -nogui -log haploview_results/EUR.$riskname.$ethnic.$region.$(basename ${file%.bed})_hap.log -out haploview_results/EUR.$riskname.$ethnic.$region.$(basename ${file%.bed}) -pedfile $DIR/plinkformat.EUR.$riskname.$ethnic.$region.$(basename ${file%.bed}).ped -info $DIR/plinkformat.EUR.$riskname.$ethnic.$region.$(basename ${file%.bed}).markers -svg -ldcolorscheme RSQ -ldvalues RSQ -skipcheck -dprime -memory 1500
+		java -jar /usr/local/bin/Haploview.jar -nogui -log haploview_results/EUR.$riskname.$ethnic.$region.$(basename ${file%.bed})_hap.log -out haploview_results/EUR.$riskname.$ethnic.$region.$(basename ${file%.bed}) -pedfile $DIR/plinkformat.EUR.$riskname.$ethnic.$region.$(basename ${file%.bed}).ped -info $DIR/plinkformat.EUR.$riskname.$ethnic.$region.$(basename ${file%.bed}).markers -ldcolorscheme RSQ -ldvalues RSQ -skipcheck -dprime -memory 1500
 	done
 ##ASN
 	tabix -h /media/bigboy/shared_data/public/SNP/1000_genomes_ASN_20100804.genotypes.vcf.gz $region > ASN.$riskname.$ethnic.$region.vcf
@@ -112,7 +112,7 @@ mkdir -p haploview_results
 		vcftools --vcf ASN.$riskname.$ethnic.$region.vcf --plink --out plinkformat --positions $DIR/intersect.ASN.$riskname.$ethnic.$region.$(basename ${file%.bed}).pos
 		cut -f2,4 plinkformat.map > $DIR/plinkformat.ASN.$riskname.$ethnic.$region.$(basename ${file%.bed}).markers
 		mv plinkformat.ped $DIR/plinkformat.ASN.$riskname.$ethnic.$region.$(basename ${file%.bed}).ped
-		java -jar /usr/local/bin/Haploview.jar -nogui -log haploview_results/ASN.$riskname.$ethnic.$region.$(basename ${file%.bed})_hap.log -out haploview_results/ASN.$riskname.$ethnic.$region.$(basename ${file%.bed}) -pedfile $DIR/plinkformat.ASN.$riskname.$ethnic.$region.$(basename ${file%.bed}).ped -info $DIR/plinkformat.ASN.$riskname.$ethnic.$region.$(basename ${file%.bed}).markers -svg -ldcolorscheme RSQ -ldvalues RSQ -skipcheck -dprime -memory 1500
+		java -jar /usr/local/bin/Haploview.jar -nogui -log haploview_results/ASN.$riskname.$ethnic.$region.$(basename ${file%.bed})_hap.log -out haploview_results/ASN.$riskname.$ethnic.$region.$(basename ${file%.bed}) -pedfile $DIR/plinkformat.ASN.$riskname.$ethnic.$region.$(basename ${file%.bed}).ped -info $DIR/plinkformat.ASN.$riskname.$ethnic.$region.$(basename ${file%.bed}).markers -ldcolorscheme RSQ -ldvalues RSQ -skipcheck -dprime -memory 1500
 	done
 	ls | grep -E -v '.bed|.poss|.markers|.ped' | xargs rm
 
