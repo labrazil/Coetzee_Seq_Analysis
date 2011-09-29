@@ -22,7 +22,7 @@ for(i in 1:length(list.files())){ ## for each tagSNP
 			tmp.name <- unlist(strsplit(tmp[j], ".", fixed = TRUE))
 		
 			#names(dat[[i]])[j] <- tmp[j]
-			dat[[i]][[j]] <- read.delim(file=paste(list.files()[i],"/haploview_results/",tmp.name[1],".",tmp.name[2],".",tmp.name[3],".",tmp.name[4],".",tmp.name[5],".",tmp.name[6], sep=""), sep="\t", check.names=T);
+			dat[[i]][[j]] <- read.delim(file=paste(list.files()[i],"/haploview_results/",tmp.name[1],".",tmp.name[2],".",tmp.name[3],".",tmp.name[4],".",tmp.name[5],".LD", sep=""), sep="\t", check.names=T);
 				if(dim(dat[[i]][[j]])[1] == 0){
 					dat[[i]][[j]][1,] <- NA
 				}
