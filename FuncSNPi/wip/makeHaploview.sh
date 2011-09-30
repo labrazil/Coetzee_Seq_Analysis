@@ -75,6 +75,7 @@ makeHaploview () {
 for input in ALL ASN AFR EUR; do
     echo "makeHaploview is running"
     echo "current options are region: $region riskname: $riskname ethnic_group: $ethnic chromosome: $chrom"
+    echo "INPUT: $input"
     tabix -h /media/bigboy/shared_data/public/SNP/1000_genomes_${input}_20100804.genotypes.vcf.gz $region > ${input}.$riskname.$ethnic.$region.vcf
 	vcftools --vcf ${input}.$riskname.$ethnic.$region.vcf --plink --out plinkformat
     awk '{print "chr" $1 "\t" $4 "\t" $4+1 "\t" $2}' plinkformat.map > plinkformat.${input}.$riskname.$ethnic.$region.bed
@@ -129,7 +130,7 @@ do
     makeHaploview
     echo $chrom.$riskname.$ethnic.$region
     fi
-    ls | grep -E -v '.bed|.pos|.markers|.ped' | xargs rm
+    ls | grep -E -v '.bed|.pos|.markers|.ped|.vcf' | xargs rm
 done < "$SNP"
 
 echo -e "Finished!"
