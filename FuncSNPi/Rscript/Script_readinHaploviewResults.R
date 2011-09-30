@@ -11,7 +11,7 @@ setwd("/home/houtana/Documents/SNP_Analysis/PCa_analysis/Ver5/results/hg19/2MB")
 dat <- vector("list", length(list.files()));
 data <- vector("list", length(list.files()));
 for(i in 1:length(list.files())){ ## for each tagSNP
-	tmp <- list.files(paste(list.files()[i],"/haploview_results/",sep=""), pattern="*.LD.SVG")
+	tmp <- list.files(paste(list.files()[i],"/haploview_results/",sep=""), pattern="*.LD")
 	#names(dat)[i] <- paste(unlist(strsplit(tmp[i], ".", fixed = TRUE))[4],unlist(strsplit(tmp[i], ".", fixed = TRUE))[2],sep="_")
 	#names(data)[i] <- paste(unlist(strsplit(tmp[i], ".", fixed = TRUE))[4],unlist(strsplit(tmp[i], ".", fixed = TRUE))[2],sep="_")	
 	dat[[i]] <- vector("list", length(tmp));	
@@ -22,7 +22,7 @@ for(i in 1:length(list.files())){ ## for each tagSNP
 			tmp.name <- unlist(strsplit(tmp[j], ".", fixed = TRUE))
 		
 			#names(dat[[i]])[j] <- tmp[j]
-			dat[[i]][[j]] <- read.delim(file=paste(list.files()[i],"/haploview_results/",tmp.name[1],".",tmp.name[2],".",tmp.name[3],".",tmp.name[4],".",tmp.name[5],".",tmp.name[6], sep=""), sep="\t", check.names=T);
+			dat[[i]][[j]] <- read.delim(file=paste(list.files()[i],"/haploview_results/",tmp.name[1],".",tmp.name[2],".",tmp.name[3],".",tmp.name[4],".",tmp.name[5],".LD", sep=""), sep="\t", check.names=T);
 				if(dim(dat[[i]][[j]])[1] == 0){
 					dat[[i]][[j]][1,] <- NA
 				}
