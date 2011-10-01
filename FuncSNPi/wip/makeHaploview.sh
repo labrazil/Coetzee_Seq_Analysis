@@ -1,5 +1,4 @@
 #!/bin/bash 
-## IN ORDER TO RUN, NEED 5 ARGUMENTS (hg18 or hg19, path/to/directory/with/list/, name of the file with the list, regionID (e.g. 5kb, 10kb, etc.), path/to/directory/with/biologicalBED_files/
 COUNT=1
 GENOME=
 WD=
