@@ -137,7 +137,8 @@ do
     makeHaploview
     echo $chrom.$riskname.$ethnic.$region
     fi
-    ls | grep -E -v '.bed|.pos|.markers|.ped|.vcf' | xargs rm
+   # ls | grep -E -v '.bed|.pos|.markers|.ped|.vcf' | xargs rm
+    ls | grep -E -v '.bed|.pos|.markers|.ped' | xargs rm
 done < "$SNP"
 
 echo -e "Finished!"
