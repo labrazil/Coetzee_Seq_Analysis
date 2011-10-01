@@ -100,6 +100,14 @@ for input in ALL ASN AFR EUR; do
 		cut -f2,4 plinkformat.map > $DIR/plinkformat.${input}.$riskname.$ethnic.$region.$(basename ${file%.bed}).markers
 		mv plinkformat.ped $DIR/plinkformat.${input}.$riskname.$ethnic.$region.$(basename ${file%.bed}).ped
 		java -jar /usr/local/bin/Haploview.jar -nogui -log haploview_results/${input}.$riskname.$ethnic.$region.$(basename ${file%.bed})_hap.log -out haploview_results/${input}.$riskname.$ethnic.$region.$(basename ${file%.bed}) -pedfile $DIR/plinkformat.${input}.$riskname.$ethnic.$region.$(basename ${file%.bed}).ped -info $DIR/plinkformat.${input}.$riskname.$ethnic.$region.$(basename ${file%.bed}).markers -skipcheck -dprime -memory 1500
+        
+        ##
+        ##
+        #R script can go here. Read in LD files for biobed file N, subset by r.2 value and then plot only those that passed.
+        ##
+        #need for or while loop to go through the set that passed the r.2 cut off
+        #java -jar /usr/local/bin/Haploview.jar -nogui -out haploview_plots/ -pedfile
+        
         echo " ${input}.$riskname.$ethnic.$region complete!"
     done
     echo "still here"
