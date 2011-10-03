@@ -75,8 +75,14 @@ for input in ALL ASN AFR EUR; do
     echo "makeHaploview is running"
     echo "current options are region: $region riskname: $riskname ethnic_group: $ethnic chromosome: $chrom"
     echo "INPUT: $input"
-    tabix -h /media/bigboy/shared_data/public/SNP/1000_genomes_${input}_20100804.genotypes.vcf.gz $region > ${input}.$riskname.$ethnic.$region.vcf
-	vcftools --vcf ${input}.$riskname.$ethnic.$region.vcf --plink --out plinkformat
+
+	if [ $chrom -e "chrX" ] ; then
+		tabix -h /media/bigboy/shared_data/public/SNP/1000_genomes_ALL.chrX.BI_Beagle.20100804.genotypes.vcf.gz $region > ${input}.$riskname.$ethnic.$region.vcf
+		vcftools --vcf ${input}.$riskname.$ethnic.$region.vcf --plink --out plinkformat
+	else
+		tabix -h /media/bigboy/shared_data/public/SNP/1000_genomes_${input}_20100804.genotypes.vcf.gz $region > ${input}.$riskname.$ethnic.$region.vcf
+		vcftools --vcf ${input}.$riskname.$ethnic.$region.vcf --plink --out plinkformat
+	fi
     awk '{print "chr" $1 "\t" $4 "\t" $4+1 "\t" $2}' plinkformat.map > plinkformat.${input}.$riskname.$ethnic.$region.bed
     for file in `dir $BIOBED/*.bed`; do
         DIR=$(basename ${file%.bed})
