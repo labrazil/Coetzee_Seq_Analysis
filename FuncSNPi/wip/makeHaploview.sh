@@ -77,7 +77,7 @@ for input in ALL ASN AFR EUR; do
     echo "INPUT: $input"
 
 	if [ $chrom -e "chrX" ] ; then
-		tabix -h /media/bigboy/shared_data/public/SNP/1000_genomes_ALL.chrX.BI_Beagle.20100804.genotypes.vcf.gz $region > ${input}.$riskname.$ethnic.$region.vcf
+		tabix -hf /media/bigboy/shared_data/public/SNP/1000_genomes_ALL.chrX.BI_Beagle.20100804.genotypes.vcf.gz $region > ${input}.$riskname.$ethnic.$region.vcf
 		vcftools --vcf ${input}.$riskname.$ethnic.$region.vcf --plink --out plinkformat
 	else
 		tabix -h /media/bigboy/shared_data/public/SNP/1000_genomes_${input}_20100804.genotypes.vcf.gz $region > ${input}.$riskname.$ethnic.$region.vcf
