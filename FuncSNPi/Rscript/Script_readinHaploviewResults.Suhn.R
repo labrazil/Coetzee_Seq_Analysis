@@ -20,16 +20,11 @@ for(i in 1:length(list.files())){ ## for each tagSNP
 
 		
 			tmp.name <- unlist(strsplit(tmp[j], ".", fixed = TRUE))
-		    print(tmp.name);
 			#names(dat[[i]])[j] <- tmp[j]
 			dat[[i]][[j]] <- read.delim(file=paste(list.files()[i],"/haploview_results/",tmp[j],sep=""),sep="\t", check.names=T);
-            print(dat[[i]][[j]]);
 				if(dim(dat[[i]][[j]])[1] == 0){
 					dat[[i]][[j]][1,] <- NA
 				}
-        }
-}
-			
 			dat[[i]][[j]]$tagSNP <- tmp.name[2]
 			dat[[i]][[j]]$bioFeature <- tmp.name[5]
 			dat[[i]][[j]]$location <- tmp.name[4]
