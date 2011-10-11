@@ -1,7 +1,7 @@
 ## R script to read in all Haploview data into a datamatrix for downstream analysis.
 #starting in this directory "/home/houtana/Documents/SNP_Analysis/PCa_analysis/Ver4/results/hg19/2MB"
 ## change the following to match your own path. then copy from here to there
-setwd("/home/houtana/Documents/SNP_Analysis/PCa_analysis/Ver5/results/hg19/2MB")
+setwd("/home/suhn/Documents/PhD_Work/FuncSNPi_Analysis/results/hg19/1000000/")
 
 
 
@@ -61,40 +61,17 @@ riskSNP <- rbind(data[[1]], data[[2]]);
 ## copy above ##   
 ## copy above ##   
 ## copy above ##
-   save(riskSNP, file="/home/houtana/Documents/SNP_Analysis/PCa_analysis/Ver5/results/riskSNP_data.rda")
+   save(riskSNP, file="/home/suhn/Documents/PhD_Work/FuncSNPi_Analysis/results/riskSNP_data.rda")
    
-      setwd("/home/houtana/Documents/SNP_Analysis/PCa_analysis/Ver5/results/")
-   load(file="/home/houtana/Documents/SNP_Analysis/PCa_analysis/Ver5/results/riskSNP_data.rda")
+      setwd("/home/suhn/Documents/PhD_Work/FuncSNPi_Analysis/results/")
+   load(file="/home/suhn/Documents/PhD_Work/FuncSNPi_Analysis/results/riskSNP_data.rda")
    ## run the following to find out which riskSNP has a correlation values more than 0.5
 (subset(riskSNP, TagTRUE2==TRUE & r.2>0.5))
 (subset(riskSNP, TagTRUE1==TRUE & r.2>0.5))
 
-val<- read.delim(file="/home/houtana/Documents/SNP_Analysis/PCa_analysis/data/Enhancer_Clone_Assay_JohnLai_2009.txt", sep="\t")
-riskSNP$ID <- c("byHoutan")
-val$ID <- c("byJohn")
-
-dat <- merge(riskSNP, val, by.x="tagSNP", by.y = "riskID",all = T)
-
+riskSNPall <- rbind((subset(riskSNP, TagTRUE2==TRUE & r.2>0.5)),(subset(riskSNP, TagTRUE1==TRUE & r.2>0.5)))
+write.table(riskSNPall, file="/home/suhn/Documents/PhD_Work/FuncSNPi_Analysis/results/riskSNPall.txt", sep="\t", row.names=F, quote=F)
 ###############
-###############plots for Genomic Annotations (TSS, Exons, introns, etc.)
 ###############
-
-theme_white <- function() {
-
- theme_update (
- plot.background = theme_blank(),
- panel.background=theme_rect(colour="black", size=1),
- axis.text.x= theme_text(colour="black",vjust= 1, size=12),
- axis.text.y= theme_text(colour="black",hjust=1, size=12),
- axis.title.x =theme_text(colour="black",face="bold", size=12),
- axis.title.y =theme_text(colour="black",face="bold", angle = 90, size=12)
- )
-}
-theme_white()
-
-c.r <- ggplot(riskSNP, aes(y=value, x=factor(genomic_type), fill=variable));
-c.r + geom_bar(position=dodge) + scale_fill_manual(values=c("Peaks" = "RED", "Background" = "darkgrey")) + opts(axis.text.x = theme_text(angle=90), title = "SNP Characterization") + scale_y_continuous("Raw Counts") + facet_grid(type ~ Class.s, scales="free")
-
-
-ggsave(file="results/genomicAnnotations_Raw_ver2.pdf")
+###############
 
