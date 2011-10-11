@@ -42,7 +42,7 @@ do
             echo >&2 \
                 "Option -$OPTARG requires an argument"
             exit 1;;
-        \?)
+        [?])
             echo >&2 \
                 "COMMAND LINE OPTIONS FOR FuncSNPi:
                 -c : max cpus availible (ex. -c 8)
