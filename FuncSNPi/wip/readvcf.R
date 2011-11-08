@@ -13,7 +13,7 @@ ReadRegionsFile <- function(regions.file) {
     snp.regions <- read.table(regions.file)
     snp.region.split <- unlist(strsplit(as.vector(snp.regions[,1]), ":"))
     
-    snp.chromosome <- grep("^\\d{1,2}$", snp.region.split, value=T, perl=T)
+    snp.chromosome <- grep("^\\d{1,2}$", snp.region.split, value = TRUE, perl = TRUE)
 
 	m <- regexpr("^\\d{1,}-", snp.region.split)
 	snp.region.start <- substr(snp.region.split, m, m + attr(m, "match.length") - 1)
@@ -30,7 +30,7 @@ ReadRegionsFile <- function(regions.file) {
                               snp.region.end, 
                               snp.name, 
                               snp.ethno, 
-                              stringsAsFactors=F)
+                              stringsAsFactors = FALSE)
 }
 
 ChooseFeaturesFiles <- function(folder, verbose = TRUE) {
@@ -38,24 +38,28 @@ ChooseFeaturesFiles <- function(folder, verbose = TRUE) {
     # and arranges them into a list
     bio.features.file <<- list.files(folder, pattern="*.bed$", full.names = TRUE)
     bio.features <<- list.files(folder, pattern="*.bed$", full.names = FALSE)
-    if(verbose)
+    if(verbose) {
         cat("You have chosen", length(bio.features.file), "features\n", 
             print(bio.features), "\n", sep=" ")
+    }
 }
 
 LoopOverRiskSNPs <- function(snp.names = snp.regions$snp.name, 
                              ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"), 
-                             bio.features.file = bio.features.file) {
-    manifest <<- read.delim("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20110521/phase1_integrated_calls.20101123.ALL.panel", sep="\t",header=F)
-    snp.names <<- snp.names
-    ethno <<- ethno
+                             bio.features.loc) {
+    
+    bio.features.file <- list.files(bio.features.loc, pattern="*.bed$", full.names = TRUE)
+    bio.features <- list.files(bio.features.loc, pattern="*.bed$", full.names = FALSE)
+    manifest <- read.delim("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20110521/phase1_integrated_calls.20101123.ALL.panel", sep="\t",header = FALSE)
+#    snp.names <<- snp.names
+#    ethno <<- ethno
     for (j in snp.names) {
         for (i in ethno) {
-            ifelse (i != "ALL",
-                    ethno.sample.set <<- as.character(subset(manifest, V3==i)[,1]),
-                    ethno.sample.set <<- as.character(manifest[,1]))
+#            ifelse (i != "ALL",
+#                    ethno.sample.set <<- as.character(subset(manifest, V3==i)[,1]),
+#                    ethno.sample.set <<- as.character(manifest[,1]))
             PullInVariants(i, j)
-            print(paste("completed PullInVariants", i, j, sep=" "))
+#            print(paste("completed PullInVariants", i, j, sep=" "))
             for (h in bio.features.file) {
                 print("began searching for biofeatures")
                 bio.features.count <<- h
@@ -65,12 +69,15 @@ LoopOverRiskSNPs <- function(snp.names = snp.regions$snp.name,
             }
         }
     }
-write.table(snp.ld.frame, file="risk.snp.txt", sep="\t", quote=F, row.names=F)
+write.table(snp.ld.frame, file="risk.snp.txt", sep="\t", quote = FALSE, row.names = FALSE)
 }
 
     
 PullInVariants <- function(ethno.chosen, snp.names.chosen) {
     ethno.chosen <<- ethno.chosen
+    ifelse (i != "ALL",
+            ethno.sample.set <- as.character(subset(manifest, V3==i)[,1]),
+            ethno.sample.set <- as.character(manifest[,1]))
     snp.names.chosen <<- snp.names.chosen
     intermediate.vcf <- paste(snp.names.chosen, "_", ethno.chosen, ".vcf", sep="")
     print(paste( "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20101123/interim_phase1_release/ALL.chr", snp.regions$snp.chromosome[snp.regions$snp.name == snp.names.chosen][1], ".phase1.projectConsensus.genotypes.vcf.gz", sep=""))
@@ -87,14 +94,11 @@ PullInVariants <- function(ethno.chosen, snp.names.chosen) {
                                 subset.variants.file$ALT,
                                 subset.variants.file$GENO$GT[, c(ethno.sample.set)],
                                 stringsAsFactors = FALSE)
-    cat("check 2 \n")
     core.names <-  c("CHROM", "POS", "ID", "REF", "ALT")
     
     colnames(variants.data)[1:5] <- core.names
     
-    variants.data.length <<- length(variants.data)
-
-    cat("check 3 \n")
+    variants.data.length <- length(variants.data)
     variants.data[, 6:variants.data.length] <- 
         ifelse(variants.data[, 6:variants.data.length] == "0|0", 
                paste(variants.data$REF, "/", variants.data$REF, sep=""),
@@ -106,7 +110,6 @@ PullInVariants <- function(ethno.chosen, snp.names.chosen) {
                                     paste(variants.data$ALT, "/", variants.data$ALT
                                           , sep=""),
                                     NA))))
-    cat("check 4 \n")
     variants.data$ID <- 
         ifelse(variants.data$ID == ".", variants.data$POS, variants.data$ID)
     variants.data <<- variants.data
@@ -127,14 +130,13 @@ FilterByFeatures <- function(features.file) {
     if (sum(snps.included) >= 1) {
         snps.included <- subset(variants.data, snps.included)
 
-        snp.geno <- data.frame(t(snps.included[, c(6:variants.data.length)]))
+        snp.geno <- data.frame(t(snps.included[, c(6:length(snps.included))]))
         colnames(snp.geno) <- snps.included$ID
-        snp.geno <<- snp.geno[, colSums(is.na(snp.geno))<nrow(snp.geno)] #removes NA cols
+        snp.geno <<- snp.geno[, colSums(is.na(snp.geno))<nrow(snp.geno)]
         if (snp.names.chosen %in% colnames(snp.geno)) {
             print(paste(snp.names.chosen, ", the risk snp, already overlaps with the feature", features.file, sep=""))
-        }
-        else {
-            temp <- data.frame(t(subset(variants.data, ID==snp.names.chosen))[6:variants.data.length, ])
+        } else {
+            temp <- data.frame(t(subset(variants.data, ID==snp.names.chosen))[6:length(variants.data), ])
             colnames(temp) <- snp.names.chosen
             snp.geno <- cbind(snp.geno, temp)
             rm(temp)
@@ -143,8 +145,7 @@ FilterByFeatures <- function(features.file) {
             snp.geno[, i] <- genotype(snp.geno[, i])
         }
         snp.geno <<- snp.geno
-    }
-    else {
+    } else {
         print(paste("There is no overlap for: \n",
                     "SNP: ", snp.names.chosen, "\n", 
                     "biofeature: ", features.file, "\n", 
@@ -179,8 +180,7 @@ LDTesting <- function(snps) {
         snp.ld.frame$loc.risk <- subset(variants.data, ID==snp.names.chosen)$POS
         snp.ld.frame$loc.cor <- subset(variants.data, variants.data$ID %in% snp.names.cor)$POS
         snp.ld.frame$dist <- abs(snp.ld.frame$loc.risk - snp.ld.frame$loc.cor)
-    }
-    else {
+    } else {
         tmp.snp.ld.frame <- data.frame(snp.names.chosen, snp.names.cor, d, D.prime, r, R.squared, n, chi.squared, p.val)
         tmp.snp.ld.frame$feature <- unlist(strsplit(bio.features[bio.features.count], "\\.bed")) 
         tmp.snp.ld.frame$loc.feature <- paste(seqnames(subsetByOverlaps(features.file.interval, test[snp.names.corr])), ":", start(subsetByOverlaps(features.file.interval, test[snp.names.corr])), "-", end(subsetByOverlaps(features.file.interval, test[snp.names.corr])), sep="")
