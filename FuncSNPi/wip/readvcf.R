@@ -14,7 +14,7 @@ ReadRegionsFile <- function(regions.file) {
     snp.regions <- read.table(regions.file)
     snp.region.split <- unlist(strsplit(as.vector(snp.regions[,1]), ":"))
     
-    snp.chromosome <- grep("^\\d{0,1}[0-9x-y]$", snp.region.split, value = TRUE, perl = TRUE)
+    snp.chromosome <- grep("^\\d{0,1}[0-9X-Y]$", snp.region.split, value = TRUE, perl = TRUE)
 
 	m <- regexpr("^\\d{1,}-", snp.region.split)
 	snp.region.start <- substr(snp.region.split, m, m + attr(m, "match.length") - 1)
