@@ -34,36 +34,57 @@ ReadRegionsFile <- function(regions.file) {
                               stringsAsFactors = FALSE)
 }
 
-#ChooseFeaturesFiles <- function(folder, verbose = TRUE) {
-    # Reads the directory of the Features files, to check for bed files
-    # and arranges them into a list
-#    bio.features.file <<- list.files(folder, pattern="*.bed$", full.names = TRUE)
-#    bio.features <<- list.files(folder, pattern="*.bed$", full.names = FALSE)
-#    if(verbose) {
-#        cat("You have chosen", length(bio.features.file), "features\n", 
-#            print(bio.features), "\n", sep=" ")
-#    }
-#}
-
 LoopOverRiskSNPs <- function(snp.names = snp.regions$snp.name, 
                              ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"), 
-                             bio.features.loc) {
+                             bio.features.loc, preferred.1000genomes.server) {
     
+    ncbi <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/"
+    ebi <- "ftp://ftp.1000genomes.ebi.ac.uk/vol1/"
+    manifest.file <- "ftp/release/20110521/phase1_integrated_calls.20101123.ALL.panel"
+
+    server.up <- url(paste(ncbi, manifest.file, sep=""))
+    if(exists("server.up")) {
+        try(open(server.up), silent = TRUE)
+        print(1)
+        if(isOpen(server.up)) {
+            print(2)
+            manifest <<- read.delim(paste(ncbi, manifest.file, sep=""), sep="\t", header = FALSE)
+        } else {
+            print(3)
+            try(rm(server.up), silent = TRUE)
+            server.up <- url(paste(ebi, manifest.file, sep=""))
+            if(exists("server.up")) {
+                print(4)
+                try(open(server.up), silent = TRUE)
+                if(isOpen(server.up)) {
+                    print(5)
+                    manifest <<- read.delim(paste(ebi, manifest.file, sep=""), sep="\t", header = FALSE)
+                } else {
+                    print(7)
+                    stop("Neither EBI nor NCBI mirrors for the 1000 genomes project were found")
+                }
+            } else {
+                print(6)
+                stop("Neither EBI nor NCBI mirrors for the 1000 genomes project were found")
+            }
+        }
+    }
+
     bio.features.file <<- list.files(bio.features.loc, pattern="*.bed$", full.names = TRUE)
     bio.features <<- list.files(bio.features.loc, pattern="*.bed$", full.names = FALSE)
-    manifest <<- read.delim("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20110521/phase1_integrated_calls.20101123.ALL.panel", sep="\t",header = FALSE)
-#    snp.names <<- snp.names
-#    ethno <<- ethno
+    ifelse(isOpen(server.up),  
+           manifest <<- read.delim(paste(ncbi, manifest.file, sep=""), sep="\t", header = FALSE),
+           ifelse(isOpen(url(paste(ebi, manifest.file), "rt")),
+                  manifest <<- read.delim(paste(ebi, manifest.file, sep=""), sep="\t", header = FALSE),
+                  stop("Neither EBI nor NCBI mirrors for the 1000 genomes project were found")))
+    
     for (j in snp.names) {
         for (i in ethno) {
-#            ifelse (i != "ALL",
-#                    ethno.sample.set <<- as.character(subset(manifest, V3==i)[,1]),
-#                    ethno.sample.set <<- as.character(manifest[,1]))
             PullInVariants(i, j)
 #            print(paste("completed PullInVariants", i, j, sep=" "))
             bio.features.count <- 0
             for (h in bio.features.file) {
-                print("began searching for biofeatures")
+                cat(paste("began searching for overlap with new biofeature: ", h, sep=""))
                 bio.features.count <<- bio.features.count + 1
                 FilterByFeatures(h)
                 print("began LDTesting")
@@ -82,12 +103,17 @@ PullInVariants <- function(ethno.chosen, snp.names.chosen) {
     ifelse (ethno.chosen != "ALL",
             ethno.sample.set <- as.character(subset(manifest, V3==ethno.chosen)[,1]),
             ethno.sample.set <- as.character(manifest[,1]))
+#    print(ethno.sample.set)
     snp.names.chosen <<- snp.names.chosen
-    intermediate.vcf <- paste(snp.names.chosen, "_", ethno.chosen, ".vcf", sep="")
+    print(snp.names.chosen)
+    intermediate.vcf <- paste(snp.names.chosen, ".vcf", sep="")
     variants.file <- paste(intermediate.vcf, ".gz", sep="") 
-    if (file.exists(variants.file)) {
+    if (file.exists(variants.file) == FALSE) {
+        ## the tabix file is being created for virtually every single loop
+        ## this is most likely b/c of poor naming of intermediate and variants
+        ## file.  Find a solution
         system(paste("tabix -hf ", "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20101123/interim_phase1_release/ALL.chr", snp.regions$snp.chromosome[snp.regions$snp.name == snp.names.chosen][1], ".phase1.projectConsensus.genotypes.vcf.gz", " ", snp.regions$snp.chromosome[snp.regions$snp.name == snp.names.chosen][1], ":", snp.regions$snp.region.start[snp.regions$snp.name == snp.names.chosen][1], "-", snp.regions$snp.region.end[snp.regions$snp.name == snp.names.chosen][1], " > ", intermediate.vcf, " && ", "bgzip -f ", intermediate.vcf, " && ", "tabix -hf ", intermediate.vcf, ".gz" , sep=""))
-        subset.variants.file <- unpackVcf(scanVcf(variants.file))[[1]]
+        subset.variants.file <<- unpackVcf(scanVcf(variants.file))[[1]]
     }
     
     cat("check 1 \n")
@@ -103,7 +129,7 @@ PullInVariants <- function(ethno.chosen, snp.names.chosen) {
                                 subset.variants.file$ALT,
                                 genotype.data,
                                 stringsAsFactors = FALSE)
-    
+#    summary(variants.data[,1:10]) 
     core.names <-  c("CHROM", "POS", "ID", "REF", "ALT")
     colnames(variants.data)[1:5] <- core.names
     variants.data.length <- length(variants.data)
@@ -122,6 +148,7 @@ PullInVariants <- function(ethno.chosen, snp.names.chosen) {
     variants.data$ID <- 
         ifelse(variants.data$ID == ".", variants.data$POS, variants.data$ID)
     variants.data <<- variants.data
+#    summary(variants.data[,1:10])
 }
 
 FilterByFeatures <- function(features.file) {
@@ -133,7 +160,9 @@ FilterByFeatures <- function(features.file) {
                 ranges=(IRanges(
                                 start=as.integer(variants.data$POS), 
                                 width=1)))
+#    print(close.snp.ranges)
     names(close.snp.ranges) <- variants.data$ID
+#    print(close.snp.ranges)
     features.file.interval <<- import(features.file, asRangedData = FALSE)
     snps.included <- !is.na(match(close.snp.ranges, features.file.interval) > 0)
     if (sum(snps.included) >= 1) {
@@ -147,6 +176,7 @@ FilterByFeatures <- function(features.file) {
         } else {
             temp <- data.frame(t(subset(variants.data, ID==snp.names.chosen))[6:length(variants.data), ])
             colnames(temp) <- snp.names.chosen
+#            print(temp)
             snp.geno <- cbind(snp.geno, temp)
             rm(temp)
         }
@@ -155,17 +185,18 @@ FilterByFeatures <- function(features.file) {
         }
         snp.geno <<- snp.geno
     } else {
-        print(paste("There is no overlap for: \n",
-                    "SNP: ", snp.names.chosen, "\n", 
-                    "biofeature: ", features.file, "\n", 
-                    "racial/ethnic group: ", ethno.chosen, sep=""))
+       try(rm(snp.geno), silent = TRUE)
+       cat(paste("There is no overlap for: \n",
+                    "\tRisk SNP: \t\t", snp.names.chosen, "\n", 
+                    "\tbiofeature: \t\t", features.file, "\n", 
+                    "\tracial/ethnic group: \t", ethno.chosen, "\n", sep=""))
     }
     close.snp.ranges <<- close.snp.ranges
 }
 
 LDTesting <- function(snps) {
-    try(snp.ld <<- LD(snps), silent = TRUE)
-    if (exists(as.character(substitute(snp.ld))) == TRUE) {
+    try(snp.ld <- LD(snps), silent = TRUE)
+    if (exists("snp.ld")) {
         d <- na.omit(as.data.frame(snp.ld$"D"[, c(snp.names.chosen)]))
         colnames(d) <- "d"
         D.prime <- na.omit(as.data.frame(snp.ld$"D'"[, c(snp.names.chosen)]))
@@ -181,10 +212,13 @@ LDTesting <- function(snps) {
         p.val <- na.omit(as.data.frame(snp.ld$"P-value"[, c(snp.names.chosen)]))
         colnames(p.val) <- "p.val"
         snp.names.cor <- dimnames(p.val)[[1]]
-        if (exists(as.character(substitute(snp.ld.frame))) == FALSE) {
+        if (exists("snp.ld.frame") == FALSE) {
             snp.ld.frame <- data.frame(snp.names.chosen, snp.names.cor, d, D.prime, r, R.squared, n, chi.squared, p.val)
             snp.ld.frame$feature <- unlist(strsplit(bio.features[bio.features.count], "\\.bed")) 
             snp.ld.frame$loc.feature <- paste(seqnames(features.file.interval[c(as.matrix(findOverlaps(features.file.interval, close.snp.ranges[snp.names.cor]))[,1])]), ":", start(features.file.interval[c(as.matrix(findOverlaps(features.file.interval, close.snp.ranges[snp.names.cor]))[,1])]), "-", end(features.file.interval[c(as.matrix(findOverlaps(features.file.interval, close.snp.ranges[snp.names.cor]))[,1])]), sep="")
+            ## loc.feature has "blank" areas where the only thing visible is :-, meaning that for some reason,
+            ## features.file.interval[c(as.matrix(findOverlaps(features.file.interval, close.snp.ranges[snp.names.cor]))[,1])]
+            ## is not being found sometimes
             snp.ld.frame$eth.risk <- snp.regions$snp.ethno[snp.regions$snp.name == snp.names.chosen][1]
             snp.ld.frame$eth.chosen <- ethno.chosen
             snp.ld.frame$chr <- snp.regions$snp.chromosome[snp.regions$snp.name == snp.names.chosen][1]
@@ -198,6 +232,9 @@ LDTesting <- function(snps) {
             tmp.snp.ld.frame$feature <- unlist(strsplit(bio.features[bio.features.count], "\\.bed")) 
             print(3)
             tmp.snp.ld.frame$loc.feature <- paste(seqnames(features.file.interval[c(as.matrix(findOverlaps(features.file.interval, close.snp.ranges[snp.names.cor]))[,1])]), ":", start(features.file.interval[c(as.matrix(findOverlaps(features.file.interval, close.snp.ranges[snp.names.cor]))[,1])]), "-", end(features.file.interval[c(as.matrix(findOverlaps(features.file.interval, close.snp.ranges[snp.names.cor]))[,1])]), sep="")
+            ## loc.feature has "blank" areas where the only thing visible is :-, meaning that for some reason,
+            ## features.file.interval[c(as.matrix(findOverlaps(features.file.interval, close.snp.ranges[snp.names.cor]))[,1])]
+            ## is not being found sometimes
             print(4)
             tmp.snp.ld.frame$eth.risk <- snp.regions$snp.ethno[snp.regions$snp.name == snp.names.chosen][1]
             print(5)
@@ -215,8 +252,7 @@ LDTesting <- function(snps) {
         }
         rownames(snp.ld.frame) <- NULL
         snp.ld.frame <<- snp.ld.frame
-        rm(snp.ld)
     } else {
-        print(paste("None of the snps surrounding ", snp.names.chosen, ", that overlap with ", unlist(strsplit(bio.features[bio.features.count], "\\.bed")), " for the ", ethno.chosen, " racial/ethnic group, have more than one allele", sep=""))
+        print(paste("Fewer than two of the snps grouped with ", snp.names.chosen, ", that overlap with ", unlist(strsplit(bio.features[bio.features.count], "\\.bed")), " for the ", ethno.chosen, " racial/ethnic group, have more than one allele", sep=""))
     }
 }
