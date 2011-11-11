@@ -4,6 +4,8 @@ library("Rsamtools")
 library("genetics")
 library("rtracklayer")
 library("ggplot2")
+library("gplots")
+library('matlab')
 ## TODO:::
 ## verbose options for everything
 ##
@@ -153,7 +155,10 @@ try(dir.create(path="tables"),silent=TRUE) ## directory used to store summary ta
         file.remove(paste(j, ".vcf.gz.tbi", sep=""))
     }
 write.table(snp.ld.frame, file=paste(output.file, ".txt", sep=""), sep="\t", quote = FALSE, row.names = FALSE)
-FunciSNPPlot()
+FunciSNPPlot(R.2=R.squared.cutoff, dat = snp.ld.frame)
+FunciSNPHeatmap(R.2=R.squared.cutoff, dat = snp.ld.frame)
+FunciSNPSummary(R.2=R.squared.cutoff, dat = snp.ld.frame)
+cat("FunciSNP is complete!\nSee 'tables' and 'plots' folder for overall results\nSee ", output.file, ".txt for complete results")
 }
 
     
@@ -306,25 +311,33 @@ LDTesting <- function(snps, snp.names.chosen, ethno.chosen, snp.ld.frame, bf.cou
 
 
 
-FunciSNPSummary <- function(R.squared.cutoff, snp.ld.frame) {
+FunciSNPSummary <- function(R.2, dat) {
 
-	total.tagSNPs <-length(unique(snp.ld.frame[,"snp.names.chosen"]))  
-	total.1kSNPs  <-length(unique(snp.ld.frame[,"snp.names.cor"]))
-	total.feature  <-length(unique(subset(snp.ld.frame, R.squared>R.squared.cutoff)[,"feature"]))   
+	total.tagSNPs <-length(unique(dat[,"snp.names.chosen"]))  
+	total.1kSNPs  <-length(unique(dat[,"snp.names.cor"]))
+	total.feature  <-length(unique(subset(dat, R.squared>R.2)[,"feature"]))   
 
-	total.tagSNPs.cutoff <-length(unique(subset(snp.ld.frame, R.squared>R.squared.cutoff)[,"snp.names.chosen"]))
-	total.1kSNPs.cutoff  <-length(unique(subset(snp.ld.frame, R.squared>R.squared.cutoff)[,"snp.names.cor"]))
-	total.feature.cutoff  <-length(unique(subset(snp.ld.frame, R.squared>R.squared.cutoff)[,"feature"]))
+	total.tagSNPs.cutoff <-length(unique(subset(dat, R.squared>R.2)[,"snp.names.chosen"]))
+	total.1kSNPs.cutoff  <-length(unique(subset(dat, R.squared>R.2)[,"snp.names.cor"]))
+	total.feature.cutoff  <-length(unique(subset(dat, R.squared>R.2)[,"feature"]))
 
      	total.dat <- matrix(c(total.tagSNPs,total.1kSNPs,total.feature, total.tagSNPs.cutoff,total.1kSNPs.cutoff,total.feature.cutoff), nrow = 3, ncol=2, byrow=FALSE,
                     dimnames = list(c("tagSNPs", "1kSNPs","bio.features"),
-                                    c("Total", paste("R.squared.cuff.",R.squared.cutoff,sep=""))))
+                                    c("Total", paste("R.squared.cuff.",R.2,sep=""))))
 	total.dat <- as.data.frame(total.dat)
 	total.dat$Percent <- round((total.dat[,2]/total.dat[,1])*100,2)
+	write.table(total.dat, file="tables/summary.txt", sep="\t", row.names=T, col.names=T, quote=F)
 }
 
-FunciSNPPlot <- function(R.squared.cutoff, snp.ld.frame) {
+FunciSNPPlot <- function(R.2, dat) {
+cat("Plotting will begin")
+cat("using R square cut off of ", R.2)
 
+
+
+
+
+### ggplot2 plots#####
 	theme_white <- function() {
 
 	 theme_update (
@@ -338,12 +351,12 @@ FunciSNPPlot <- function(R.squared.cutoff, snp.ld.frame) {
 	}
 	theme_white()
 
-all.s <-(subset(snp.ld.frame, R.squared>=R.squared.cutoff))
-all.ss <-(subset(snp.ld.frame, R.squared<R.squared.cutoff))
+all.s <-(subset(dat, R.squared>=R.2))
+all.ss <-(subset(dat, R.squared<R.2))
 all.s$r2 <- c("Yes")
 all.ss$r2 <- c("No")
 all <- rbind(all.s, all.ss)
-all.s<-(table( subset(all,R.squared>=R.squared.cutoff)[,"feature"], subset(all,R.squared>=R.squared.cutoff)[,"snp.names.chosen"] ))
+all.s<-(table( subset(all,R.squared>=R.2)[,"feature"], subset(all,R.squared>=R.2)[,"snp.names.chosen"] ))
 for( i in 1:length(summary(as.factor(all[,"feature"]))) ){
 
 	bio <- names(summary(as.factor(all[,"feature"])))
@@ -352,7 +365,7 @@ for( i in 1:length(summary(as.factor(all[,"feature"]))) ){
 	p.all <- ggplot(tmp, aes(x=R.squared, fill=factor(r2)))
 	p.all + 
 		geom_histogram() + 
-		geom_vline(xintercept = R.squared.cutoff, linetype=2) +
+		geom_vline(xintercept = R.2, linetype=2) +
 		scale_x_continuous("Rsquare Values (0-1)", limits=c(0,1)) + 
 		scale_y_continuous("Total # of Surrogate SNPs associated with riskSNP") + 
 		scale_fill_manual(values = c("Yes" = "Red", "No" = "Black")) +
@@ -364,7 +377,7 @@ for( i in 1:length(summary(as.factor(all[,"feature"]))) ){
 	p.all.d <- ggplot(tmp, aes(x=R.squared, y=dist, colour=r2, size=factor(r2)))
 	p.all.d + 
 		geom_point() + 
-		geom_vline(xintercept = R.squared.cutoff, linetype=2) +
+		geom_vline(xintercept = R.2, linetype=2) +
 		#geom_abline(intercept = 0, slope = 1) +
 		scale_x_continuous("Rsquare Values (0-1)", limits=c(0,1)) + 
 		scale_y_continuous("Distance to Surrogate SNPs associated with riskSNP (bp)", formatter="comma") + 
@@ -373,9 +386,40 @@ for( i in 1:length(summary(as.factor(all[,"feature"]))) ){
 		opts(legend.position = "none", axis.text.y = theme_text(), axis.text.x = theme_text(angle=90), title = paste("Distance between riskSNP\nand Surrogate SNP\nOverlapping: ", bio[i], sep="")) + 
 		facet_wrap(~ snp.names.chosen)
 	ggsave(file=paste("plots/",bio[i],"_R2vsDist_riskSNP.pdf",sep=""))
+cat("Finished plotting ", i, "/",length(bio))
 	}
-
+cat("Plots are done, see 'plots' folder in ", getwd())
 }
-
+FunciSNPHeatmap <- function(R.2, dat) {
+cat("Heatmap generation will begin")
+cat("using R square cut off of ", R.2)
+all.s<-(table( subset(all,R.squared>=R.2)[,"feature"], subset(all,R.squared>=R.2)[,"snp.names.chosen"] ))
+all.s <- as.matrix(all.s)
+png(filename="plots/heatmap.png", bg = "white")
+heatmap.2(
+		all.s,
+		na.rm=TRUE,
+		scale="none",
+		#RowSideColor=probe.cc,
+		#ColSideColors=cc.col,
+		col=jet.colors(500),
+		#col=redgreen(75),
+		key=T,
+		symkey=FALSE,
+		density.info="none",
+		trace="none",
+		Rowv=F,
+		Colv=T,
+		cexRow=1,
+		cexCol=1,
+		keysize=1,
+		dendrogram=c("col"),
+		main = paste("Rsquare values >= ",R.2)
+		#labRow=c("ACH_OV","AR","AR_nonOV","AR_OV", "Sahu_AR","Sahu_AR_siFoxA1", "Sahu_FoxA1", "Sahu_FoxA1_siFoxA1", "AR_DHT", "AR_DHT_siFoxA1", "FoxA1", "FoxA1_DHT", "K4me1","K4me1_DHT", "K4me1_siFoxA1","K4me1_DH!_siFoxA1","K27ac_DHT","K27ac_DHT_siFoxA1", "Dnase_DHT", "Dnase","Dnase_broad1","Dnase_broad2","Dnase_narrow1","Dnase_narrow2"),
+		#labCol=NULL
+)
+dev.off()
+cat("Heatmap is complete, see 'plots' folder in ", getwd())
+}
 
 
