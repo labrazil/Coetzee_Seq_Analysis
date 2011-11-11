@@ -204,7 +204,7 @@ FilterByFeatures <- function(features.file, snp.names.chosen, ethno.chosen, vari
         colnames(snp.geno) <- snps.included$ID
         snp.geno <- snp.geno[, colSums(is.na(snp.geno))<nrow(snp.geno)]
         if(snp.names.chosen %in% colnames(snp.geno)) {
-            cat(snp.names.chosen, ", the risk snp, already overlaps with the feature", features.file, "\n")
+            cat(snp.names.chosen, ", the risk snp, already overlaps with the feature", features.file, "\n");
         } else {
             temp <- data.frame(t(subset(variants.data, ID==snp.names.chosen))[6:length(variants.data), ])
             colnames(temp) <- snp.names.chosen
@@ -219,10 +219,10 @@ FilterByFeatures <- function(features.file, snp.names.chosen, ethno.chosen, vari
     } else {
         try(rm(snp.geno), silent = TRUE);
         ## need to put the following in log files
-        cat(paste("There is no overlap for: \n",
-                  "\tRisk SNP: \t\t", snp.names.chosen, "\n", 
-                  "\tbiofeature: \t\t", features.file, "\n", 
-                  "\tracial/ethnic group: \t", ethno.chosen, "\n", sep=""))
+#        cat(paste("There is no overlap for: \n",
+#                  "\tRisk SNP: \t\t", snp.names.chosen, "\n", 
+#                  "\tbiofeature: \t\t", features.file, "\n", 
+#                  "\tracial/ethnic group: \t", ethno.chosen, "\n", sep=""));
         NULL
         close.snp.ranges <<- close.snp.ranges
     }
