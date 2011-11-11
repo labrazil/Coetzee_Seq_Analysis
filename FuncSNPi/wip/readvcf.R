@@ -37,7 +37,7 @@ ReadRegionsFile <- function(regions.file) {
 
 
 ServerCheck <- function(primary.server) {
-    ncbi <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/error/"
+    ncbi <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/"
     ebi <- "ftp://ftp.1000genomes.ebi.ac.uk/vol1/"
     test.file <- "ftp/release/20110521/phase1_integrated_calls.20101123.ALL.panel"
     if(primary.server == "ebi"){
