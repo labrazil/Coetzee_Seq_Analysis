@@ -124,8 +124,8 @@ args:  snp.regions.file: ", as.character(snp.regions.file), "\n",
         snp.names.count <- snp.names.count + 1
         cat(paste("\n#####\n","Pulling In Variants File for SNP: ", j, "\n", sep=""))
         for(i in as.character(ethno)) {
-            cat(paste("subsetting Variants File for racial/ethnic group: ", i, "\n", sep="")) 
             variants.data <- PullInVariants(i, j, snp.region, primary.server, manifest.read)
+            cat(paste("subsetting Variants File for racial/ethnic group: ", i, "\n", sep="")) 
             bio.features.count <- 0
             for(h in bio.features.file) {
                 bio.features.count <- bio.features.count + 1
