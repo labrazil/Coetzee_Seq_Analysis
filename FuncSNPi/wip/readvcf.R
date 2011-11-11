@@ -82,7 +82,7 @@ ServerCheck <- function(primary.server) {
 
 
 FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"), 
-                     bio.features.loc, snp.regions.file, output.file = risk.snp, R.squared.cutoff = 0, primary.server) {
+                     bio.features.loc, snp.regions.file, output.file = "risk.snp", R.squared.cutoff = 0, primary.server) {
     cat("
 ####################################
 ##                                ##
@@ -139,7 +139,7 @@ args:  snp.regions.file: ", as.character(snp.regions.file), "\n",
         file.remove(paste(j, ".vcf.gz", sep=""))
         file.remove(paste(j, ".vcf.gz.tbi", sep=""))
     }
-write.table(snp.ld.frame, file="risk.snp.txt", sep="\t", quote = FALSE, row.names = FALSE)
+write.table(snp.ld.frame, file=paste(output.file, ".txt", sep=""), sep="\t", quote = FALSE, row.names = FALSE)
 }
 
     
@@ -217,7 +217,8 @@ FilterByFeatures <- function(features.file, snp.names.chosen, ethno.chosen, vari
         close.snp.ranges <<- close.snp.ranges
         snp.geno
     } else {
-        try(rm(snp.geno), silent = TRUE)
+        try(rm(snp.geno), silent = TRUE);
+        ## need to put the following in log files
         cat(paste("There is no overlap for: \n",
                   "\tRisk SNP: \t\t", snp.names.chosen, "\n", 
                   "\tbiofeature: \t\t", features.file, "\n", 
@@ -278,11 +279,13 @@ LDTesting <- function(snps, snp.names.chosen, ethno.chosen, snp.ld.frame, bf.cou
             rownames(snp.ld.frame) <- NULL
             snp.ld.frame
         } else {
-            cat("risk snp", snp.names.chosen, "is not variant within the", ethno.chosen, "group \n")
+        ## need to put the following in log files
+            #cat("risk snp", snp.names.chosen, "is not variant within the", ethno.chosen, "group \n")
             snp.ld.frame
         }
     } else {
-        cat(paste("\n", "Fewer than two of the snps grouped with ", snp.names.chosen, ", that overlap with ", unlist(strsplit(bio.features[bf.count], "\\.bed")), " for the ", ethno.chosen, " racial/ethnic group, have more than one allele", "\n", sep=""))
+    ## need to put the following in log files
+        #cat(paste("\n", "Fewer than two of the snps grouped with ", snp.names.chosen, ", that overlap with ", unlist(strsplit(bio.features[bf.count], "\\.bed")), " for the ", ethno.chosen, " racial/ethnic group, have more than one allele", "\n", sep=""))
         snp.ld.frame
     }
 }
