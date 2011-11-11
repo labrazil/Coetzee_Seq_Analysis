@@ -3,6 +3,7 @@
 library("Rsamtools")
 library("genetics")
 library("rtracklayer")
+library("ggplot2")
 ## TODO:::
 ## verbose options for everything
 ##
@@ -108,6 +109,18 @@ args:  snp.regions.file: ", as.character(snp.regions.file), "\n",
     } else {
         stop("please select ebi or ncbi as your primary server")
     }
+    if(R.squared.cutoff < 1 || R.squared.cutoff > 0) {
+        cat("you have selected ", R.squared.cutoff, " as your prefered R squared cut off used for summary reports and plots \n")
+    } else {
+        stop("please select an R squared cutoff between 0-1")
+    }
+
+### Not sure if we want to make this silent or error out if permission is denied. I use plot folder to store graphs.
+try(dir.create(path="plots"), silent=TRUE) ## directory used to store plots
+try(dir.create(path="tmp"), silent=TRUE) ## directory used to store temp files
+try(dir.create(path="log"),silent=TRUE) ## directory used to store log files
+try(dir.create(path="tables"),silent=TRUE) ## directory used to store summary tables
+
     snp.region <- ReadRegionsFile(snp.regions.file)
     snp.names <- snp.region$snp.name
     system("ls | grep vcf.gz | xargs rm", ignore.stdout = TRUE, ignore.stderr = TRUE)
@@ -140,6 +153,7 @@ args:  snp.regions.file: ", as.character(snp.regions.file), "\n",
         file.remove(paste(j, ".vcf.gz.tbi", sep=""))
     }
 write.table(snp.ld.frame, file=paste(output.file, ".txt", sep=""), sep="\t", quote = FALSE, row.names = FALSE)
+FunciSNPPlot()
 }
 
     
@@ -289,3 +303,79 @@ LDTesting <- function(snps, snp.names.chosen, ethno.chosen, snp.ld.frame, bf.cou
         snp.ld.frame
     }
 }
+
+
+
+FunciSNPSummary <- function(R.squared.cutoff, snp.ld.frame) {
+
+	total.tagSNPs <-length(unique(snp.ld.frame[,"snp.names.chosen"]))  
+	total.1kSNPs  <-length(unique(snp.ld.frame[,"snp.names.cor"]))
+	total.feature  <-length(unique(subset(snp.ld.frame, R.squared>R.squared.cutoff)[,"feature"]))   
+
+	total.tagSNPs.cutoff <-length(unique(subset(snp.ld.frame, R.squared>R.squared.cutoff)[,"snp.names.chosen"]))
+	total.1kSNPs.cutoff  <-length(unique(subset(snp.ld.frame, R.squared>R.squared.cutoff)[,"snp.names.cor"]))
+	total.feature.cutoff  <-length(unique(subset(snp.ld.frame, R.squared>R.squared.cutoff)[,"feature"]))
+
+     	total.dat <- matrix(c(total.tagSNPs,total.1kSNPs,total.feature, total.tagSNPs.cutoff,total.1kSNPs.cutoff,total.feature.cutoff), nrow = 3, ncol=2, byrow=FALSE,
+                    dimnames = list(c("tagSNPs", "1kSNPs","bio.features"),
+                                    c("Total", paste("R.squared.cuff.",R.squared.cutoff,sep=""))))
+	total.dat <- as.data.frame(total.dat)
+	total.dat$Percent <- round((total.dat[,2]/total.dat[,1])*100,2)
+}
+
+FunciSNPPlot <- function(R.squared.cutoff, snp.ld.frame) {
+
+	theme_white <- function() {
+
+	 theme_update (
+	 plot.background = theme_blank(),
+	 panel.background=theme_rect(colour="black", size=1),
+	 axis.text.x= theme_text(colour="black",vjust= 1, size=12),
+	 axis.text.y= theme_text(colour="black",hjust=1, size=12),
+	 axis.title.x =theme_text(colour="black",face="bold", size=12),
+	 axis.title.y =theme_text(colour="black",face="bold", angle = 90, size=12)
+	 )
+	}
+	theme_white()
+
+all.s <-(subset(snp.ld.frame, R.squared>=R.squared.cutoff))
+all.ss <-(subset(snp.ld.frame, R.squared<R.squared.cutoff))
+all.s$r2 <- c("Yes")
+all.ss$r2 <- c("No")
+all <- rbind(all.s, all.ss)
+all.s<-(table( subset(all,R.squared>=R.squared.cutoff)[,"feature"], subset(all,R.squared>=R.squared.cutoff)[,"snp.names.chosen"] ))
+for( i in 1:length(summary(as.factor(all[,"feature"]))) ){
+
+	bio <- names(summary(as.factor(all[,"feature"])))
+	## plot r.2 values
+	tmp <- subset(all, feature==bio[i])
+	p.all <- ggplot(tmp, aes(x=R.squared, fill=factor(r2)))
+	p.all + 
+		geom_histogram() + 
+		geom_vline(xintercept = R.squared.cutoff, linetype=2) +
+		scale_x_continuous("Rsquare Values (0-1)", limits=c(0,1)) + 
+		scale_y_continuous("Total # of Surrogate SNPs associated with riskSNP") + 
+		scale_fill_manual(values = c("Yes" = "Red", "No" = "Black")) +
+		opts(legend.position = "none", axis.text.y = theme_text(), axis.text.x = theme_text(angle=90), title = paste("riskSNP\nOverlapping: ", bio[i], sep="")) + 
+		facet_wrap(~ snp.names.chosen)
+	ggsave(file=paste("plots/",bio[i],"_R2summary_riskSNP.pdf",sep=""))
+
+	## plot r.2 vs. distance values
+	p.all.d <- ggplot(tmp, aes(x=R.squared, y=dist, colour=r2, size=factor(r2)))
+	p.all.d + 
+		geom_point() + 
+		geom_vline(xintercept = R.squared.cutoff, linetype=2) +
+		#geom_abline(intercept = 0, slope = 1) +
+		scale_x_continuous("Rsquare Values (0-1)", limits=c(0,1)) + 
+		scale_y_continuous("Distance to Surrogate SNPs associated with riskSNP (bp)", formatter="comma") + 
+		scale_colour_manual(values = c("Yes" = "Red", "No" = "Black")) +
+		scale_size_manual(values = c("Yes" = 2, "No" = 1)) +
+		opts(legend.position = "none", axis.text.y = theme_text(), axis.text.x = theme_text(angle=90), title = paste("Distance between riskSNP\nand Surrogate SNP\nOverlapping: ", bio[i], sep="")) + 
+		facet_wrap(~ snp.names.chosen)
+	ggsave(file=paste("plots/",bio[i],"_R2vsDist_riskSNP.pdf",sep=""))
+	}
+
+}
+
+
+
