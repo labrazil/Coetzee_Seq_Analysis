@@ -390,10 +390,10 @@ cat("Finished plotting ", i, "/",length(bio))
 	}
 cat("Plots are done, see 'plots' folder in ", getwd())
 }
-FunciSNPHeatmap <- function(R.2, dat) {
+FunciSNPHeatmap <- function(R.2, all) {
 cat("Heatmap generation will begin")
 cat("using R square cut off of ", R.2)
-all.s<-(table( subset(all,R.squared>=R.2)[,"feature"], subset(all,R.squared>=R.2)[,"snp.names.chosen"] ))
+all.s<-(table( subset(dat,R.squared>=R.2)[,"feature"], subset(dat,R.squared>=R.2)[,"snp.names.chosen"] ))
 all.s <- as.matrix(all.s)
 png(filename="plots/heatmap.png", bg = "white")
 heatmap.2(
