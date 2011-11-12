@@ -1,0 +1,13 @@
+Package: FunciSNP
+Type: Package
+Title: The Functional Integration of SNPs with Phenotype by Coincidence with 
+Chromatin Biofeatures
+Version: 1.0
+Date: 2011-11-12
+Author: Simon G. Coetzee (scoetzee@gmail.com) and Houtan Noushmehr 
+(houtana@gmail.com)
+Maintainer: Simon G. Coetzee <scoetzee@gmail.com>
+Description: FunciSNP integrates information from GWAS, 1000genomes and 
+	chromatin feature to identify functional SNP in coding or non-coding 
+	regions. 
+License: Copyright (C) 2011 Simon G. Coetzee and Houtan Noushmehr, GPL-3
