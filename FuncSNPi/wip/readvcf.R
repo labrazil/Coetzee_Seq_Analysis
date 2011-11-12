@@ -136,7 +136,6 @@ FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"),
         ### Not sure if we want to make this silent or error out if permission is denied. I use plot folder to store graphs.
         
         try(dir.create(path="funcisnp_results", showWarnings = FALSE), silent=TRUE) ## directory used to store plots
-        try(dir.create(path="funcisnp_results/plots", showWarnings = FALSE), silent=TRUE) ## directory used to store plots
         try(dir.create(path="funcisnp_results/tmp", showWarnings = FALSE), silent=TRUE) ## directory used to store temp files
         try(dir.create(path="funcisnp_results/log", showWarnings = FALSE), silent=TRUE) ## directory used to store log files
         try(dir.create(path="funcisnp_results/tables", showWarnings = FALSE),silent=TRUE) ## directory used to store summary tables
@@ -175,13 +174,18 @@ FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"),
         }
         write.table(snp.ld.frame, file="funcisnp_results/snp_table.txt", sep="\t", quote = FALSE, row.names = FALSE)
         if(make.plots == TRUE) {
+        	try(dir.create(path="funcisnp_results/plots", showWarnings = FALSE), silent=TRUE) ## directory used to store plots
                 snp.ld.frame <<- snp.ld.frame
-                FunciSNPSummary(R.squared.cutoff, snp.ld.frame)
+                tmp <- FunciSNPSummary(R.squared.cutoff, snp.ld.frame)
+    		write.table(tmp, file="funcisnp_results/tables/summary.txt", sep="\t", row.names=T, col.names=T, quote=F)
+		rm(tmp)
                 FunciSNPPlot(R.squared.cutoff, snp.ld.frame)
                 FunciSNPHeatmap(R.squared.cutoff, snp.ld.frame)
                 cat("##########################################\nFunciSNP is complete!\nSee 'funcisnp_results/tables/' and 'funcisnp_results/plots/' folder for overall results\nSee 'funcisnp_results/snp_table' for complete results.\n##########################################\n")
         } else {
-            FunciSNPSummary(R.2=R.squared.cutoff, dat = snp.ld.frame)
+                tmp <- FunciSNPSummary(R.squared.cutoff, snp.ld.frame)
+    		write.table(tmp, file="funcisnp_results/tables/summary.txt", sep="\t", row.names=T, col.names=T, quote=F)
+		rm(tmp)
             cat("##########################################\nFunciSNP is complete!\nSee 'funcisnp_results/tables/' folder for overall results\nSee 'funcisnp_results/snp_table' for complete results.\n##########################################")
         }
 }
@@ -342,7 +346,6 @@ FunciSNPSummary <- function(R.2, dat) {
                                         c("Total", paste("R.squared.cuff.",R.2,sep=""))))
     total.dat <- as.data.frame(total.dat)
     total.dat$Percent <- round((total.dat[,2]/total.dat[,1])*100,2)
-    write.table(total.dat, file="funcisnp_results/tables/summary.txt", sep="\t", row.names=T, col.names=T, quote=F)
     return(total.dat);
 }
 
