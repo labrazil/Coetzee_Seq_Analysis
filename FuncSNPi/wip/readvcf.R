@@ -20,9 +20,6 @@
 library("Rsamtools")
 library("genetics")
 library("rtracklayer")
-library("ggplot2")
-library("gplots")
-library('matlab')
 ## TODO:::
 ## verbose options for everything
 ##
@@ -384,7 +381,6 @@ FunciSNPPlot <- function(R.2, dat) {
             return()
         }
     }
-    all.s <- table(subset(all,R.squared>=R.2)[,"feature"], subset(all,R.squared>=R.2)[,"snp.names.chosen"])
     for( i in 1:length(summary(as.factor(all[,"feature"]))) ){
 
         bio <- names(summary(as.factor(all[,"feature"])))
