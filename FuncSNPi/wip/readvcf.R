@@ -151,7 +151,7 @@ FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"),
                     cat(paste("time: ", format(Sys.time(), "%H:%M:%S"), "\tRisk SNP: ", j, ", ", i, " (", snp.names.count, "/", length(snp.names), ")\t\t|\t(", bio.features.count, "/", length(bio.features), ")", "\t", bio.features[bio.features.count], "\n", sep=""))
                     snp.geno <- FilterByFeatures(h, j, i, variants.data)
                     snp.ld.frame <- LDTesting(snp.geno, j, i, snp.ld.frame, bio.features.count, snp.region, variants.data)
-                    try(save(snp.ld.frame, file="funcisnp_results/snp_table.Rda")), silent = TRUE)
+                    try(save(snp.ld.frame, file="funcisnp_results/snp_table.Rda"), silent = TRUE)
                     try(write.table(snp.ld.frame, file="funcisnp_results/snp_table.txt", sep="\t", quote = FALSE, row.names = FALSE), silent = TRUE)
                 }
             }
