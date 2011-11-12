@@ -85,16 +85,18 @@ ServerCheck <- function(primary.server) {
 
 
 FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"), 
-                     bio.features.loc, snp.regions.file, R.squared.cutoff = 0, primary.server) {
+                     bio.features.loc, snp.regions.file, R.squared.cutoff = 0, primary.server, makeplots = TRUE) {
     cat("
         ####################################
         ##                                ##
         ##      Welcome to FunciSNP       ##
         ##                                ##
         ####################################
-        args:  snp.regions.file: ", as.character(snp.regions.file), "\n",
-        "      ethno:            ", ethno, "\n",
-        "      bio.features.loc: ", list.files(bio.features.loc, pattern="*.bed$", full.names = FALSE), "\n")
+        args used:\n
+        snp.regions.file:   ", as.character(snp.regions.file), "\n",
+        "       ethno:            ", ethno, "\n",
+        "       bio.features.loc: ", list.files(bio.features.loc, pattern="*.bed$", full.names = FALSE), "\n",
+        "       Make Plots?:      ", makePlots, "\n")
         if(primary.server == "ebi" ||  primary.server == "ncbi") {
             cat("you have selected ", primary.server, " as your primary server \n")
         } else {
@@ -105,8 +107,7 @@ FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"),
         } else {
             stop("please select an R squared cutoff between 0-1")
         }
-    cat(
-        "\n ### WARNING:: existing vcf.gz files will be removed from ", getwd(),
+    cat("\n ### WARNING:: existing vcf.gz files will be removed from ", getwd(),
         "\n ### and new ones will be placed there, press
         ### <Esc> or <Ctrl-C> to cancel if you do not want this to happen after the
         ### 10 second countdown:", "\n")
@@ -158,10 +159,15 @@ FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"),
             file.remove(paste("funcisnp_results/", j, ".vcf.gz.tbi", sep=""))
         }
         write.table(snp.ld.frame, file="funcisnp_results/snp_table.txt", sep="\t", quote = FALSE, row.names = FALSE)
-        FunciSNPPlot(R.2=R.squared.cutoff, dat = snp.ld.frame)
-        FunciSNPHeatmap(R.2=R.squared.cutoff, dat = snp.ld.frame)
-        FunciSNPSummary(R.2=R.squared.cutoff, dat = snp.ld.frame)
-        cat("FunciSNP is complete! \nSee 'tables' and 'plots' folder for overall results \nSee ", output.file, ".txt for complete results \n")
+        if(makePlots == TRUE) {
+                FunciSNPSummary(R.2=R.squared.cutoff, dat = snp.ld.frame)
+                FunciSNPPlot(R.2=R.squared.cutoff, dat = snp.ld.frame)
+                FunciSNPHeatmap(R.2=R.squared.cutoff, dat = snp.ld.frame)
+                cat("##########################################\nFunciSNP is complete!\nSee 'funcisnp_results/tables/' and 'funcisnp_results/plots/' folder for overall results\nSee 'funcisnp_results/snp_table' for complete results.\n##########################################\n")
+        } else {
+            FunciSNPSummary(R.2=R.squared.cutoff, dat = snp.ld.frame)
+            cat("##########################################\nFunciSNP is complete!\nSee 'funcisnp_results/tables/' folder for overall results\nSee 'funcisnp_results/snp_table' for complete results.\n##########################################")
+        }
 }
 
 
@@ -320,11 +326,11 @@ FunciSNPSummary <- function(R.2, dat) {
                                         c("Total", paste("R.squared.cuff.",R.2,sep=""))))
     total.dat <- as.data.frame(total.dat)
     total.dat$Percent <- round((total.dat[,2]/total.dat[,1])*100,2)
-    write.table(total.dat, file="tables/summary.txt", sep="\t", row.names=T, col.names=T, quote=F)
+    write.table(total.dat, file="FunciSNP_tables/summary.txt", sep="\t", row.names=T, col.names=T, quote=F)
 }
 
 FunciSNPPlot <- function(R.2, dat) {
-    cat("Plotting will begin \n")
+    cat("\n\nPlotting will begin")
     cat("using R square cut off of", R.2, "\n")
 
     ### ggplot2 plots#####
@@ -361,7 +367,7 @@ FunciSNPPlot <- function(R.2, dat) {
         scale_fill_manual(values = c("Yes" = "Red", "No" = "Black")) +
         opts(legend.position = "none", axis.text.y = theme_text(), axis.text.x = theme_text(angle=90), title = paste("riskSNP\nOverlapping: ", bio[i], sep="")) + 
         facet_wrap(~ snp.names.chosen)
-        ggsave(file=paste("plots/",bio[i],"_R2summary_riskSNP.pdf",sep=""))
+        ggsave(file=paste("FunciSNP_plots/",bio[i],"_R2summary_riskSNP.pdf",sep=""))
 
         ## plot r.2 vs. distance values
         p.all.d <- ggplot(tmp, aes(x=R.squared, y=dist, colour=r2, size=factor(r2)))
@@ -375,17 +381,17 @@ FunciSNPPlot <- function(R.2, dat) {
         scale_size_manual(values = c("Yes" = 2, "No" = 1)) +
         opts(legend.position = "none", axis.text.y = theme_text(), axis.text.x = theme_text(angle=90), title = paste("Distance between riskSNP\nand Surrogate SNP\nOverlapping: ", bio[i], sep="")) + 
         facet_wrap(~ snp.names.chosen)
-        ggsave(file=paste("plots/",bio[i],"_R2vsDist_riskSNP.pdf",sep=""))
+        ggsave(file=paste("funcisnp_results/plots/",bio[i],"_R2vsDist_riskSNP.pdf",sep=""))
         cat("Finished plotting ", i, "/",length(bio), "\n")
     }
-    cat("Plots are done, see 'plots' folder in ", getwd(), "\n")
+    cat("\n\nMaking plots is finished, see 'funcisnp_results/plots/' folder in ", getwd(), "\n\n")
 }
-FunciSNPHeatmap <- function(R.2, all) {
-    cat("Heatmap generation will begin \n")
-    cat("using R square cut off of ", R.2, "\n")
+FunciSNPHeatmap <- function(R.2, dat) {
+    cat("Heatmap generation will begin")
+    cat(" using R square cut off of ", R.2,"\n")
     all.s<-(table( subset(dat,R.squared>=R.2)[,"feature"], subset(dat,R.squared>=R.2)[,"snp.names.chosen"] ))
     all.s <- as.matrix(all.s)
-    png(filename="plots/heatmap.png", bg = "white")
+    png(filename="FunciSNP_plots/heatmap.png", bg = "white")
     heatmap.2(
               all.s,
               na.rm=TRUE,
@@ -409,7 +415,7 @@ FunciSNPHeatmap <- function(R.2, all) {
               #labCol=NULL
               )
     dev.off()
-    cat("Heatmap is complete, see 'plots' folder in ", getwd(), "\n")
+    cat("\n\nHeatmap plot is complete, see 'funcisnp_results/plots/' folder in ", getwd(),"\n\n")
 }
 
 
