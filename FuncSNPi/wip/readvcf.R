@@ -85,7 +85,7 @@ ServerCheck <- function(primary.server) {
 
 
 FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"), 
-                     bio.features.loc, snp.regions.file, R.squared.cutoff = 0, primary.server, makeplots = TRUE) {
+                     bio.features.loc, snp.regions.file, R.squared.cutoff = 0, primary.server, make.plots = TRUE) {
     cat("
         ####################################
         ##                                ##
@@ -96,7 +96,7 @@ FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"),
         snp.regions.file:   ", as.character(snp.regions.file), "\n",
         "       ethno:            ", ethno, "\n",
         "       bio.features.loc: ", list.files(bio.features.loc, pattern="*.bed$", full.names = FALSE), "\n",
-        "       Make Plots?:      ", makePlots, "\n")
+        "       Make Plots?:      ", make.plots, "\n")
         if(primary.server == "ebi" ||  primary.server == "ncbi") {
             cat("you have selected ", primary.server, " as your primary server \n")
         } else {
@@ -159,7 +159,7 @@ FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"),
             file.remove(paste("funcisnp_results/", j, ".vcf.gz.tbi", sep=""))
         }
         write.table(snp.ld.frame, file="funcisnp_results/snp_table.txt", sep="\t", quote = FALSE, row.names = FALSE)
-        if(makePlots == TRUE) {
+        if(make.plots == TRUE) {
                 FunciSNPSummary(R.2=R.squared.cutoff, dat = snp.ld.frame)
                 FunciSNPPlot(R.2=R.squared.cutoff, dat = snp.ld.frame)
                 FunciSNPHeatmap(R.2=R.squared.cutoff, dat = snp.ld.frame)
