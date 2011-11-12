@@ -85,7 +85,7 @@ ServerCheck <- function(primary.server) {
 
 
 FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"), 
-                     bio.features.loc, snp.regions.file, output.file = "risk.snp", R.squared.cutoff = 0, primary.server) {
+                     bio.features.loc, snp.regions.file, R.squared.cutoff = 0, primary.server) {
     cat("
         ####################################
         ##                                ##
@@ -94,7 +94,18 @@ FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"),
         ####################################
         args:  snp.regions.file: ", as.character(snp.regions.file), "\n",
         "      ethno:            ", ethno, "\n",
-        "      bio.features.loc: ", list.files(bio.features.loc, pattern="*.bed$", full.names = FALSE), "\n",
+        "      bio.features.loc: ", list.files(bio.features.loc, pattern="*.bed$", full.names = FALSE), "\n")
+        if(primary.server == "ebi" ||  primary.server == "ncbi") {
+            cat("you have selected ", primary.server, " as your primary server \n")
+        } else {
+            stop("please select ebi or ncbi as your primary server")
+        }
+        if(R.squared.cutoff < 1 || R.squared.cutoff > 0) {
+            cat("you have selected ", R.squared.cutoff, " as your prefered R squared cut off used for summary reports and plots \n")
+        } else {
+            stop("please select an R squared cutoff between 0-1")
+        }
+    cat(
         "\n ### WARNING:: existing vcf.gz files will be removed from ", getwd(),
         "\n ### and new ones will be placed there, press
         ### <Esc> or <Ctrl-C> to cancel if you do not want this to happen after the
@@ -106,22 +117,14 @@ FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"),
             setTxtProgressBar(pb, i)
         }
         close(pb)
-        if(primary.server == "ebi" ||  primary.server == "ncbi") {
-            cat("you have selected ", primary.server, " as your primary server \n")
-        } else {
-            stop("please select ebi or ncbi as your primary server")
-        }
-        if(R.squared.cutoff < 1 || R.squared.cutoff > 0) {
-            cat("you have selected ", R.squared.cutoff, " as your prefered R squared cut off used for summary reports and plots \n")
-        } else {
-            stop("please select an R squared cutoff between 0-1")
-        }
 
         ### Not sure if we want to make this silent or error out if permission is denied. I use plot folder to store graphs.
-        try(dir.create(path="plots"), silent=TRUE) ## directory used to store plots
-        try(dir.create(path="tmp"), silent=TRUE) ## directory used to store temp files
-        try(dir.create(path="log"),silent=TRUE) ## directory used to store log files
-        try(dir.create(path="tables"),silent=TRUE) ## directory used to store summary tables
+        
+        try(dir.create(path="funcisnp_results"), silent=TRUE) ## directory used to store plots
+        try(dir.create(path="funcisnp_results/plots"), silent=TRUE) ## directory used to store plots
+        try(dir.create(path="funcisnp_results/tmp"), silent=TRUE) ## directory used to store temp files
+        try(dir.create(path="funcisnp_results/log"),silent=TRUE) ## directory used to store log files
+        try(dir.create(path="funcisnp_results/tables"),silent=TRUE) ## directory used to store summary tables
 
         snp.region <- ReadRegionsFile(snp.regions.file)
         snp.names <- snp.region$snp.name
@@ -147,18 +150,18 @@ FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"),
                     cat(paste("time: ", format(Sys.time(), "%H:%M:%S"), "\tRisk SNP: ", j, ", ", i, " (", snp.names.count, "/", length(snp.names), ")\t\t|\t(", bio.features.count, "/", length(bio.features), ")", "\t", bio.features[bio.features.count], "\n", sep=""))
                     snp.geno <- FilterByFeatures(h, j, i, variants.data)
                     snp.ld.frame <- LDTesting(snp.geno, j, i, snp.ld.frame, bio.features.count, snp.region, variants.data)
-                    try(save(snp.ld.frame, file=paste(output.file, ".Rda", sep="")), silent = TRUE)
-                    try(write.table(snp.ld.frame, file=paste(output.file, ".txt", sep=""), sep="\t", quote = FALSE, row.names = FALSE), silent = TRUE)
+                    try(save(snp.ld.frame, file="funcisnp_results/snp_table.Rda")), silent = TRUE)
+                    try(write.table(snp.ld.frame, file="funcisnp_results/snp_table.txt", sep="\t", quote = FALSE, row.names = FALSE), silent = TRUE)
                 }
             }
-            file.remove(paste(j, ".vcf.gz", sep=""))
-            file.remove(paste(j, ".vcf.gz.tbi", sep=""))
+            file.remove(paste("funcisnp_results/", j, ".vcf.gz", sep=""))
+            file.remove(paste("funcisnp_results/", j, ".vcf.gz.tbi", sep=""))
         }
-        write.table(snp.ld.frame, file=paste(output.file, ".txt", sep=""), sep="\t", quote = FALSE, row.names = FALSE)
+        write.table(snp.ld.frame, file="funcisnp_results/snp_table.txt", sep="\t", quote = FALSE, row.names = FALSE)
         FunciSNPPlot(R.2=R.squared.cutoff, dat = snp.ld.frame)
         FunciSNPHeatmap(R.2=R.squared.cutoff, dat = snp.ld.frame)
         FunciSNPSummary(R.2=R.squared.cutoff, dat = snp.ld.frame)
-        cat("FunciSNP is complete!\nSee 'tables' and 'plots' folder for overall results\nSee ", output.file, ".txt for complete results")
+        cat("FunciSNP is complete! \nSee 'tables' and 'plots' folder for overall results \nSee ", output.file, ".txt for complete results \n")
 }
 
 
@@ -166,11 +169,10 @@ PullInVariants <- function(ethno.chosen, snp.names.chosen, snp.regions, primary.
     ifelse(ethno.chosen != "ALL",
            ethno.sample.set <- as.character(subset(manifest, V3==ethno.chosen)[,1]),
            ethno.sample.set <- as.character(manifest[,1]))
-    intermediate.vcf <- paste(snp.names.chosen, ".vcf", sep="")
-    variants.file <- paste(intermediate.vcf, ".gz", sep="") 
+    intermediate.vcf <- paste("funcisnp_results/", snp.names.chosen, ".vcf", sep="")
+    variants.file <- paste("funcisnp_results/", intermediate.vcf, ".gz", sep="") 
     if(file.exists(variants.file) == FALSE) {
         onek.genome.server <- ServerCheck(primary.server)
-        #        cat("tabix command: ", "tabix -hf ", onek.genome.server, "/ftp/release/20101123/interim_phase1_release/ALL.chr", snp.regions$snp.chromosome[snp.regions$snp.name == snp.names.chosen][1], ".phase1.projectConsensus.genotypes.vcf.gz", " ", snp.regions$snp.chromosome[snp.regions$snp.name == snp.names.chosen][1], ":", snp.regions$snp.region.start[snp.regions$snp.name == snp.names.chosen][1], "-", snp.regions$snp.region.end[snp.regions$snp.name == snp.names.chosen][1], " > ", intermediate.vcf, " && ", "bgzip -f ", intermediate.vcf, " && ", "tabix -hf ", intermediate.vcf, ".gz", "\n")
         system(paste("tabix -hf ", onek.genome.server, "/ftp/release/20101123/interim_phase1_release/ALL.chr", snp.regions$snp.chromosome[snp.regions$snp.name == snp.names.chosen][1], ".phase1.projectConsensus.genotypes.vcf.gz", " ", snp.regions$snp.chromosome[snp.regions$snp.name == snp.names.chosen][1], ":", snp.regions$snp.region.start[snp.regions$snp.name == snp.names.chosen][1], "-", snp.regions$snp.region.end[snp.regions$snp.name == snp.names.chosen][1], " > ", intermediate.vcf, " && ", "bgzip -f ", intermediate.vcf, " && ", "tabix -hf ", intermediate.vcf, ".gz" , sep=""))
         subset.variants.file <<- unpackVcf(scanVcf(variants.file))[[1]]
     }
@@ -206,10 +208,6 @@ PullInVariants <- function(ethno.chosen, snp.names.chosen, snp.regions, primary.
 }
 
 FilterByFeatures <- function(features.file, snp.names.chosen, ethno.chosen, variants.data) {
-    f.features.file <<- features.file
-    f.snp.names.chosen <<- snp.names.chosen
-    f.ethno.chosen <<- ethno.chosen
-    f.variants.data <<- variants.data
     close.snp.ranges <- 
         GRanges(seqnames=paste(
                                "chr",
@@ -251,13 +249,6 @@ FilterByFeatures <- function(features.file, snp.names.chosen, ethno.chosen, vari
 }
 
 LDTesting <- function(snps, snp.names.chosen, ethno.chosen, snp.ld.frame, bf.count, snp.regions, var.data) {
-    snps <<- snps
-    snp.names.chosen <<- snp.names.chosen
-    ethno.chosen <<- ethno.chosen
-    snp.ld.frame <<- snp.ld.frame
-    bf.count <<- bf.count
-    snp.regions <<- snp.regions
-    var.data <<- var.data
     try(snp.ld <- LD(snps), silent = TRUE)
     if(exists("snp.ld")) {
         if(snp.names.chosen %in% colnames(snp.ld$"D")) {
@@ -333,12 +324,8 @@ FunciSNPSummary <- function(R.2, dat) {
 }
 
 FunciSNPPlot <- function(R.2, dat) {
-    cat("Plotting will begin")
-    cat("using R square cut off of ", R.2)
-
-
-
-
+    cat("Plotting will begin \n")
+    cat("using R square cut off of", R.2, "\n")
 
     ### ggplot2 plots#####
     theme_white <- function() {
@@ -389,13 +376,13 @@ FunciSNPPlot <- function(R.2, dat) {
         opts(legend.position = "none", axis.text.y = theme_text(), axis.text.x = theme_text(angle=90), title = paste("Distance between riskSNP\nand Surrogate SNP\nOverlapping: ", bio[i], sep="")) + 
         facet_wrap(~ snp.names.chosen)
         ggsave(file=paste("plots/",bio[i],"_R2vsDist_riskSNP.pdf",sep=""))
-        cat("Finished plotting ", i, "/",length(bio))
+        cat("Finished plotting ", i, "/",length(bio), "\n")
     }
-    cat("Plots are done, see 'plots' folder in ", getwd())
+    cat("Plots are done, see 'plots' folder in ", getwd(), "\n")
 }
 FunciSNPHeatmap <- function(R.2, all) {
-    cat("Heatmap generation will begin")
-    cat("using R square cut off of ", R.2)
+    cat("Heatmap generation will begin \n")
+    cat("using R square cut off of ", R.2, "\n")
     all.s<-(table( subset(dat,R.squared>=R.2)[,"feature"], subset(dat,R.squared>=R.2)[,"snp.names.chosen"] ))
     all.s <- as.matrix(all.s)
     png(filename="plots/heatmap.png", bg = "white")
@@ -422,7 +409,7 @@ FunciSNPHeatmap <- function(R.2, all) {
               #labCol=NULL
               )
     dev.off()
-    cat("Heatmap is complete, see 'plots' folder in ", getwd())
+    cat("Heatmap is complete, see 'plots' folder in ", getwd(), "\n")
 }
 
 
