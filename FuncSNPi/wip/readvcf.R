@@ -98,19 +98,19 @@ FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"),
         "       bio.features.loc: ", list.files(bio.features.loc, pattern="*.bed$", full.names = FALSE), "\n",
         "       Make Plots?:      ", make.plots, "\n")
         if(primary.server == "ebi" ||  primary.server == "ncbi") {
-            cat("you have selected ", primary.server, " as your primary server \n")
+            cat("you have selected", primary.server, "as your primary server \n")
         } else {
             stop("please select ebi or ncbi as your primary server")
         }
         if(R.squared.cutoff < 1 || R.squared.cutoff > 0) {
-            cat("you have selected ", R.squared.cutoff, " as your prefered R squared cut off used for summary reports and plots \n")
+            cat("you have selected" , R.squared.cutoff, "as your prefered R squared cut off used for summary reports and plots \n")
         } else {
             stop("please select an R squared cutoff between 0-1")
         }
-    cat("\n ### WARNING:: existing vcf.gz files will be removed from ", getwd(),
+    cat("\n ### WARNING:: existing vcf.gz files will be removed from", getwd(), "/funcisnp/",
         "\n ### and new ones will be placed there, press
-        ### <Esc> or <Ctrl-C> to cancel if you do not want this to happen after the
-        ### 10 second countdown:", "\n")
+ ### <Esc> or <Ctrl-C> to cancel if you do not want this to happen after the
+ ### 10 second countdown:", "\n")
         timer <- 10
         pb <- txtProgressBar(min = 0, max = timer, style = 2)
         for(i in 1:timer) {
@@ -121,15 +121,15 @@ FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"),
 
         ### Not sure if we want to make this silent or error out if permission is denied. I use plot folder to store graphs.
         
-        try(dir.create(path="funcisnp_results"), silent=TRUE) ## directory used to store plots
-        try(dir.create(path="funcisnp_results/plots"), silent=TRUE) ## directory used to store plots
-        try(dir.create(path="funcisnp_results/tmp"), silent=TRUE) ## directory used to store temp files
-        try(dir.create(path="funcisnp_results/log"),silent=TRUE) ## directory used to store log files
-        try(dir.create(path="funcisnp_results/tables"),silent=TRUE) ## directory used to store summary tables
+        try(dir.create(path="funcisnp_results", showWarnings = FALSE), silent=TRUE) ## directory used to store plots
+        try(dir.create(path="funcisnp_results/plots", showWarnings = FALSE), silent=TRUE) ## directory used to store plots
+        try(dir.create(path="funcisnp_results/tmp", showWarnings = FALSE), silent=TRUE) ## directory used to store temp files
+        try(dir.create(path="funcisnp_results/log", showWarnings = FALSE), silent=TRUE) ## directory used to store log files
+        try(dir.create(path="funcisnp_results/tables", showWarnings = FALSE),silent=TRUE) ## directory used to store summary tables
 
         snp.region <- ReadRegionsFile(snp.regions.file)
         snp.names <- snp.region$snp.name
-        system("ls | grep vcf.gz | xargs rm", ignore.stdout = TRUE, ignore.stderr = TRUE)
+        system("find funcisnp_results/ -iname \\*vcf.gz\\* | xargs rm", ignore.stdout = TRUE, ignore.stderr = TRUE)
 
         onek.genome.server <- ServerCheck(primary.server)
         manifest.read <- read.delim(paste(onek.genome.server, "ftp/release/20110521/phase1_integrated_calls.20101123.ALL.panel", sep=""), sep="\t", header = FALSE)
@@ -148,21 +148,27 @@ FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"),
                 bio.features.count <- 0
                 for(h in bio.features.file) {
                     bio.features.count <- bio.features.count + 1
-                    cat(paste("time: ", format(Sys.time(), "%H:%M:%S"), "\tRisk SNP: ", j, ", ", i, " (", snp.names.count, "/", length(snp.names), ")\t\t|\t(", bio.features.count, "/", length(bio.features), ")", "\t", bio.features[bio.features.count], "\n", sep=""))
+                    cat(paste("time: ", format(Sys.time(), "%H:%M:%S"), "\tRisk SNP: ", j, ", ", i, " (", snp.names.count, "/", length(snp.names), ")\n>>>>> (", bio.features.count, "/", length(bio.features), ")", "\t", bio.features[bio.features.count], "\n", sep=""))
                     snp.geno <- FilterByFeatures(h, j, i, variants.data)
                     snp.ld.frame <- LDTesting(snp.geno, j, i, snp.ld.frame, bio.features.count, snp.region, variants.data)
                     try(save(snp.ld.frame, file="funcisnp_results/snp_table.Rda"), silent = TRUE)
                     try(write.table(snp.ld.frame, file="funcisnp_results/snp_table.txt", sep="\t", quote = FALSE, row.names = FALSE), silent = TRUE)
+                    cat("snp.ld.frame exists?", exists("snp.ld.frame"))
                 }
+                cat("snp.ld.frame exists?", exists("snp.ld.frame"))
             }
+            cat("snp.ld.frame exists?", exists("snp.ld.frame"))
             file.remove(paste("funcisnp_results/", j, ".vcf.gz", sep=""))
             file.remove(paste("funcisnp_results/", j, ".vcf.gz.tbi", sep=""))
+            summary(snp.ld.frame)
         }
         write.table(snp.ld.frame, file="funcisnp_results/snp_table.txt", sep="\t", quote = FALSE, row.names = FALSE)
         if(make.plots == TRUE) {
-                FunciSNPSummary(R.2=R.squared.cutoff, dat = snp.ld.frame)
-                FunciSNPPlot(R.2=R.squared.cutoff, dat = snp.ld.frame)
-                FunciSNPHeatmap(R.2=R.squared.cutoff, dat = snp.ld.frame)
+                cat("snp.ld.frame exists?", exists("snp.ld.frame"))
+                snp.ld.frame <<- snp.ld.frame
+                FunciSNPSummary(R.squared.cutoff, snp.ld.frame)
+                FunciSNPPlot(R.squared.cutoff, snp.ld.frame)
+                FunciSNPHeatmap(R.squared.cutoff, snp.ld.frame)
                 cat("##########################################\nFunciSNP is complete!\nSee 'funcisnp_results/tables/' and 'funcisnp_results/plots/' folder for overall results\nSee 'funcisnp_results/snp_table' for complete results.\n##########################################\n")
         } else {
             FunciSNPSummary(R.2=R.squared.cutoff, dat = snp.ld.frame)
@@ -176,7 +182,7 @@ PullInVariants <- function(ethno.chosen, snp.names.chosen, snp.regions, primary.
            ethno.sample.set <- as.character(subset(manifest, V3==ethno.chosen)[,1]),
            ethno.sample.set <- as.character(manifest[,1]))
     intermediate.vcf <- paste("funcisnp_results/", snp.names.chosen, ".vcf", sep="")
-    variants.file <- paste("funcisnp_results/", intermediate.vcf, ".gz", sep="") 
+    variants.file <- paste(intermediate.vcf, ".gz", sep="") 
     if(file.exists(variants.file) == FALSE) {
         onek.genome.server <- ServerCheck(primary.server)
         system(paste("tabix -hf ", onek.genome.server, "/ftp/release/20101123/interim_phase1_release/ALL.chr", snp.regions$snp.chromosome[snp.regions$snp.name == snp.names.chosen][1], ".phase1.projectConsensus.genotypes.vcf.gz", " ", snp.regions$snp.chromosome[snp.regions$snp.name == snp.names.chosen][1], ":", snp.regions$snp.region.start[snp.regions$snp.name == snp.names.chosen][1], "-", snp.regions$snp.region.end[snp.regions$snp.name == snp.names.chosen][1], " > ", intermediate.vcf, " && ", "bgzip -f ", intermediate.vcf, " && ", "tabix -hf ", intermediate.vcf, ".gz" , sep=""))
@@ -326,12 +332,12 @@ FunciSNPSummary <- function(R.2, dat) {
                                         c("Total", paste("R.squared.cuff.",R.2,sep=""))))
     total.dat <- as.data.frame(total.dat)
     total.dat$Percent <- round((total.dat[,2]/total.dat[,1])*100,2)
-    write.table(total.dat, file="FunciSNP_tables/summary.txt", sep="\t", row.names=T, col.names=T, quote=F)
+    write.table(total.dat, file="funcisnp_results/tables/summary.txt", sep="\t", row.names=T, col.names=T, quote=F)
 }
 
 FunciSNPPlot <- function(R.2, dat) {
-require("ggplot2")
-    cat("\n\nPlotting will begin")
+    require("ggplot2")
+    cat("\n\nPlotting will begin ")
     cat("using R square cut off of", R.2, "\n")
 
     ### ggplot2 plots#####
@@ -348,12 +354,24 @@ require("ggplot2")
     }
     theme_white()
 
-    all.s <-(subset(dat, R.squared>=R.2))
-    all.ss <-(subset(dat, R.squared<R.2))
-    all.s$r2 <- c("Yes")
-    all.ss$r2 <- c("No")
-    all <- rbind(all.s, all.ss)
-    all.s<-(table( subset(all,R.squared>=R.2)[,"feature"], subset(all,R.squared>=R.2)[,"snp.names.chosen"] ))
+    all.s <- try(subset(dat, R.squared >= R.2), silent = TRUE)
+    all.ss <- try(subset(dat, R.squared < R.2), silent = TRUE)
+    try(all.s$r2 <- c("Yes"), silent = TRUE)
+    try(all.ss$r2 <- c("No"), silent = TRUE)
+    if(nrow(all.s) > 0 && nrow(all.ss) > 0) {
+        all <- try(rbind(all.s, all.ss), silent = TRUE)
+    } else {
+        if(nrow(all.s) > 0 && nrow(all.ss) <= 0) {
+            all <- all.s
+        }
+        if(nrow(all.s) <= 0 && nrow(all.ss) > 0) {
+            all <- all.ss
+        }
+        if(nrow(all.s) <= 1 && nrow(all.ss) <= 0) {
+            return()
+        }
+    }
+    all.s <- table(subset(all,R.squared>=R.2)[,"feature"], subset(all,R.squared>=R.2)[,"snp.names.chosen"])
     for( i in 1:length(summary(as.factor(all[,"feature"]))) ){
 
         bio <- names(summary(as.factor(all[,"feature"])))
@@ -368,7 +386,7 @@ require("ggplot2")
         scale_fill_manual(values = c("Yes" = "Red", "No" = "Black")) +
         opts(legend.position = "none", axis.text.y = theme_text(), axis.text.x = theme_text(angle=90), title = paste("riskSNP\nOverlapping: ", bio[i], sep="")) + 
         facet_wrap(~ snp.names.chosen)
-        ggsave(file=paste("FunciSNP_plots/",bio[i],"_R2summary_riskSNP.pdf",sep=""))
+        ggsave(file=paste("funcisnp_results/plots/",bio[i],"_R2summary_riskSNP.pdf",sep=""))
 
         ## plot r.2 vs. distance values
         p.all.d <- ggplot(tmp, aes(x=R.squared, y=dist, colour=r2, size=factor(r2)))
@@ -394,7 +412,7 @@ require('matlab')
     cat(" using R square cut off of ", R.2,"\n")
     all.s<-(table( subset(dat,R.squared>=R.2)[,"feature"], subset(dat,R.squared>=R.2)[,"snp.names.chosen"] ))
     all.s <- as.matrix(all.s)
-    png(filename="FunciSNP_plots/heatmap.png", bg = "white")
+    png(filename="funcisnp_results/plots/heatmap.png", bg = "white")
     heatmap.2(
               all.s,
               na.rm=TRUE,
