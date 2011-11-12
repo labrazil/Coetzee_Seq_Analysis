@@ -151,14 +151,14 @@ FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"),
                     cat(paste("time: ", format(Sys.time(), "%H:%M:%S"), "\tRisk SNP: ", j, ", ", i, " (", snp.names.count, "/", length(snp.names), ")\t\t|\t(", bio.features.count, "/", length(bio.features), ")", "\t", bio.features[bio.features.count], "\n", sep=""))
                     snp.geno <- FilterByFeatures(h, j, i, variants.data)
                     snp.ld.frame <- LDTesting(snp.geno, j, i, snp.ld.frame, bio.features.count, snp.region, variants.data)
-                    try(save(snp.ld.frame, file=paste(output.file, ".Rda", sep="")), silent = TRUE)
-                    try(write.table(snp.ld.frame, file=paste(output.file, ".txt", sep=""), sep="\t", quote = FALSE, row.names = FALSE), silent = TRUE)
+                    try(save(snp.ld.frame, file=paste("FunciSNP_tables/",output.file, ".Rda", sep="")), silent = TRUE)
+                    try(write.table(snp.ld.frame, file=paste("FunciSNP_tables/",output.file, ".txt", sep=""), sep="\t", quote = FALSE, row.names = FALSE), silent = TRUE)
                 }
             }
             file.remove(paste(j, ".vcf.gz", sep=""))
             file.remove(paste(j, ".vcf.gz.tbi", sep=""))
         }
-        write.table(snp.ld.frame, file=paste(output.file, ".txt", sep=""), sep="\t", quote = FALSE, row.names = FALSE)
+        write.table(snp.ld.frame, file=paste("FunciSNP_tables/",output.file, ".txt", sep=""), sep="\t", quote = FALSE, row.names = FALSE)
         if(makePlots == TRUE) {
                 FunciSNPSummary(R.2=R.squared.cutoff, dat = snp.ld.frame)
                 FunciSNPPlot(R.2=R.squared.cutoff, dat = snp.ld.frame)
