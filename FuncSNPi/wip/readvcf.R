@@ -428,7 +428,7 @@ require('matlab')
               scale="none",
               #RowSideColor=probe.cc,
               #ColSideColors=cc.col,
-              col=jet.colors(max(all.s,na.rm=T)),
+              col=jet.colors(max(all.s,na.rm=T)/2),
               #col=redgreen(75),
               key=T,
               symkey=FALSE,
