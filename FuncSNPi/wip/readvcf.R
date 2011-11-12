@@ -174,7 +174,6 @@ FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"),
         }
         write.table(snp.ld.frame, file="funcisnp_results/snp_table.txt", sep="\t", quote = FALSE, row.names = FALSE)
         if(make.plots == TRUE) {
-        	try(dir.create(path="funcisnp_results/plots", showWarnings = FALSE), silent=TRUE) ## directory used to store plots
                 snp.ld.frame <<- snp.ld.frame
                 tmp <- FunciSNPSummary(R.squared.cutoff, snp.ld.frame)
     		write.table(tmp, file="funcisnp_results/tables/summary.txt", sep="\t", row.names=T, col.names=T, quote=F)
@@ -350,6 +349,7 @@ FunciSNPSummary <- function(R.2, dat) {
 }
 
 FunciSNPPlot <- function(R.2, dat) {
+    try(dir.create(path="funcisnp_results/plots", showWarnings = FALSE, recursive=TRUE), silent=TRUE) ## directory used to store plots
     require("ggplot2")
     cat("\n\nPlotting will begin ")
     cat("using R square cut off of", R.2, "\n")
@@ -421,6 +421,7 @@ FunciSNPPlot <- function(R.2, dat) {
 FunciSNPHeatmap <- function(R.2, dat) {
 require("gplots")
 require('matlab')
+    try(dir.create(path="funcisnp_results/plots", showWarnings = FALSE, recursive=TRUE), silent=TRUE) ## directory used to store plots
     cat("Heatmap generation will begin")
     cat(" using R square cut off of ", R.2,"\n")
     all.s<-(table( subset(dat,R.squared>=R.2)[,"feature"], subset(dat,R.squared>=R.2)[,"snp.names.chosen"] ))
