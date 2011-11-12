@@ -1,5 +1,22 @@
 #!/usr/bin/env R
 
+#### FunciSNP - the Functional Integration of SNPs with Phenotype
+####           by Coincidence with Chromatin Biofeatures
+#### Copyright (C) 2011 Simon G. Coetzee and Houtan Noushmehr
+####
+#### This program is free software: you can redistribute it and/or modify
+#### it under the terms of the GNU General Public License as published by
+#### the Free Software Foundation, either version 3 of the License, or
+#### (at your option) any later version.
+####
+#### This program is distributed in the hope that it will be useful,
+#### but WITHOUT ANY WARRANTY; without even the implied warranty of
+#### MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#### GNU General Public License for more details.
+####
+#### You should have received a copy of the GNU General Public License
+#### along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 library("Rsamtools")
 library("genetics")
 library("rtracklayer")
@@ -153,18 +170,14 @@ FunciSNP <- function(ethno = c("AFR", "ASN", "EUR", "AMR", "ALL"),
                     snp.ld.frame <- LDTesting(snp.geno, j, i, snp.ld.frame, bio.features.count, snp.region, variants.data)
                     try(save(snp.ld.frame, file="funcisnp_results/snp_table.Rda"), silent = TRUE)
                     try(write.table(snp.ld.frame, file="funcisnp_results/snp_table.txt", sep="\t", quote = FALSE, row.names = FALSE), silent = TRUE)
-                    cat("snp.ld.frame exists?", exists("snp.ld.frame"))
                 }
-                cat("snp.ld.frame exists?", exists("snp.ld.frame"))
             }
-            cat("snp.ld.frame exists?", exists("snp.ld.frame"))
             file.remove(paste("funcisnp_results/", j, ".vcf.gz", sep=""))
             file.remove(paste("funcisnp_results/", j, ".vcf.gz.tbi", sep=""))
             summary(snp.ld.frame)
         }
         write.table(snp.ld.frame, file="funcisnp_results/snp_table.txt", sep="\t", quote = FALSE, row.names = FALSE)
         if(make.plots == TRUE) {
-                cat("snp.ld.frame exists?", exists("snp.ld.frame"))
                 snp.ld.frame <<- snp.ld.frame
                 FunciSNPSummary(R.squared.cutoff, snp.ld.frame)
                 FunciSNPPlot(R.squared.cutoff, snp.ld.frame)
