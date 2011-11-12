@@ -343,6 +343,7 @@ FunciSNPSummary <- function(R.2, dat) {
     total.dat <- as.data.frame(total.dat)
     total.dat$Percent <- round((total.dat[,2]/total.dat[,1])*100,2)
     write.table(total.dat, file="funcisnp_results/tables/summary.txt", sep="\t", row.names=T, col.names=T, quote=F)
+    return(total.dat);
 }
 
 FunciSNPPlot <- function(R.2, dat) {
