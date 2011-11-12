@@ -330,6 +330,7 @@ FunciSNPSummary <- function(R.2, dat) {
 }
 
 FunciSNPPlot <- function(R.2, dat) {
+require("ggplot2")
     cat("\n\nPlotting will begin")
     cat("using R square cut off of", R.2, "\n")
 
@@ -387,6 +388,8 @@ FunciSNPPlot <- function(R.2, dat) {
     cat("\n\nMaking plots is finished, see 'funcisnp_results/plots/' folder in ", getwd(), "\n\n")
 }
 FunciSNPHeatmap <- function(R.2, dat) {
+require("gplots")
+require('matlab')
     cat("Heatmap generation will begin")
     cat(" using R square cut off of ", R.2,"\n")
     all.s<-(table( subset(dat,R.squared>=R.2)[,"feature"], subset(dat,R.squared>=R.2)[,"snp.names.chosen"] ))
