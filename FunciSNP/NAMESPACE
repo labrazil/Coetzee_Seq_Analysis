@@ -1,0 +1,70 @@
+import(methods)
+import(plyr)
+import(Rsamtools)
+import(rtracklayer)
+import(GGtools)
+import(parallel)
+import(TxDb.Hsapiens.UCSC.hg19.knownGene)
+importFrom(ChIPpeakAnno, annotatePeakInBatch, addGeneIDs)
+importFrom(VariantAnnotation, locateVariants)
+
+exportMethods(
+    "AFR.D.prime<-", "AFR.D.prime",
+    "AFR.geno<-", "AFR.geno",
+    "AFR.overlapping.snps.geno<-", "AFR.overlapping.snps.geno",
+    "AFR.p.value<-", "AFR.p.value",
+    "AFR.R.squared<-", "AFR.R.squared",
+    "ALL.D.prime<-", "ALL.D.prime",
+    "ALL.geno<-", "ALL.geno",
+    "ALL.overlapping.snps.geno<-", "ALL.overlapping.snps.geno",
+    "ALL.p.value<-", "ALL.p.value",
+    "ALL.R.squared<-", "ALL.R.squared",
+    "alt.allele<-", "alt.allele",
+    "AMR.D.prime<-", "AMR.D.prime",
+    "AMR.geno<-", "AMR.geno",
+    "AMR.overlapping.snps.geno<-", "AMR.overlapping.snps.geno",
+    "AMR.p.value<-", "AMR.p.value",
+    "AMR.R.squared<-", "AMR.R.squared",
+    "ASN.D.prime<-", "ASN.D.prime",
+    "ASN.geno<-", "ASN.geno",
+    "ASN.overlapping.snps.geno<-",
+    "ASN.overlapping.snps.geno",
+    "ASN.p.value<-",
+    "ASN.p.value",
+    "ASN.R.squared<-",
+    "ASN.R.squared",
+    "chr<-",
+    "chr",
+    "correlated.snps<-",
+    "correlated.snps",
+    "D.prime.corrsnps<-",
+    "D.prime.corrsnps",
+    "EUR.D.prime<-",
+    "EUR.D.prime",
+    "EUR.geno<-",
+    "EUR.geno",
+    "EUR.overlapping.snps.geno<-",
+    "EUR.overlapping.snps.geno",
+    "EUR.p.value<-",
+    "EUR.p.value",
+    "EUR.R.squared<-",
+    "EUR.R.squared",
+    "genotype<-",
+    "genotype",
+    "overlapping.features<-",
+    "overlapping.features",
+    "population<-",
+    "population",
+    "position<-",
+    "position",
+    "ref.allele<-",
+    "ref.allele",
+    "R.squared.corrsnps<-",
+    "R.squared.corrsnps",
+    "snpid<-",
+    "snpid"
+)
+
+exportClasses(CorrelatedSNPs, TagSNP)
+
+export(FunciSNP, FunciSNPAnnotateSummary, FunciSNPplot, FunciSNPtable, FunciSNPsummaryOverlaps, FunciSNPidsFromSummary)

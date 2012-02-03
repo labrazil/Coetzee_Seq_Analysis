@@ -1,0 +1,16 @@
+Package: FunciSNP
+Type: Package
+Title: The Functional Integration of SNPs with Phenotype by Coincidence
+        with Chromatin Biofeatures
+Version: 0.1.4
+Date: 2012-02-02
+Author: Simon G. Coetzee (scoetzee@gmail.com) and Houtan Noushmehr (houtana@gmail.com)
+Maintainer: Simon G. Coetzee <scoetzee@gmail.com>
+Depends: R (>= 2.14.0), Rsamtools (>= 1.6.1), rtracklayer(>= 1.14.1),
+        GGtools (>= 4.0.0), methods, ChIPpeakAnno (>= 2.2.0), parallel,
+        GenomicRanges, TxDb.Hsapiens.UCSC.hg19.knownGene,
+        VariantAnnotation, plyr
+Suggests: gplots (>= 2.10.1), ggplot2 (>= 0.8.9), matlab (>= 0.8.9)
+Description: FunciSNP integrates information from GWAS, 1000genomes and chromatin feature to identify functional SNP in coding or non-coding regions. 
+License: GPL-3
+Packaged: 2012-02-03 10:29:59 UTC; houtan
