@@ -1253,7 +1253,7 @@ require(ggplot2)
               cexRow=1,
               cexCol=1,
               keysize=1,
-              dendrogram=c("col"),
+              dendrogram=c("none"),
               main = paste("Rsquare values >= ",rsq)
               #labCol=NULL
               )
