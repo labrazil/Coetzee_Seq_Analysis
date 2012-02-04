@@ -1242,7 +1242,7 @@ require(ggplot2)
               scale="none",
               #RowSideColor=probe.cc,
               #ColSideColors=cc.col,
-              col=jet.colors(max(all.s,na.rm=T)/2),
+              col=jet.colors(max(all.s,na.rm=T)),
               #col=redgreen(75),
               key=T,
               symkey=FALSE,
@@ -1252,7 +1252,7 @@ require(ggplot2)
               Colv=T,
               cexRow=1,
               cexCol=1,
-              keysize=1,
+              keysize=0.5,
               dendrogram=c("none"),
               main = paste("Rsquare values >= ",rsq)
               #labCol=NULL

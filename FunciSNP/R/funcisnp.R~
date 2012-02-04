@@ -1088,7 +1088,7 @@ FunciSNPtable <- function(dat, rsq, geneSum = FALSE) {
 
 FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE, 
                           tagSummary = FALSE, heatmap = FALSE, 
-                          genomicSum = FALSE) 
+                          genomicSum = FALSE, save = FALSE) 
 {
   if(sum(c(split,tagSummary,heatmap,genomicSum)) == 0){
      split = TRUE;
@@ -1233,15 +1233,16 @@ require(ggplot2)
     all.s<-(table( subset(dat,R.squared>=rsq)[,"bio.feature"], 
             subset(dat,R.squared>=rsq)[,"tag.snp.id"] ))
     all.s <- as.matrix(all.s)
-    png(filename=paste("FunciSNP.",package.version("FunciSNP"),
-        "/plots/FunciSNP_heatmap.png",sep=""), bg = "white", width=3000, height=3000)
+    if(save) png(filename=paste("FunciSNP.",package.version("FunciSNP"),
+        "/plots/FunciSNP_heatmap.png",sep=""), bg = "white", width=3000, 
+        height=3000)
     heatmap.2(
               all.s,
               na.rm=TRUE,
               scale="none",
               #RowSideColor=probe.cc,
               #ColSideColors=cc.col,
-              col=jet.colors(max(all.s,na.rm=T)/2),
+              col=jet.colors(max(all.s,na.rm=T)),
               #col=redgreen(75),
               key=T,
               symkey=FALSE,
@@ -1252,12 +1253,12 @@ require(ggplot2)
               cexRow=1,
               cexCol=1,
               keysize=1,
-              dendrogram=c("col"),
+              dendrogram=c("none"),
               main = paste("Rsquare values >= ",rsq)
               #labCol=NULL
               )
-    dev.off()
-    message("\nSee ",paste("FunciSNP.",package.version("FunciSNP"),
+    if(save) dev.off()
+    if(save) message("\nSee ",paste("FunciSNP.",package.version("FunciSNP"),
         "/plots/",sep=""), "folder in ", getwd()," for heatmap.\n\n")
 
   }
