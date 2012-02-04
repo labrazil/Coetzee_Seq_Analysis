@@ -1088,7 +1088,7 @@ FunciSNPtable <- function(dat, rsq, geneSum = FALSE) {
 
 FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE, 
                           tagSummary = FALSE, heatmap = FALSE, 
-                          genomicSum = FALSE, save = FALSE) 
+                          genomicSum = FALSE) 
 {
   if(sum(c(split,tagSummary,heatmap,genomicSum)) == 0){
      split = TRUE;
@@ -1233,9 +1233,8 @@ require(ggplot2)
     all.s<-(table( subset(dat,R.squared>=rsq)[,"bio.feature"], 
             subset(dat,R.squared>=rsq)[,"tag.snp.id"] ))
     all.s <- as.matrix(all.s)
-    if(save) png(filename=paste("FunciSNP.",package.version("FunciSNP"),
-        "/plots/FunciSNP_heatmap.png",sep=""), bg = "white", width=3000, 
-        height=3000)
+    png(filename=paste("FunciSNP.",package.version("FunciSNP"),
+        "/plots/FunciSNP_heatmap.png",sep=""), bg = "white", width=3000, height=3000)
     heatmap.2(
               all.s,
               na.rm=TRUE,
@@ -1257,8 +1256,8 @@ require(ggplot2)
               main = paste("Rsquare values >= ",rsq)
               #labCol=NULL
               )
-    if(save) dev.off()
-    if(save) message("\nSee ",paste("FunciSNP.",package.version("FunciSNP"),
+    dev.off()
+    message("\nSee ",paste("FunciSNP.",package.version("FunciSNP"),
         "/plots/",sep=""), "folder in ", getwd()," for heatmap.\n\n")
 
   }
