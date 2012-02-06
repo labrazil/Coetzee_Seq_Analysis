@@ -418,6 +418,11 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
     Sys.sleep(wait.time)
     snps.geno <- try(vcf2sm(kgeno, gr=param, nmetacol=9L), silent = TRUE)
     wait.time <- sample(primes, size=1)
+    if(primary.server == "ncbi") {
+      primary.server <- "ebi"
+    } else {
+      primary.server <- "ncbi"
+    }
     onek.genome.server <- ServerCheck(primary.server, verbose = FALSE)
     variants.reference <-
       paste(onek.genome.server,
