@@ -1,7 +1,0 @@
-##
-This folder contains the in house script to integrate riskSNP for a particular cancer to putative biological features. Reports correlated Rsquare values and haploview plots
-*    folder 'wip' is the current developing version (not ready to be tested).
-*    The current working script should be 'makeHaploview.sh'
-*    Do not change this file name since it is linked to Suhn's profile.
-*    folder Rscript contains the ad-hoc R script to read in results and output necessary information for end user.
-
