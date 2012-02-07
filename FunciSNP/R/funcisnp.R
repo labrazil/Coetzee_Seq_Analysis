@@ -1090,6 +1090,31 @@ FunciSNPtable <- function(dat, rsq, geneSum = FALSE) {
   }
 }
 
+FunciSNPbed <- function(dat, rsq) {
+    ###new function try out
+    d.s <- subset(dat, R.squared > rsq)
+    d.cor <- d.s[ which(!(duplicated(d.s[,"corr.snp.id"]))), ]
+    d.tag <- d.s[ which(!(duplicated(d.s[,"tag.snp.id"]))), ]
+    d.tag <- (d.tag[,c(1,8,8,7,10,8,8)])
+    d.cor <- (d.cor[,c(1,6,6,5,10,6,6)])
+    d.cor$chromosome <- paste("chr",d.cor$chromosome,sep="")
+    d.tag$chromosome <- paste("chr",d.tag$chromosome,sep="")
+    d.cor[,3] <- d.cor[,3]+1
+    d.tag[,3] <- d.tag[,3]+1
+    d.cor[,7] <- d.cor[,7]+1
+    d.tag[,7] <- d.tag[,7]+1
+    d.cor$strand <- "+"
+    d.tag$strand <- "+"
+    d.cor$color <- "255,0,0"
+    d.tag$color <- "0,0,0"
+    d.cor <- d.cor[,c(1:5,8,6:7,9)]
+    d.tag <- d.tag[,c(1:5,8,6:7,9)]
+    dimnames(d.cor)[[2]] <- c("chr", "snp.pos.s", "snp.pos.e", "snp.id", "rsq", "strand", "snp.pos.s", "snp.pos.e", "color")
+    dimnames(d.tag)[[2]] <- dimnames(d.cor)[[2]] 
+    y <- rbind(d.tag, d.cor); 
+    return(y)
+}
+
 
 FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE, 
                           tagSummary = FALSE, heatmap = FALSE, 
