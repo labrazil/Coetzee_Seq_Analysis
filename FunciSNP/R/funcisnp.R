@@ -1114,12 +1114,20 @@ FunciSNPbed <- function(dat, rsq, path=getwd(), filename="FunciSNP_results") {
     d.tag$color <- "0,0,0"
     d.cor <- d.cor[,c(1:5,8,6:7,9)]
     d.tag <- d.tag[,c(1:5,8,6:7,9)]
-    dimnames(d.cor)[[2]] <- c("chr", "snp.pos.s", "snp.pos.e", "snp.id", "rsq", "strand", "snp.pos.s", "snp.pos.e", "color")
+    dimnames(d.cor)[[2]] <- c("chr", "snp.pos.s", "snp.pos.e", "snp.id", "rsquare", "strand", "snp.pos.s", "snp.pos.e", "color")
     dimnames(d.tag)[[2]] <- dimnames(d.cor)[[2]] 
     y <- rbind(d.tag, d.cor); 
+    y$rsquare <- round(y$rsquare, digits=4)
     con <- file(paste(path,filename,sep="/"),open="wt")
-    writeLines(paste("track name=\"FunciSNP_results\" description=\"FunciSNP ver. ",package.version("FunciSNP")," Results\" itemRgb=\"On\"", sep=""), con)
+    writeLines(paste("browser position chr",d.s[1,1],":",
+    if(d.s[1,6]<d.s[1,8]){    
+    paste(d.s[1,6]-500,"-",d.s[1,8]+500,sep="")
+    }else{
+    paste(d.s[1,8]-500,"-",d.s[1,6]+500,sep="")
+    }
+    ,"\ntrack name=\"FunciSNP_results\" description=\"FunciSNP ver. ",package.version("FunciSNP")," Results\" itemRgb=\"On\"", sep=""), con)
     write.table(y, row.names=F, col.names=F, sep="\t", file=con, quote=F)
+    close(con)
     
 }
 
