@@ -1090,7 +1090,12 @@ FunciSNPtable <- function(dat, rsq, geneSum = FALSE) {
   }
 }
 
-FunciSNPbed <- function(dat, rsq) {
+FunciSNPbed <- function(dat, rsq, path=getwd(), filename="FunciSNP_results") {
+    if(filename=="FunciSNP_results"){
+    filename <- paste("FunciSNP_results_rsq.",rsq,".bed",sep="")
+    }else{
+    filename <- filename
+    }
     ###new function try out
     d.s <- subset(dat, R.squared > rsq)
     d.cor <- d.s[ which(!(duplicated(d.s[,"corr.snp.id"]))), ]
@@ -1112,7 +1117,10 @@ FunciSNPbed <- function(dat, rsq) {
     dimnames(d.cor)[[2]] <- c("chr", "snp.pos.s", "snp.pos.e", "snp.id", "rsq", "strand", "snp.pos.s", "snp.pos.e", "color")
     dimnames(d.tag)[[2]] <- dimnames(d.cor)[[2]] 
     y <- rbind(d.tag, d.cor); 
-    return(y)
+    con <- file(paste(path,filename,sep="/"),open="wt")
+    writeLines(paste("track name=\"FunciSNP_results\" description=\"FunciSNP ver. ",package.version("FunciSNP")," Results\" itemRgb=\"On\"", sep=""), con)
+    write.table(y, row.names=F, col.names=F, sep="\t", file=con, quote=F)
+    
 }
 
 
