@@ -3,7 +3,7 @@ Type: Package
 Title: The Functional Integration of SNPs with Phenotype by Coincidence
         with Chromatin Biofeatures
 Version: 0.1.6
-Date: 2012-02-05
+Date: 2012-02-07
 Author: Simon G. Coetzee (scoetzee@gmail.com) and Houtan Noushmehr (houtana@gmail.com)
 Maintainer: Simon G. Coetzee <scoetzee@gmail.com>
 Depends: R (>= 2.14.0), Rsamtools (>= 1.6.1), rtracklayer(>= 1.14.1),

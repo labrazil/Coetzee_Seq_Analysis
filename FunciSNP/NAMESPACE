@@ -67,4 +67,4 @@ exportMethods(
 
 exportClasses(CorrelatedSNPs, TagSNP)
 
-export(FunciSNP, FunciSNPAnnotateSummary, FunciSNPplot, FunciSNPtable, FunciSNPsummaryOverlaps, FunciSNPidsFromSummary)
+export(FunciSNP, FunciSNPAnnotateSummary, FunciSNPplot, FunciSNPbed, FunciSNPtable, FunciSNPsummaryOverlaps, FunciSNPidsFromSummary)
