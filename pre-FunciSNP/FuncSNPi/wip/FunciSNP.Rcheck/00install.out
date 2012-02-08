@@ -1,0 +1,14 @@
+* installing *source* package ‘FunciSNP’ ...
+** R
+** preparing package for lazy loading
+Warning in .simpleDuplicateClass(def, prev) :
+  A specification for class “corrsnps” in package ‘.GlobalEnv’ seems equivalent to one from package ‘FunciSNP’ and is not turning on duplicate class definitions for this class
+Warning in .simpleDuplicateClass(def, prev) :
+  A specification for class “tagsnp” in package ‘.GlobalEnv’ seems equivalent to one from package ‘FunciSNP’ and is not turning on duplicate class definitions for this class
+** help
+No man pages found in package  ‘FunciSNP’ 
+*** installing help indices
+** building package indices ...
+** testing if installed package can be loaded
+
+* DONE (FunciSNP)

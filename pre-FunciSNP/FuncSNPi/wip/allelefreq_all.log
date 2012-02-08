@@ -1,0 +1,17 @@
+
+VCFtools - v0.1.6
+(C) Adam Auton 2009
+
+Parameters as interpreted:
+	--freq
+	--out allelefreq_all
+	--vcf all_output.vcf
+
+Scanning all_output.vcf ... 
+Currently scanning CHROM: 8
+	Keeping 3 entries (out of 3 read)
+Done
+Kept 629 out of 629 Individuals
+Kept 3 out of 3 Sites
+Outputting Frequency Statistics...
+Run Time = 0.00 seconds
