@@ -357,7 +357,7 @@ setMethod("show",
 setMethod("show",
           signature=signature(object="TSList"),
           function(object){
-            cat("TagSNP List with ", length(object), " Tag SNPs and \n"
+            cat("TagSNP List with ", length(object), " Tag SNPs and \n",
                 length(unique(object@summary.data$corr.snp.id)), "nearby, ",
                 "potentially correlated SNPs, that overlap at least one biofeature \n")
               cat("Number of potentially correlated SNPs overlapping at least x",
