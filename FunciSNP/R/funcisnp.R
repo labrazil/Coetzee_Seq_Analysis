@@ -1127,6 +1127,7 @@ FunciSNPbed <- function(dat, rsq, path=getwd(), filename=NULL) {
 }
 
 
+<<<<<<< Updated upstream
 FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE, 
 		tagSummary = FALSE, heatmap = FALSE, 
 		genomicSum = FALSE, save = FALSE) 
