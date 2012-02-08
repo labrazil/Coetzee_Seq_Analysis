@@ -1125,9 +1125,10 @@ FunciSNPbed <- function(dat, rsq, path=getwd(), filename="FunciSNP_results") {
     }else{
     paste(d.s[1,8]-500,"-",d.s[1,6]+500,sep="")
     }
-    ,"\ntrack name=\"FunciSNP_results\" description=\"FunciSNP ver. ",package.version("FunciSNP")," Results\" itemRgb=\"On\"", sep=""), con)
+    ,"\ntrack name=\"FunciSNP_results\" description=\"FunciSNP ver. ",package.version("FunciSNP")," Results\" visibility=3 itemRgb=\"On\"", sep=""), con)
     write.table(y, row.names=F, col.names=F, sep="\t", file=con, quote=F)
     close(con)
+    message("Bed file '",filename,"' created successfully.\nSee folder: ",path,"\n\nTo view results, submit bed file as a custom track in UCSC Genome Browser (genome.ucsc.edu)");
     
 }
 
