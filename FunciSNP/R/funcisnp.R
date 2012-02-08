@@ -1091,7 +1091,7 @@ FunciSNPtable <- function(dat, rsq, geneSum = FALSE) {
 }
 
 FunciSNPbed <- function(dat, rsq, path=getwd(), filename=NULL) {
-	if(filename==NULL){
+	if(identical(filename,NULL)){
 		filename <- paste("FunciSNP_results_rsq.",rsq,".bed",sep="")
 	}else{
 		filename <- filename
