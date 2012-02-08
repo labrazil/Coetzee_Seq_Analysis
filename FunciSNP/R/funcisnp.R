@@ -1129,7 +1129,7 @@ FunciSNPbed <- function(dat, rsq, path=getwd(), filename=NULL) {
 		write.table(y, row.names=F, col.names=F, sep="\t", file=con, quote=F)
 		close(con)
 		message("####\nBed file \"",filename,"\" created successfully.\n(See folder: \"",path,"\")")
-        cat("Total corSNP: ", dim(d.cor)[1],"\nTotal tagSNP: ", dim(d.tag)[1],"\n")
+        cat("Total corSNP (RED): ", dim(d.cor)[1],"\nTotal tagSNP (BLK): ", dim(d.tag)[1],"\n")
         message("\nTo view results, submit bed file as a\n  custom track in UCSC Genome Browser (genome.ucsc.edu), \n\nNow have fun with your new Func-y SNP",if(dim(d.cor)[1]>1){"s"}else{""},"!!\n####");
 
 }
