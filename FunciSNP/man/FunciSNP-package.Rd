@@ -89,7 +89,7 @@ glioma.bio <- system.file('extdata',package='FunciSNP');
 #  correlated SNP and biological features and then 
 #  calculates LD (Rsquare, Dprime, distance, p-value).
 glioma <- FunciSNP(snp.regions.file=glioma.snp, 
-  bio.features.loc = glioma.bio);
+  bio.features.loc = glioma.bio, bio.features.TSS=FALSE);
 
 ##
 data(glioma);
