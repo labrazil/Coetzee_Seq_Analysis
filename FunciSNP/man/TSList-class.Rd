@@ -1,55 +1,55 @@
-\name{TSList-classplaceholder<<<<<}
-\Rdversion{1.1placeholder<<<<<}
-\docType{classplaceholder<<<<<}
-\alias{TSList-classplaceholder<<<<<}
-\alias{show,TSList-methodplaceholder<<<<<}
-\alias{summary,TSList-methodplaceholder<<<<<}
+\name{TSList-class}
+\Rdversion{1.1}
+\docType{class}
+\alias{TSList-class}
+\alias{show,TSList-method}
+\alias{summary,TSList-method}
 
-\title{Class \code{"TSList"placeholder<<<<<}placeholder<<<<<}
+\title{Class \code{"TSList"}}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the class is. ~~
-placeholder<<<<<}
-\section{Objects from the Classplaceholder<<<<<}{
-Objects can be created by calls of the form \code{new("TSList", ...)placeholder<<<<<}.
+ffff%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+}
+\section{Objects from the Class}{
+Objects can be created by calls of the form \code{new("TSList", ...)}.
 %%  ~~ describe objects here ~~ 
-placeholder<<<<<}
-\section{Slotsplaceholder<<<<<}{
+}
+\section{Slots}{
   \describe{
-    \item{\code{snp.dataplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"list"placeholder<<<<<} ~~ placeholder<<<<<}
-    \item{\code{summary.dataplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"data.frame"placeholder<<<<<} ~~ placeholder<<<<<}
-    \item{\code{elementTypeplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"character"placeholder<<<<<} ~~ placeholder<<<<<}
-    \item{\code{elementMetadataplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"DataTableORNULL"placeholder<<<<<} ~~ placeholder<<<<<}
-    \item{\code{metadataplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"list"placeholder<<<<<} ~~ placeholder<<<<<}
-  placeholder<<<<<}
-placeholder<<<<<}
-\section{Extendsplaceholder<<<<<}{
-Class \code{"\linkS4class{Listplaceholder<<<<<}"placeholder<<<<<}, directly.
-Class \code{"\linkS4class{Vectorplaceholder<<<<<}"placeholder<<<<<}, by class "List", distance 2.
-Class \code{"\linkS4class{Annotatedplaceholder<<<<<}"placeholder<<<<<}, by class "List", distance 3.
-placeholder<<<<<}
-\section{Methodsplaceholder<<<<<}{
+    \item{\code{snp.data}:}{Object of class \code{"list"} ~~ }
+    \item{\code{summary.data}:}{Object of class \code{"data.frame"} ~~ }
+    \item{\code{elementType}:}{Object of class \code{"character"} ~~ }
+    \item{\code{elementMetadata}:}{Object of class \code{"DataTableORNULL"} ~~ }
+    \item{\code{metadata}:}{Object of class \code{"list"} ~~ }
+  }
+}
+\section{Extends}{
+Class \code{"\linkS4class{List}"}, directly.
+Class \code{"\linkS4class{Vector}"}, by class "List", distance 2.
+Class \code{"\linkS4class{Annotated}"}, by class "List", distance 3.
+}
+\section{Methods}{
   \describe{
-    \item{showplaceholder<<<<<}{\code{signature(object = "TSList")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{summaryplaceholder<<<<<}{\code{signature(object = "TSList")placeholder<<<<<}: ... placeholder<<<<<}
-	 placeholder<<<<<}
-placeholder<<<<<}
+    \item{show}{\code{signature(object = "TSList")}: ... }
+    \item{summary}{\code{signature(object = "TSList")}: ... }
+	 }
+}
 \references{
 %%  ~~put references to the literature/web site here~~
-placeholder<<<<<}
+}
 \author{
 %%  ~~who you are~~
-placeholder<<<<<}
+}
 \note{
 %%  ~~further notes~~
-placeholder<<<<<}
+}
 
-%% ~Make other sections like Warning with \section{Warning placeholder<<<<<}{....placeholder<<<<<} ~
+%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~placeholder<<<<<}placeholder<<<<<}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAMEplaceholder<<<<<}placeholder<<<<<} for links to other classes ~~~
-placeholder<<<<<}
+%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
+%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+}
 \examples{
 showClass("TSList")
-placeholder<<<<<}
-\keyword{classesplaceholder<<<<<}
+}
+\keyword{classes}

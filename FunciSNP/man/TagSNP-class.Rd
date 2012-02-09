@@ -1,108 +1,108 @@
-\name{TagSNP-classplaceholder<<<<<}
-\Rdversion{1.1placeholder<<<<<}
-\docType{classplaceholder<<<<<}
-\alias{TagSNP-classplaceholder<<<<<}
-\alias{AFR.overlapping.snps.geno,TagSNP-methodplaceholder<<<<<}
-\alias{ALL.overlapping.snps.geno,TagSNP-methodplaceholder<<<<<}
-\alias{alt.allele<-,TagSNP-methodplaceholder<<<<<}
-\alias{alt.allele,TagSNP-methodplaceholder<<<<<}
-\alias{AMR.overlapping.snps.geno,TagSNP-methodplaceholder<<<<<}
-\alias{ASN.overlapping.snps.geno,TagSNP-methodplaceholder<<<<<}
-\alias{chr<-,TagSNP-methodplaceholder<<<<<}
-\alias{chr,TagSNP-methodplaceholder<<<<<}
-\alias{correlated.snps<-,TagSNP-methodplaceholder<<<<<}
-\alias{correlated.snps,TagSNP-methodplaceholder<<<<<}
-\alias{D.prime.corrsnps<-,TagSNP-methodplaceholder<<<<<}
-\alias{D.prime.corrsnps,TagSNP-methodplaceholder<<<<<}
-\alias{EUR.overlapping.snps.geno,TagSNP-methodplaceholder<<<<<}
-\alias{genotype<-,TagSNP-methodplaceholder<<<<<}
-\alias{genotype,TagSNP-methodplaceholder<<<<<}
-\alias{overlapping.features<-,TagSNP-methodplaceholder<<<<<}
-\alias{overlapping.features,TagSNP-methodplaceholder<<<<<}
-\alias{population<-,TagSNP-methodplaceholder<<<<<}
-\alias{population,TagSNP-methodplaceholder<<<<<}
-\alias{position<-,TagSNP-methodplaceholder<<<<<}
-\alias{position,TagSNP-methodplaceholder<<<<<}
-\alias{ref.allele<-,TagSNP-methodplaceholder<<<<<}
-\alias{ref.allele,TagSNP-methodplaceholder<<<<<}
-\alias{R.squared.corrsnps<-,TagSNP-methodplaceholder<<<<<}
-\alias{R.squared.corrsnps,TagSNP-methodplaceholder<<<<<}
-\alias{show,TagSNP-methodplaceholder<<<<<}
-\alias{snpid<-,TagSNP-methodplaceholder<<<<<}
-\alias{snpid,TagSNP-methodplaceholder<<<<<}
+\name{TagSNP-class}
+\Rdversion{1.1}
+\docType{class}
+\alias{TagSNP-class}
+\alias{AFR.overlapping.snps.geno,TagSNP-method}
+\alias{ALL.overlapping.snps.geno,TagSNP-method}
+\alias{alt.allele<-,TagSNP-method}
+\alias{alt.allele,TagSNP-method}
+\alias{AMR.overlapping.snps.geno,TagSNP-method}
+\alias{ASN.overlapping.snps.geno,TagSNP-method}
+\alias{chr<-,TagSNP-method}
+\alias{chr,TagSNP-method}
+\alias{correlated.snps<-,TagSNP-method}
+\alias{correlated.snps,TagSNP-method}
+\alias{D.prime.corrsnps<-,TagSNP-method}
+\alias{D.prime.corrsnps,TagSNP-method}
+\alias{EUR.overlapping.snps.geno,TagSNP-method}
+\alias{genotype<-,TagSNP-method}
+\alias{genotype,TagSNP-method}
+\alias{overlapping.features<-,TagSNP-method}
+\alias{overlapping.features,TagSNP-method}
+\alias{population<-,TagSNP-method}
+\alias{population,TagSNP-method}
+\alias{position<-,TagSNP-method}
+\alias{position,TagSNP-method}
+\alias{ref.allele<-,TagSNP-method}
+\alias{ref.allele,TagSNP-method}
+\alias{R.squared.corrsnps<-,TagSNP-method}
+\alias{R.squared.corrsnps,TagSNP-method}
+\alias{show,TagSNP-method}
+\alias{snpid<-,TagSNP-method}
+\alias{snpid,TagSNP-method}
 
-\title{Class \code{"TagSNP"placeholder<<<<<}placeholder<<<<<}
+\title{Class \code{"TagSNP"}}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the class is. ~~
-placeholder<<<<<}
-\section{Objects from the Classplaceholder<<<<<}{
-Objects can be created by calls of the form \code{new("TagSNP", ...)placeholder<<<<<}.
+hello%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+}
+\section{Objects from the Class}{
+Objects can be created by calls of the form \code{new("TagSNP", ...)}.
 %%  ~~ describe objects here ~~ 
-placeholder<<<<<}
-\section{Slotsplaceholder<<<<<}{
+}
+\section{Slots}{
   \describe{
-    \item{\code{chromosomeplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"integer"placeholder<<<<<} ~~ placeholder<<<<<}
-    \item{\code{positionplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"integer"placeholder<<<<<} ~~ placeholder<<<<<}
-    \item{\code{snpidplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"character"placeholder<<<<<} ~~ placeholder<<<<<}
-    \item{\code{populationplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"character"placeholder<<<<<} ~~ placeholder<<<<<}
-    \item{\code{ref.alleleplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"character"placeholder<<<<<} ~~ placeholder<<<<<}
-    \item{\code{alt.alleleplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"character"placeholder<<<<<} ~~ placeholder<<<<<}
-    \item{\code{overlapping.featuresplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"GRanges"placeholder<<<<<} ~~ placeholder<<<<<}
-    \item{\code{genotypeplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"SnpMatrix"placeholder<<<<<} ~~ placeholder<<<<<}
-    \item{\code{R.squared.corrsnpsplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"dgCMatrix"placeholder<<<<<} ~~ placeholder<<<<<}
-    \item{\code{D.prime.corrsnpsplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"dgCMatrix"placeholder<<<<<} ~~ placeholder<<<<<}
-    \item{\code{correlated.snpsplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"CorrelatedSNPs"placeholder<<<<<} ~~ placeholder<<<<<}
-  placeholder<<<<<}
-placeholder<<<<<}
-\section{Methodsplaceholder<<<<<}{
+    \item{\code{chromosome}:}{Object of class \code{"integer"} ~~ }
+    \item{\code{position}:}{Object of class \code{"integer"} ~~ }
+    \item{\code{snpid}:}{Object of class \code{"character"} ~~ }
+    \item{\code{population}:}{Object of class \code{"character"} ~~ }
+    \item{\code{ref.allele}:}{Object of class \code{"character"} ~~ }
+    \item{\code{alt.allele}:}{Object of class \code{"character"} ~~ }
+    \item{\code{overlapping.features}:}{Object of class \code{"GRanges"} ~~ }
+    \item{\code{genotype}:}{Object of class \code{"SnpMatrix"} ~~ }
+    \item{\code{R.squared.corrsnps}:}{Object of class \code{"dgCMatrix"} ~~ }
+    \item{\code{D.prime.corrsnps}:}{Object of class \code{"dgCMatrix"} ~~ }
+    \item{\code{correlated.snps}:}{Object of class \code{"CorrelatedSNPs"} ~~ }
+  }
+}
+\section{Methods}{
   \describe{
-    \item{AFR.overlapping.snps.genoplaceholder<<<<<}{\code{signature(object = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{ALL.overlapping.snps.genoplaceholder<<<<<}{\code{signature(object = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{alt.allele<-placeholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{alt.alleleplaceholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{AMR.overlapping.snps.genoplaceholder<<<<<}{\code{signature(object = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{ASN.overlapping.snps.genoplaceholder<<<<<}{\code{signature(object = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{chr<-placeholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{chrplaceholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{correlated.snps<-placeholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{correlated.snpsplaceholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{D.prime.corrsnps<-placeholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{D.prime.corrsnpsplaceholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{EUR.overlapping.snps.genoplaceholder<<<<<}{\code{signature(object = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{genotype<-placeholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{genotypeplaceholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{overlapping.features<-placeholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{overlapping.featuresplaceholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{population<-placeholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{populationplaceholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{position<-placeholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{positionplaceholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{ref.allele<-placeholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{ref.alleleplaceholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{R.squared.corrsnps<-placeholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{R.squared.corrsnpsplaceholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{showplaceholder<<<<<}{\code{signature(object = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{snpid<-placeholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-    \item{snpidplaceholder<<<<<}{\code{signature(x = "TagSNP")placeholder<<<<<}: ... placeholder<<<<<}
-	 placeholder<<<<<}
-placeholder<<<<<}
+    \item{AFR.overlapping.snps.geno}{\code{signature(object = "TagSNP")}: ... }
+    \item{ALL.overlapping.snps.geno}{\code{signature(object = "TagSNP")}: ... }
+    \item{alt.allele<-}{\code{signature(x = "TagSNP")}: ... }
+    \item{alt.allele}{\code{signature(x = "TagSNP")}: ... }
+    \item{AMR.overlapping.snps.geno}{\code{signature(object = "TagSNP")}: ... }
+    \item{ASN.overlapping.snps.geno}{\code{signature(object = "TagSNP")}: ... }
+    \item{chr<-}{\code{signature(x = "TagSNP")}: ... }
+    \item{chr}{\code{signature(x = "TagSNP")}: ... }
+    \item{correlated.snps<-}{\code{signature(x = "TagSNP")}: ... }
+    \item{correlated.snps}{\code{signature(x = "TagSNP")}: ... }
+    \item{D.prime.corrsnps<-}{\code{signature(x = "TagSNP")}: ... }
+    \item{D.prime.corrsnps}{\code{signature(x = "TagSNP")}: ... }
+    \item{EUR.overlapping.snps.geno}{\code{signature(object = "TagSNP")}: ... }
+    \item{genotype<-}{\code{signature(x = "TagSNP")}: ... }
+    \item{genotype}{\code{signature(x = "TagSNP")}: ... }
+    \item{overlapping.features<-}{\code{signature(x = "TagSNP")}: ... }
+    \item{overlapping.features}{\code{signature(x = "TagSNP")}: ... }
+    \item{population<-}{\code{signature(x = "TagSNP")}: ... }
+    \item{population}{\code{signature(x = "TagSNP")}: ... }
+    \item{position<-}{\code{signature(x = "TagSNP")}: ... }
+    \item{position}{\code{signature(x = "TagSNP")}: ... }
+    \item{ref.allele<-}{\code{signature(x = "TagSNP")}: ... }
+    \item{ref.allele}{\code{signature(x = "TagSNP")}: ... }
+    \item{R.squared.corrsnps<-}{\code{signature(x = "TagSNP")}: ... }
+    \item{R.squared.corrsnps}{\code{signature(x = "TagSNP")}: ... }
+    \item{show}{\code{signature(object = "TagSNP")}: ... }
+    \item{snpid<-}{\code{signature(x = "TagSNP")}: ... }
+    \item{snpid}{\code{signature(x = "TagSNP")}: ... }
+	 }
+}
 \references{
 %%  ~~put references to the literature/web site here~~
-placeholder<<<<<}
+}
 \author{
 %%  ~~who you are~~
-placeholder<<<<<}
+}
 \note{
 %%  ~~further notes~~
-placeholder<<<<<}
+}
 
-%% ~Make other sections like Warning with \section{Warning placeholder<<<<<}{....placeholder<<<<<} ~
+%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~placeholder<<<<<}placeholder<<<<<}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAMEplaceholder<<<<<}placeholder<<<<<} for links to other classes ~~~
-placeholder<<<<<}
+%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
+%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+}
 \examples{
 showClass("TagSNP")
-placeholder<<<<<}
-\keyword{classesplaceholder<<<<<}
+}
+\keyword{classes}

@@ -1,7 +1,7 @@
-\name{CorrGeno-classplaceholder<<<<<}
-\Rdversion{1.1placeholder<<<<<}
-\docType{classplaceholder<<<<<}
-\alias{CorrGeno-classplaceholder<<<<<}
+\name{CorrGeno-class}
+\Rdversion{1.1}
+\docType{class}
+\alias{CorrGeno-class}
 
 \title{Class \code{"CorrGeno"placeholder<<<<<}placeholder<<<<<}
 \description{

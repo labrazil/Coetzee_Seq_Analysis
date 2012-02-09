@@ -1158,8 +1158,8 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
 		split = TRUE;
 	}
 	require(ggplot2)
-		if(split){
-			if(splitbysnp == TRUE){
+	if(split){
+		if(splitbysnp){
 				FunciSNP:::theme_white()
 					ggplot(dat, aes(x = R.squared)) + geom_histogram(binwidth = 0.05) + 
 					geom_vline(xintercept = 0.5, linetype = 2) + 
@@ -1216,7 +1216,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
 					text(0.85, ht*.95, as.character(k[10]))
 					text(0.95, ht*.95, as.character(k[11]))
 			}
-		}
+	}
 	if(tagSummary){
 ## directory used to store plots
 		try(dir.create(path=paste("FunciSNP.",package.version("FunciSNP"),"/plots",
