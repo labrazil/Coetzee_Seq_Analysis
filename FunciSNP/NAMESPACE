@@ -1,13 +1,14 @@
 import(methods)
 import(parallel)
-importFrom(plyr, ldply, adply, count)
-importFrom(Rsamtools, TabixFile, indexTabix, headerTabix, scanTabix)
-importFrom(rtracklayer, import)
+importFrom(plyr)
+import(Rsamtools)
+import(rtracklayer)
 importFrom(snpStats, ld)
-importFrom(GGtools, vcf2sm)
+import(GGtools)
 import(TxDb.Hsapiens.UCSC.hg19.knownGene)
-importFrom(ChIPpeakAnno, annotatePeakInBatch, addGeneIDs)
+import(ChIPpeakAnno)
 importFrom(VariantAnnotation, locateVariants)
+import(org.Hs.eg.db)
 
 exportMethods(
     "AFR.D.prime<-", "AFR.D.prime",

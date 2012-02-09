@@ -889,6 +889,7 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
     data(lincRNA.hg19)
 
     ##nearest linc RNAs
+    cat("Func-y-SNPs identified!!\nAnnotation will begin\n~~\n")
     cat("Adding lincRNA")
     nearest.RNA <-
       annotatePeakInBatch(myPeakList = rd.corr.snp.loc,
@@ -912,9 +913,10 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
     cat(" ... done\n")
     ##nearest TSS (conanical gene)
     cat("Adding gene annotations\n\n")
+    require("org.Hs.eg.db")
     nearest.TSS <- annotatePeakInBatch(myPeakList = rd.corr.snp.loc,
                                        AnnotationData = TSS.human.GRCh37,
-                                       output="nearestStart")
+                                       output="nearestStart")                                       
     nearest.TSS <- addGeneIDs(nearest.TSS,
                               "org.Hs.eg.db",
                               IDs2Add = c("symbol", "refseq"),
