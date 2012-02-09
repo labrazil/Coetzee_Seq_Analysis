@@ -1,6 +1,6 @@
 import(methods)
 import(parallel)
-importFrom(plyr, adply)
+importFrom(plyr, ldply, adply, count)
 importFrom(Rsamtools, TabixFile, indexTabix, headerTabix, scanTabix)
 importFrom(rtracklayer, import)
 importFrom(snpStats, ld)
