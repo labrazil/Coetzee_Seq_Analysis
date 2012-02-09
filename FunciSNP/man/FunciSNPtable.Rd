@@ -1,94 +1,55 @@
-\name{FunciSNPtableplaceholder<<<<<}
-\alias{FunciSNPtableplaceholder<<<<<}
-%- Also NEED an '\alias' for EACH other topic documented here.
+\name{FunciSNPtable}
+\alias{FunciSNPtable}
+
 \title{
-%%  ~~function to do ... ~~
-placeholder<<<<<}
+Will output a summary report from FunciSNP at specified Rsquare cut-offs.
+}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
-placeholder<<<<<}
+Using a specified Rsquare value (0-1) to subset the data, a table is generated which summarizes the total number of Func-y-SNPs, associated tagSNPs, and number of overlapping biofeatures.
+}
 \usage{
 FunciSNPtable(dat, rsq, geneSum = FALSE)
-placeholder<<<<<}
-%- maybe also 'usage' for other objects documented here.
-\arguments{
-  \item{datplaceholder<<<<<}{
-%%     ~~Describe \code{datplaceholder<<<<<} here~~
-placeholder<<<<<}
-  \item{rsqplaceholder<<<<<}{
-%%     ~~Describe \code{rsqplaceholder<<<<<} here~~
-placeholder<<<<<}
-  \item{geneSumplaceholder<<<<<}{
-%%     ~~Describe \code{geneSumplaceholder<<<<<} here~~
-placeholder<<<<<}
-placeholder<<<<<}
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-placeholder<<<<<}
-\value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 placeholder<<<<<}{Description of 'comp1'placeholder<<<<<}
-%%  \item{comp2 placeholder<<<<<}{Description of 'comp2'placeholder<<<<<}
-%% ...
-placeholder<<<<<}
-\references{
-%% ~put references to the literature/web site here ~
-placeholder<<<<<}
-\author{
-%%  ~~who you are~~
-placeholder<<<<<}
-\note{
-%%  ~~further notes~~
-placeholder<<<<<}
+}
 
-%% ~Make other sections like Warning with \section{Warning placeholder<<<<<}{....placeholder<<<<<} ~
+\arguments{
+  \item{dat}{
+            FunciSNP data.frame: \code{dat} is a data.frame object from FunciSNPAnnotateSummary. Need to run \code{\link{FunciSNPAnnotateSummary}} first.
+}
+  \item{rsq}{
+            an interger (0-1): \code{rsq} is the Rsquared cutoff used to subset.
+}
+  \item{geneSum}{
+            logical: \code{geneSum} is set to FALSE. Setting to TRUE will output a list of Gene names which are nearest to the Func-y-SNP.
+}
+}
+\details{
+Using a specified Rsquare value (0-1) to subset the data, a table is generated which summarizes the total number of Func-y-SNPs, associated tagSNPs, and number of overlapping biofeatures. This will provide user a first look at the total number of available Func-y-SNP at a particular Rsquare cutoff.  If geneSum is set to TRUE, a list of gene names is reported instead.
+}
+\value{
+Standard output which summarizes FunciSNP results.
+}
+\references{
+	Coetzee SG et al. submitted for review. 2012
+}
+\author{
+	Simon Coetzee, Houtan Noushmehr
+}
+\note{
+
+}
+
+
 
 \seealso{
-%% ~~objects to See Also as \code{\link{helpplaceholder<<<<<}placeholder<<<<<}, ~~~
-placeholder<<<<<}
+	\code{\link{FunciSNP}}, \code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
+}
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (dat, rsq, geneSum = FALSE) 
-{
-    if (!geneSum) {
-        total.tagSNPs <- length(unique(dat[, "tag.snp.id"]))
-        total.1kSNPs <- length(unique(dat[, "corr.snp.id"]))
-        total.feature <- length(unique(subset(dat, R.squared > 
-            rsq)[, "bio.feature"]))
-        total.tagSNPs.cutoff <- length(unique(subset(dat, R.squared > 
-            rsq)[, "tag.snp.id"]))
-        total.1kSNPs.cutoff <- length(unique(subset(dat, R.squared > 
-            rsq)[, "corr.snp.id"]))
-        total.feature.cutoff <- length(unique(subset(dat, R.squared > 
-            rsq)[, "bio.feature"]))
-        total.summary.snp.list <- matrix(c(total.tagSNPs, total.1kSNPs, 
-            total.feature, total.tagSNPs.cutoff, total.1kSNPs.cutoff, 
-            total.feature.cutoff), nrow = 3, ncol = 2, byrow = FALSE, 
-            dimnames = list(c("tagSNPs", "1kSNPs", "bio.features"), 
-                c("Total", paste("R.squared.cuff.", rsq, sep = ""))))
-        total.summary.snp.list <- as.data.frame(total.summary.snp.list)
-        total.summary.snp.list$Percent <- round((total.summary.snp.list[, 
-            2]/total.summary.snp.list[, 1]) * 100, 2)
-        return(total.summary.snp.list)
-    placeholder<<<<<}
-    else {
-        dat.s <- subset(dat, R.squared > rsq)
-        y <- colSums(table(dat.s$corr.snp.id, dat.s$nearest.TSS.GeneSymbol))
-        y[y == 0] <- NA
-        y <- na.omit(y)
-        y <- as.matrix(names(y))
-        y <- as.data.frame(y)
-        dimnames(y)[[2]] <- "Gene_Names"
-        return(y)
-    placeholder<<<<<}
-  placeholder<<<<<}
-placeholder<<<<<}
+data(glioma);
+gl <- FunciSNPAnnotateSummary(glioma);
+FunciSNPtable(gl, rsq=0.5);
+FunciSNPtable(gl, rsq=0.5, geneSum=T);
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 placeholder<<<<<}
-\keyword{ ~kwd2 placeholder<<<<<}% __ONLY ONE__ keyword per line
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

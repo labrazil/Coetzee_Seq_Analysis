@@ -1,58 +1,50 @@
-\name{FunciSNPAnnotateSummaryplaceholder<<<<<}
-\alias{FunciSNPAnnotateSummaryplaceholder<<<<<}
-%- Also NEED an '\alias' for EACH other topic documented here.
+\name{FunciSNPAnnotateSummary}
+\alias{FunciSNPAnnotateSummary}
+
 \title{
-%%  ~~function to do ... ~~
-placeholder<<<<<}
+Genomic Annotation of Func-y-SNPs.
+}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
-placeholder<<<<<}
+This will annotate all identified Func-y-SNP for it's distance to the nearest known TSS, whether it overlapps a known exon, intron, 5'UTR, 3'UTR, promoter, lincRNA or in gene desert (intergentic) regions.
+}
 \usage{
 FunciSNPAnnotateSummary(snp.list)
-placeholder<<<<<}
-%- maybe also 'usage' for other objects documented here.
-\arguments{
-  \item{snp.listplaceholder<<<<<}{
-%%     ~~Describe \code{snp.listplaceholder<<<<<} here~~
-placeholder<<<<<}
-placeholder<<<<<}
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-placeholder<<<<<}
-\value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 placeholder<<<<<}{Description of 'comp1'placeholder<<<<<}
-%%  \item{comp2 placeholder<<<<<}{Description of 'comp2'placeholder<<<<<}
-%% ...
-placeholder<<<<<}
-\references{
-%% ~put references to the literature/web site here ~
-placeholder<<<<<}
-\author{
-%%  ~~who you are~~
-placeholder<<<<<}
-\note{
-%%  ~~further notes~~
-placeholder<<<<<}
+}
 
-%% ~Make other sections like Warning with \section{Warning placeholder<<<<<}{....placeholder<<<<<} ~
+\arguments{
+  \item{snp.list}{
+          a FunciSNP object: \code{snp.list} represents the FunciSNP object output from FunciSNP. See \code{\link{FunciSNP}}.
+}
+}
+\details{
+All known genomic features (exon, intron, 5'UTR, 3'UTR, promoter, lincRNA or in gene desert (intergentic)) are used to annotate the newly identified Func-y-SNP. Information described in this data.frame is used for all summary plots, table, and bed file generations.
+}
+\value{
+data.frame with rows for each correlated SNP.
+}
+\references{
+	Coetzee SG et al. submitted for review. 2012
+}
+\author{
+	Simon Coetzee, Houtan Noushmehr
+}
+\note{
+
+}
+
+
 
 \seealso{
-%% ~~objects to See Also as \code{\link{helpplaceholder<<<<<}placeholder<<<<<}, ~~~
-placeholder<<<<<}
+	\code{\link{FunciSNP}}, \code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
+}
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (snp.list) 
-{
-    return(snp.list@summary.data)
-  placeholder<<<<<}
-placeholder<<<<<}
+data(glioma);
+gl <- FunciSNPAnnotateSummary(glioma);
+dim(gl)
+head(gl)
+names(gl)
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 placeholder<<<<<}
-\keyword{ ~kwd2 placeholder<<<<<}% __ONLY ONE__ keyword per line
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

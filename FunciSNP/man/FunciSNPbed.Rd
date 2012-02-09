@@ -1,121 +1,73 @@
-\name{FunciSNPbedplaceholder<<<<<}
-\alias{FunciSNPbedplaceholder<<<<<}
-%- Also NEED an '\alias' for EACH other topic documented here.
+\name{FunciSNPbed}
+\alias{FunciSNPbed}
+
 \title{
-%%  ~~function to do ... ~~
-placeholder<<<<<}
+Creates a BED file to view Func-y-SNPs in your favorite genome browser
+}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
-placeholder<<<<<}
+FunciSNPbed will output a BED file to a specified folder. The BED file is in standard UCSC Genome Browser format (\url{http://genome.ucsc.edu/FAQ/FAQformat}). Each tagSNP is colored black and each Func-y-SNP is colored red.
+
+}
 \usage{
 FunciSNPbed(dat, rsq, path = getwd(), filename = NULL)
-placeholder<<<<<}
-%- maybe also 'usage' for other objects documented here.
-\arguments{
-  \item{datplaceholder<<<<<}{
-%%     ~~Describe \code{datplaceholder<<<<<} here~~
-placeholder<<<<<}
-  \item{rsqplaceholder<<<<<}{
-%%     ~~Describe \code{rsqplaceholder<<<<<} here~~
-placeholder<<<<<}
-  \item{pathplaceholder<<<<<}{
-%%     ~~Describe \code{pathplaceholder<<<<<} here~~
-placeholder<<<<<}
-  \item{filenameplaceholder<<<<<}{
-%%     ~~Describe \code{filenameplaceholder<<<<<} here~~
-placeholder<<<<<}
-placeholder<<<<<}
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-placeholder<<<<<}
-\value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 placeholder<<<<<}{Description of 'comp1'placeholder<<<<<}
-%%  \item{comp2 placeholder<<<<<}{Description of 'comp2'placeholder<<<<<}
-%% ...
-placeholder<<<<<}
-\references{
-%% ~put references to the literature/web site here ~
-placeholder<<<<<}
-\author{
-%%  ~~who you are~~
-placeholder<<<<<}
-\note{
-%%  ~~further notes~~
-placeholder<<<<<}
+}
 
-%% ~Make other sections like Warning with \section{Warning placeholder<<<<<}{....placeholder<<<<<} ~
+\arguments{
+  \item{dat}{
+             FunciSNP data.frame: \code{dat} is a data.frame object from FunciSNPAnnotateSummary. Need to run \code{\link{FunciSNPAnnotateSummary}} first.
+}
+  \item{rsq}{
+            an interger (0-1): \code{rsq} is the Rsquared cutoff used to subset.
+}
+  \item{path}{
+           a character: \code{path} is the path to the folder where to output the BED file. Default to getwd() or current working directory.
+}
+  \item{filename}{
+           a character: \code{filename} is the name of the BED file. If NULL, filename is 'FunciSNP_results_rsq.RSQ value.bed'
+}
+}
+\details{
+FunciSNPbed outputs a unique BED file which can be used to view in any genomic browser compatible with BED formats. To learn more about BED formats, see UCSC Genome Browser FAQ (\url{http://genome.ucsc.edu/FAQ/FAQformat}). Each tagSNP which is in LD to a corresponding Func-y-SNP overlapping at least one biofeature is colored black, while the Func-y-SNP is colored red. The initial position is provided by the first tagSNP and the first linked Func-y-SNP. We recommend using UCSC genome browser to view your BED files. This is useful so you can view all public and private tracks in relation to FunciSNP results.
+}
+\value{
+BED file is outputed as a tab-deliminated file in the specified 'path' folder. See example below.
+}
+\references{
+	Coetzee SG et al. submitted for review. 2012
+}
+\author{
+	Simon Coetzee, Houtan Noushmehr
+}
+\note{
+
+}
+
+
 
 \seealso{
-%% ~~objects to See Also as \code{\link{helpplaceholder<<<<<}placeholder<<<<<}, ~~~
-placeholder<<<<<}
+	\code{\link{FunciSNP}}, \code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
+}
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+##
+data(glioma);
+glioma.anno <- FunciSNPAnnotateSummary(glioma);
+FunciSNPbed(glioma.anno, rsq=0.9);
+####
+#Bed file "FunciSNP_results_rsq.0.9.bed" created successfully.
+#(See folder: "/home/houtan/Downloads/")
+#Total corSNP (RED):  15 
+#Total tagSNP (BLK):  1 
 
-## The function is currently defined as
-function (dat, rsq, path = getwd(), filename = NULL) 
-{
-    if (identical(filename, NULL)) {
-        filename <- paste("FunciSNP_results_rsq.", rsq, ".bed", 
-            sep = "")
-    placeholder<<<<<}
-    else {
-        filename <- filename
-    placeholder<<<<<}
-    d.s <- subset(dat, R.squared > rsq)
-    d.cor <- d.s[which(!(duplicated(d.s[, "corr.snp.id"]))), 
-        ]
-    d.tag <- d.s[which(!(duplicated(d.s[, "tag.snp.id"]))), ]
-    d.tag <- (d.tag[, c(1, 8, 8, 7, 10, 8, 8)])
-    d.cor <- (d.cor[, c(1, 6, 6, 5, 10, 6, 6)])
-    d.cor$chromosome <- paste("chr", d.cor$chromosome, sep = "")
-    d.tag$chromosome <- paste("chr", d.tag$chromosome, sep = "")
-    d.cor[, 3] <- d.cor[, 3] + 1
-    d.tag[, 3] <- d.tag[, 3] + 1
-    d.cor[, 7] <- d.cor[, 7] + 1
-    d.tag[, 7] <- d.tag[, 7] + 1
-    d.cor$strand <- "+"
-    d.tag$strand <- "+"
-    d.cor$color <- "255,0,0"
-    d.tag$color <- "0,0,0"
-    d.cor <- d.cor[, c(1:5, 8, 6:7, 9)]
-    d.tag <- d.tag[, c(1:5, 8, 6:7, 9)]
-    dimnames(d.cor)[[2]] <- c("chr", "snp.pos.s", "snp.pos.e", 
-        "snp.id", "rsquare", "strand", "snp.pos.s", "snp.pos.e", 
-        "color")
-    dimnames(d.tag)[[2]] <- dimnames(d.cor)[[2]]
-    y <- rbind(d.tag, d.cor)
-    y$rsquare <- round(y$rsquare, digits = 4)
-    con <- file(paste(path, filename, sep = "/"), open = "wt")
-    writeLines(paste("browser position chr", d.s[1, 1], ":", 
-        if (d.s[1, 6] < d.s[1, 8]) {
-            paste(d.s[1, 6] - 500, "-", d.s[1, 8] + 500, sep = "")
-        placeholder<<<<<}
-        else {
-            paste(d.s[1, 8] - 500, "-", d.s[1, 6] + 500, sep = "")
-        placeholder<<<<<}, "\ntrack name=\"FunciSNP_results\" description=\"FunciSNP ver. ", 
-        package.version("FunciSNP"), " Results\" visibility=3 itemRgb=\"On\"", 
-        sep = ""), con)
-    write.table(y, row.names = F, col.names = F, sep = "\t", 
-        file = con, quote = F)
-    close(con)
-    message("####\nBed file \"", filename, "\" created successfully.\n(See folder: \"", 
-        path, "\")")
-    cat("Total corSNP (RED): ", dim(d.cor)[1], "\nTotal tagSNP (BLK): ", 
-        dim(d.tag)[1], "\n")
-    message("\nTo view results, submit bed file as a\n  custom track in UCSC Genome Browser (genome.ucsc.edu), \n\nNow have fun with your new Func-y SNP", 
-        if (dim(d.cor)[1] > 1) {
-            "s"
-        placeholder<<<<<}
-        else {
-            ""
-        placeholder<<<<<}, "!!\n####")
-  placeholder<<<<<}
-placeholder<<<<<}
+#To view results, submit bed file as a
+#  custom track in UCSC Genome Browser (genome.ucsc.edu), 
+
+#Now have fun with your new Func-y SNPs!!
+####
+
+
+
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 placeholder<<<<<}
-\keyword{ ~kwd2 placeholder<<<<<}% __ONLY ONE__ keyword per line
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
