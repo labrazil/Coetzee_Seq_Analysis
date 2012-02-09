@@ -64,7 +64,7 @@ TSList <- function(...) {
       stop("all elements in '...' must be TagSNP objects")
     list.data <- do.call("c", list.data)
   }
-  summary.data <- FunciSNPAnnotateSummary(list.data)
+  summary.data <- AnnotateSummary(list.data)
   x <- new("TSList", snp.data=list.data, summary.data=summary.data)
   return(x)
 }
@@ -181,19 +181,20 @@ setReplaceMethod("overlapping.features", "CorrelatedSNPs", function(x, value) {
                  x@overlapping.features <- value
                  x
          })
-setGeneric("genotype", function(object, populations) standardGeneric("genotype"))
-setGeneric("genotype<-", function(object, value) standardGeneric("genotype<-"))
-setMethod("genotype",
+setGeneric("pop.genotype", function(x, population) standardGeneric("pop.genotype"))
+setGeneric("pop.genotype<-", function(x, value) standardGeneric("pop.genotype<-"))
+setMethod("pop.genotype",
           "CorrelatedSNPs",
-          function(object, populations="ALL"){
-            x <- object@genotype@SnpMatrix[row.names(object@genotype@SnpMatrix)
-                                           %in% object@genotype@populations[[population]]]
+          function(x, population="ALL"){
+            snps <- x@genotype@SnpMatrix
+            populations <- x@genotype@populations
+            x <- snps[row.names(snps) %in% populations[[population]]]
             return(x)
           }
           )
-setReplaceMethod("genotype", "CorrelatedSNPs", function(object, value) {
-                 object@genotype@SnpMatrix <- value
-                 object
+setReplaceMethod("pop.genotype", "CorrelatedSNPs", function(x, value) {
+                 x@genotype@SnpMatrix <- value
+                 x
           })
 
 setGeneric("ALL.R.squared", function(x) standardGeneric("ALL.R.squared"))
@@ -306,7 +307,7 @@ setMethod("ALL.overlapping.snps.geno",
           "TagSNP",
           function(object){
             overlapping.snps <- unique(names(overlapping.features(correlated.snps(object))))
-            y <- genotype(correlated.snps(x), "ALL")[, c(overlapping.snps, snpid(object))]
+            y <- pop.genotype(correlated.snps(object), "ALL")[, c(overlapping.snps, snpid(object))]
             return(y)
           })
 setGeneric("AMR.overlapping.snps.geno", function(object) standardGeneric("AMR.overlapping.snps.geno"))
@@ -314,7 +315,7 @@ setMethod("AMR.overlapping.snps.geno",
           "TagSNP",
           function(object){
             overlapping.snps <- unique(names(overlapping.features(correlated.snps(object))))
-            y <- genotype(correlated.snps(x), "AMR")[, c(overlapping.snps, snpid(object))]
+            y <- pop.genotype(correlated.snps(object), "AMR")[, c(overlapping.snps, snpid(object))]
             return(y)
           })
 setGeneric("ASN.overlapping.snps.geno", function(object) standardGeneric("ASN.overlapping.snps.geno"))
@@ -322,7 +323,7 @@ setMethod("ASN.overlapping.snps.geno",
           "TagSNP",
           function(object){
             overlapping.snps <- unique(names(overlapping.features(correlated.snps(object))))
-            y <- genotype(correlated.snps(x), "ASN")[, c(overlapping.snps, snpid(object))]
+            y <- pop.genotype(correlated.snps(object), "ASN")[, c(overlapping.snps, snpid(object))]
             return(y)
           })
 setGeneric("AFR.overlapping.snps.geno", function(object) standardGeneric("AFR.overlapping.snps.geno"))
@@ -330,7 +331,7 @@ setMethod("AFR.overlapping.snps.geno",
           "TagSNP",
           function(object){
             overlapping.snps <- unique(names(overlapping.features(correlated.snps(object))))
-            y <- genotype(correlated.snps(x), "AFR")[, c(overlapping.snps, snpid(object))]
+            y <- pop.genotype(correlated.snps(object), "AFR")[, c(overlapping.snps, snpid(object))]
             return(y)
           })
 setGeneric("EUR.overlapping.snps.geno", function(object) standardGeneric("EUR.overlapping.snps.geno"))
@@ -338,7 +339,7 @@ setMethod("EUR.overlapping.snps.geno",
           "TagSNP",
           function(object){
             overlapping.snps <- unique(names(overlapping.features(correlated.snps(object))))
-            y <- genotype(correlated.snps(x), "EUR")[, c(overlapping.snps, snpid(object))]
+            y <- pop.genotype(correlated.snps(object), "EUR")[, c(overlapping.snps, snpid(object))]
             return(y)
           })
 setMethod("show",
@@ -354,21 +355,43 @@ setMethod("show",
               cat("No Surrounding SNPs are overlapping any biofeatures\n")
             }
           })
+setMethod("summary",
+          signature=signature(object="TSList"),
+          function(object){
+            cat("TagSNP List with ", length(object@snp.data), " Tag SNPs and \n",
+                length(unique(object@summary.data$corr.snp.id)), "nearby, ",
+                "potentially correlated SNPs, that overlap at least one biofeature \n")
+              cat("Number of potentially correlated SNPs", "\noverlapping at least x",
+                  "biofeatures, per Tag SNP at an R squared of\n")
+            r.squared.values <- c(0.10, 0.50, 0.90)
+            bio.features.counting <- list()
+            for(i in r.squared.values) {
+              summ.overlaps <- FunciSNPsummaryOverlaps(object@summary.data, rsq=i)
+              bio.features.counting[[ as.character(paste("R squared: ", 
+                                                         i, 
+                                                         " in ", 
+                                                         nrow(summ.overlaps), 
+                                                         " Tag SNPs with a total of ", 
+                                                         sep="")) ]] <- summ.overlaps
+            }
+            print(bio.features.counting, quote=F)
+          })
 setMethod("show",
           signature=signature(object="TSList"),
           function(object){
-            cat("TagSNP List with ", length(object), " Tag SNPs and \n",
+            cat("TagSNP List with ", length(object@snp.data), " Tag SNPs and \n",
                 length(unique(object@summary.data$corr.snp.id)), "nearby, ",
                 "potentially correlated SNPs, that overlap at least one biofeature \n")
-              cat("Number of potentially correlated SNPs overlapping at least x",
-                  " number of biofeatures at an R squared of\n")
-            for(i in c(0.20, 0.50, 0.60, 0.70, 0.80, 0.90)) {
-              summ.overlaps <- FunciSNPsummaryOverlaps(object@summary.data, rsq=i)
-              cat("at least ", i)
-              cat(summ.overlaps)
+            r.squared.values <- c(0.10, 0.50, 0.90)
+            funcitable <- list()
+            for(i in r.squared.values) {
+              summ.overlaps <- FunciSNPtable(object@summary.data, rsq=i)
+              funcitable[[ as.character(paste("R squared: ", 
+                                                         i, 
+                                                         sep="")) ]] <- summ.overlaps
             }
+            print(funcitable, quote=F)
           })
-
 #setMethod("summary", "TagSNP", function(object) {
 #          data.frame(chromosome=chromosome(object), position=position(object),
 #                     snpid=snpid(object), population=population(object),

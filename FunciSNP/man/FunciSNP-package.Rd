@@ -1,6 +1,6 @@
 \name{FunciSNP}
 \alias{FunciSNP}
-\title{titlehere	
+\title{
 Functional Identification of SNPs with Phenotype by Coincidence with Chromatin Biofeatures	
 }
 \description{

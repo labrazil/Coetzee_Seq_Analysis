@@ -120,6 +120,7 @@ CreateCorrelatedSNPs<- function(tag.snp.name, snp.list, primary.server,
                                          window.size, par.threads), silent=TRUE)
   tag.snp.error <- inherits(tag.snp.complete, "try-error")
   if(tag.snp.error){
+    message(tag.snp.complete)
     if(identical(length(grep("not in 1000 genomes data",tag.snp.complete[[1]])),
                              as.integer(0))){
       while(tag.snp.error) {
@@ -159,6 +160,7 @@ CreateCorrelatedSNPs<- function(tag.snp.name, snp.list, primary.server,
                                          tag.snp.name=tag.snp.name,
                                          tag.snp.complete=tag.snp.complete,
                                          verbose=verbose)))
+    tag.snp.complete <<- tag.snp.complete
     if(reduce.by.features) {
       overlapping.snps <- unique(names(overlapping.features(correlated.snps(tag.snp.complete))))
       tag.snp.complete <- FilteredLDTesting(tag.snp.complete, verbose)
@@ -300,6 +302,7 @@ FunciSNP <- function(snp.regions.file, bio.features.loc = NULL,
                        window.size=search.window,
                        par.threads=par.threads)
   names(snp.list) <- tag.snp.names
+  snp.list <- TSList(snp.list)
   return(snp.list)
 }
 
@@ -556,55 +559,55 @@ LDTesting <- function(tag.snp.complete, verbose = TRUE) {
   snp.name.chosen <- snpid(tag.snp.complete)
   #  snp.name.chosen <- grep("^rs", unlist(strsplit(snp.list.name, ":")), value=T)
 
-  corr.snp.depth <- (dim(genotype(correlated.snps(tag.snp.complete), "ALL"))[2]) - 1
+  corr.snp.depth <- (dim(pop.genotype(correlated.snps(tag.snp.complete), "ALL"))[2]) - 1
   ALL.R.squared(correlated.snps(tag.snp.complete)) <-
-    ld(genotype(correlated.snps(tag.snp.complete), "ALL")[, snp.name.chosen],
-       genotype(correlated.snps(tag.snp.complete), "ALL")[, !(colnames(genotype(correlated.snps(tag.snp.complete), "ALL")))
+    ld(pop.genotype(correlated.snps(tag.snp.complete), "ALL")[, snp.name.chosen],
+       pop.genotype(correlated.snps(tag.snp.complete), "ALL")[, !(colnames(pop.genotype(correlated.snps(tag.snp.complete), "ALL")))
                                                    %in% snp.name.chosen], stats="R.squared", depth=corr.snp.depth)
   AFR.R.squared(correlated.snps(tag.snp.complete)) <-
-    ld(genotype(correlated.snps(tag.snp.complete), "AFR")[, snp.name.chosen],
-       genotype(correlated.snps(tag.snp.complete), "AFR")[, !(colnames(genotype(correlated.snps(tag.snp.complete), "AFR")))
+    ld(pop.genotype(correlated.snps(tag.snp.complete), "AFR")[, snp.name.chosen],
+       pop.genotype(correlated.snps(tag.snp.complete), "AFR")[, !(colnames(pop.genotype(correlated.snps(tag.snp.complete), "AFR")))
                                                    %in% snp.name.chosen], stats="R.squared", depth=corr.snp.depth)
   AMR.R.squared(correlated.snps(tag.snp.complete)) <-
-    ld(genotype(correlated.snps(tag.snp.complete), "AMR")[, snp.name.chosen],
-       genotype(correlated.snps(tag.snp.complete), "AMR")[, !(colnames(genotype(correlated.snps(tag.snp.complete), "AMR")))
+    ld(pop.genotype(correlated.snps(tag.snp.complete), "AMR")[, snp.name.chosen],
+       pop.genotype(correlated.snps(tag.snp.complete), "AMR")[, !(colnames(pop.genotype(correlated.snps(tag.snp.complete), "AMR")))
                                                    %in% snp.name.chosen], stats="R.squared", depth=corr.snp.depth)
   ASN.R.squared(correlated.snps(tag.snp.complete)) <-
-    ld(genotype(correlated.snps(tag.snp.complete), "ASN")[, snp.name.chosen],
-       genotype(correlated.snps(tag.snp.complete), "ASN")[, !(colnames(genotype(correlated.snps(tag.snp.complete), "ASN")))
+    ld(pop.genotype(correlated.snps(tag.snp.complete), "ASN")[, snp.name.chosen],
+       pop.genotype(correlated.snps(tag.snp.complete), "ASN")[, !(colnames(pop.genotype(correlated.snps(tag.snp.complete), "ASN")))
                                                    %in% snp.name.chosen], stats="R.squared", depth=corr.snp.depth)
   EUR.R.squared(correlated.snps(tag.snp.complete)) <-
-    ld(genotype(correlated.snps(tag.snp.complete), "EUR")[, snp.name.chosen],
-       genotype(correlated.snps(tag.snp.complete), "EUR")[, !(colnames(genotype(correlated.snps(tag.snp.complete), "EUR")))
+    ld(pop.genotype(correlated.snps(tag.snp.complete), "EUR")[, snp.name.chosen],
+       pop.genotype(correlated.snps(tag.snp.complete), "EUR")[, !(colnames(pop.genotype(correlated.snps(tag.snp.complete), "EUR")))
                                                    %in% snp.name.chosen], stats="R.squared", depth=corr.snp.depth)
 
   ALL.D.prime(correlated.snps(tag.snp.complete)) <-
-    ld(genotype(correlated.snps(tag.snp.complete), "ALL")[, snp.name.chosen],
-       genotype(correlated.snps(tag.snp.complete), "ALL")[, !(colnames(genotype(correlated.snps(tag.snp.complete), "ALL")))
+    ld(pop.genotype(correlated.snps(tag.snp.complete), "ALL")[, snp.name.chosen],
+       pop.genotype(correlated.snps(tag.snp.complete), "ALL")[, !(colnames(pop.genotype(correlated.snps(tag.snp.complete), "ALL")))
                                                    %in% snp.name.chosen], stats="D.prime", depth=corr.snp.depth)
   AFR.D.prime(correlated.snps(tag.snp.complete)) <-
-    ld(genotype(correlated.snps(tag.snp.complete), "AFR")[, snp.name.chosen],
-       genotype(correlated.snps(tag.snp.complete), "AFR")[, !(colnames(genotype(correlated.snps(tag.snp.complete), "AFR")))
+    ld(pop.genotype(correlated.snps(tag.snp.complete), "AFR")[, snp.name.chosen],
+       pop.genotype(correlated.snps(tag.snp.complete), "AFR")[, !(colnames(pop.genotype(correlated.snps(tag.snp.complete), "AFR")))
                                                    %in% snp.name.chosen], stats="D.prime", depth=corr.snp.depth)
   AMR.D.prime(correlated.snps(tag.snp.complete)) <-
-    ld(genotype(correlated.snps(tag.snp.complete), "AMR")[, snp.name.chosen],
-       genotype(correlated.snps(tag.snp.complete), "AMR")[, !(colnames(genotype(correlated.snps(tag.snp.complete), "AMR")))
+    ld(pop.genotype(correlated.snps(tag.snp.complete), "AMR")[, snp.name.chosen],
+       pop.genotype(correlated.snps(tag.snp.complete), "AMR")[, !(colnames(pop.genotype(correlated.snps(tag.snp.complete), "AMR")))
                                                    %in% snp.name.chosen], stats="D.prime", depth=corr.snp.depth)
   ASN.D.prime(correlated.snps(tag.snp.complete)) <-
-    ld(genotype(correlated.snps(tag.snp.complete), "ASN")[, snp.name.chosen],
-       genotype(correlated.snps(tag.snp.complete), "ASN")[, !(colnames(genotype(correlated.snps(tag.snp.complete), "ASN")))
+    ld(pop.genotype(correlated.snps(tag.snp.complete), "ASN")[, snp.name.chosen],
+       pop.genotype(correlated.snps(tag.snp.complete), "ASN")[, !(colnames(pop.genotype(correlated.snps(tag.snp.complete), "ASN")))
                                                    %in% snp.name.chosen], stats="D.prime", depth=corr.snp.depth)
   EUR.D.prime(correlated.snps(tag.snp.complete)) <-
-    ld(genotype(correlated.snps(tag.snp.complete), "EUR")[, snp.name.chosen],
-       genotype(correlated.snps(tag.snp.complete), "EUR")[, !(colnames(genotype(correlated.snps(tag.snp.complete), "EUR")))
+    ld(pop.genotype(correlated.snps(tag.snp.complete), "EUR")[, snp.name.chosen],
+       pop.genotype(correlated.snps(tag.snp.complete), "EUR")[, !(colnames(pop.genotype(correlated.snps(tag.snp.complete), "EUR")))
                                                    %in% snp.name.chosen], stats="D.prime", depth=corr.snp.depth)
 
 
   R.squared.corrsnps(tag.snp.complete) <-
-    ld(genotype(correlated.snps(tag.snp.complete), population(tag.snp.complete)),
+    ld(pop.genotype(correlated.snps(tag.snp.complete), population(tag.snp.complete)),
                               stats="R.squared", depth=corr.snp.depth)
   D.prime.corrsnps(tag.snp.complete) <-
-    ld(genotype(correlated.snps(tag.snp.complete), population(tag.snp.complete)),
+    ld(pop.genotype(correlated.snps(tag.snp.complete), population(tag.snp.complete)),
                               stats="D.prime", depth=corr.snp.depth)
 
   return(tag.snp.complete)
@@ -820,7 +823,13 @@ SNPSummary <- function(snp.list) {
   }
 }
 
-FunciSNPAnnotateSummary <- function(snp.list, verbose=TRUE) {
+
+
+FunciSNPAnnotateSummary <- function(snp.list){
+  return(snp.list@summary.data)
+}
+
+AnnotateSummary <- function(snp.list, verbose=TRUE) {
   if(identical(snp.list, NULL)) {
     return(NULL)
   } else{
@@ -988,7 +997,7 @@ FunciSNPsummaryOverlaps <- function(dat, rsq=0) {
                                overlap.counts <- count(as.character(dat[dat$tag.snp.id == x, ]$corr.snp.id))
                                overlap.counts$x <- as.character(overlap.counts$x)
                                max.freq <- max(overlap.counts$freq)
-                               range.freq <- c(1:(max.freq+1))
+                               range.freq <- c(1:(max.freq))
 
                                z <- t(ldply(range.freq, function(x, overlap.counts)
                                             {
@@ -1011,16 +1020,26 @@ FunciSNPsummaryOverlaps <- function(dat, rsq=0) {
   overlap.counts <- do.call("rbind", lapply(tag.snp.features, "[", columnnames))
   overlap.counts[is.na(overlap.counts)] <- 0
   colnames(overlap.counts) <- paste("bio.",as.character(columnnames),sep="")
+  overlap.counts <- rbind(overlap.counts, colSums(overlap.counts))
+  rownames(overlap.counts)[length(rownames(overlap.counts))] <- "TOTAL # CORRELATED SNPS"
   return(overlap.counts)
 }
 
 
-FunciSNPidsFromSummary <- function(dat, tagsnpid, num.features, rsq=0) {
+FunciSNPidsFromSummary <- function(dat, tagsnpid=NULL, num.features, rsq=0) {
   dat <- subset(dat, R.squared >= rsq)
+  if(identical(tagsnpid, NULL)) {
+    dat.sum <- FunciSNPsummaryOverlaps(dat=dat, rsq=rsq)
+    tag.snps <- dat.sum[1:nrow(dat.sum)-1, num.features]
+    tag.snps <- names(tag.snps[which(tag.snps > 0)])
+    tagsnpid <- tag.snps
+  }
+  summary.corr.snps.list <- NULL
+  for(i in tagsnpid) {
   overlap.counts <-
         count(
         as.character(
-        dat[dat$tag.snp.id == tagsnpid, ]$corr.snp.id))
+        dat[dat$tag.snp.id == i, ]$corr.snp.id))
   corr.overlapping.xfeatures <-
                   subset(overlap.counts, freq >= num.features, select=x)
   corr.overlapping.xfeatures <-
@@ -1030,13 +1049,15 @@ FunciSNPidsFromSummary <- function(dat, tagsnpid, num.features, rsq=0) {
                             dat[which(dat$corr.snp.id == x), ]
                              }, dat)
   summary.corr.snps$X1 <- NULL
-  summary.corr.snps <- subset(summary.corr.snps, tag.snp.id == tagsnpid)
-  rownames(summary.corr.snps) <-
-             paste(summary.corr.snps$tag.snp.id, ":",
-             summary.corr.snps$population, ".",
-             summary.corr.snps$corr.snp.id, ".",
-             summary.corr.snps$bio.feature, sep="")
-  return(summary.corr.snps)
+  summary.corr.snps <- subset(summary.corr.snps, tag.snp.id == i)
+  summary.corr.snps.list <- rbind(summary.corr.snps.list, summary.corr.snps)
+  }
+  rownames(summary.corr.snps.list) <-
+             paste(summary.corr.snps.list$tag.snp.id, ":",
+             summary.corr.snps.list$population, ".",
+             summary.corr.snps.list$corr.snp.id, ".",
+             summary.corr.snps.list$bio.feature, sep="")
+  return(summary.corr.snps.list)
 }
 
 

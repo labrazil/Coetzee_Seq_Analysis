@@ -1,9 +1,10 @@
 import(methods)
-import(plyr)
-import(Rsamtools)
-import(rtracklayer)
-import(GGtools)
 import(parallel)
+importFrom(plyr, adply)
+importFrom(Rsamtools, TabixFile, indexTabix, headerTabix, scanTabix)
+importFrom(rtracklayer, import)
+importFrom(snpStats, ld)
+importFrom(GGtools, vcf2sm)
 import(TxDb.Hsapiens.UCSC.hg19.knownGene)
 importFrom(ChIPpeakAnno, annotatePeakInBatch, addGeneIDs)
 importFrom(VariantAnnotation, locateVariants)
@@ -39,6 +40,8 @@ exportMethods(
     "EUR.R.squared",
     "genotype<-",
     "genotype",
+    "pop.genotype",
+    "pop.genotype<-",
     "overlapping.features<-",
     "overlapping.features",
     "population<-",
@@ -53,6 +56,6 @@ exportMethods(
     "snpid"
 )
 
-exportClasses(CorrelatedSNPs, TagSNP)
+exportClasses(CorrelatedSNPs, TagSNP, TSList)
 
 export(FunciSNP, FunciSNPAnnotateSummary, FunciSNPplot, FunciSNPbed, FunciSNPtable, FunciSNPsummaryOverlaps, FunciSNPidsFromSummary)
