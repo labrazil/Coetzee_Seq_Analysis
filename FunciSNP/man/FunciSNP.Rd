@@ -1,147 +1,108 @@
-\name{FunciSNPplaceholder<<<<<}
-\alias{FunciSNPplaceholder<<<<<}
-%- Also NEED an '\alias' for EACH other topic documented here.
+\name{FunciSNP}
+\alias{FunciSNP}
 \title{
-%%  ~~function to do ... ~~
-placeholder<<<<<}
+Functional Identification of SNPs with Phenotype by Coincidence with Chromatin Biofeatures	
+}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
-placeholder<<<<<}
+Given a set of known tag-SNPs associated with a particular phenotype (e.g. disease, trait), and a set of available biological features (e.g. peaks derived from ChIP-seq experiments for phenotype), returns correlated SNPs (from the 1000 genomes db) which are in linkage disequilibrium (LD) to a known disease associated tag-SNP and overlaps chromatin biological features.  These identified correlated SNPs are characterized as putative functional SNPs for a particular trait. 
+}
 \usage{
-FunciSNP(snp.regions.file, bio.features.loc = NULL, bio.features.TSS = TRUE, par.threads = detectCores()/2, verbose = par.threads < 2, method.p = "BH", reduce.by.features = TRUE, search.window = 2e+05)
-placeholder<<<<<}
-%- maybe also 'usage' for other objects documented here.
-\arguments{
-  \item{snp.regions.fileplaceholder<<<<<}{
-%%     ~~Describe \code{snp.regions.fileplaceholder<<<<<} here~~
-placeholder<<<<<}
-  \item{bio.features.locplaceholder<<<<<}{
-%%     ~~Describe \code{bio.features.locplaceholder<<<<<} here~~
-placeholder<<<<<}
-  \item{bio.features.TSSplaceholder<<<<<}{
-%%     ~~Describe \code{bio.features.TSSplaceholder<<<<<} here~~
-placeholder<<<<<}
-  \item{par.threadsplaceholder<<<<<}{
-%%     ~~Describe \code{par.threadsplaceholder<<<<<} here~~
-placeholder<<<<<}
-  \item{verboseplaceholder<<<<<}{
-%%     ~~Describe \code{verboseplaceholder<<<<<} here~~
-placeholder<<<<<}
-  \item{method.pplaceholder<<<<<}{
-%%     ~~Describe \code{method.pplaceholder<<<<<} here~~
-placeholder<<<<<}
-  \item{reduce.by.featuresplaceholder<<<<<}{
-%%     ~~Describe \code{reduce.by.featuresplaceholder<<<<<} here~~
-placeholder<<<<<}
-  \item{search.windowplaceholder<<<<<}{
-%%     ~~Describe \code{search.windowplaceholder<<<<<} here~~
-placeholder<<<<<}
-placeholder<<<<<}
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-placeholder<<<<<}
-\value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 placeholder<<<<<}{Description of 'comp1'placeholder<<<<<}
-%%  \item{comp2 placeholder<<<<<}{Description of 'comp2'placeholder<<<<<}
-%% ...
-placeholder<<<<<}
-\references{
-%% ~put references to the literature/web site here ~
-placeholder<<<<<}
-\author{
-%%  ~~who you are~~
-placeholder<<<<<}
-\note{
-%%  ~~further notes~~
-placeholder<<<<<}
+FunciSNP(snp.regions.file, bio.features.loc = NULL,
+                     bio.features.TSS = TRUE,
+                     par.threads=detectCores()/2,
+                     verbose = par.threads < 2, method.p = "BH",
+                     reduce.by.features = TRUE, search.window = 200000)
 
-%% ~Make other sections like Warning with \section{Warning placeholder<<<<<}{....placeholder<<<<<} ~
+detectCores()
+#function implemented from library(parallel) to identify number of 
+#CPUs running on current R session.
+}
+\arguments{
+	\item{snp.regions.file}{
+		path: Location of the regions file: Regions file is tab-deliminated and contains three elements per row. First element defines the genomic location of the tagSNP, 'chr:position' (e.g. 5:5420030). Second element contains the tagSNP name, 'rsID' (e.g. rs6010620). Third element defines the 'POPULATION' (ASN, EUR, AFR, ALL) where the tagSNP was identified (e.g. ASN, EUR, AFR, ALL).
+
+		SNP Region file is imported and each row element (tagSNP element) is parsed for tagSNP name (rsXXXX), population (ASN, EUR, AFR, or ALL), and genomic location.  Genomic location is used to define the window size (see 'search.window' argument). See example file here: file.path(system.file('data',package='FunciSNP'), dir(system.file('data',package='FunciSNP'), pattern='.snp$')); 
+	}
+	\item{bio.features.loc}{
+		path: Location of the biological features folder: Each biological feature for a particular genomic phenotype should be separated as individual BED files (tab deliminated file with chr, start and end). See UCSC for more information about BED formats \url{http://genome.ucsc.edu/FAQ/FAQformat.html#format1}. See example below. Default set to NULL.
+	}
+	\item{bio.features.TSS}{
+		logical: To include promoter regions as an additional biofeature in the analysis. Promoters defined as -1000 to +100 bp of a known TSS. File extracted on Feb. 9, 2012 from UCSC genome table browser. Default set to TRUE.
+	}
+	\item{par.threads}{
+		an integer: Number of CPU cores to use for FunciSNP analysis. Default set at detectCores()/2. If par.threads > 1, then by default "verbose" = FALSE.	
+	}
+	\item{verbose}{
+		logical: If set to TRUE, then regardless of par.threads value, all verbose message will output to terminal. If set to FALSE, no verbose message will output to terminal, except for warnings(). Default setting depends on number of 'par.threads' value.	
+	}
+	\item{method.p}{
+		method: p-value correction (or adjustment) method (see ?p.adjust). Default set at "BH" (Benjamini & Hochberg (1995)).
+	
+	}
+	\item{reduce.by.features}{
+		logical: If set to TRUE, then only correlated SNPs overlapping biological features will be filtered and used to calculate Rsquared, Dprime, distance and p-value.  In addition, only these correlated SNPs will be used to generate plots and summary analysis.  If set to FALSE, all correlated SNPs regardless of overlap with biological features will have an associated Rsquare, Dprime, distance and p-value associated with the tag-SNP as defined by the 'search.window'.	
+	}
+	\item{search.window}{
+		an integer: genomic window size used to extract all available correlated SNPs from the 1000 genomes db. The window size is centered around the tagSNP position as defined in the regions.file.
+	}
+}
+\details{
+This is the main funtion of FunciSNP. It will identify correlated SNPs which are in linkage disequilibrium (LD) to a known disease associated tagSNP. It will also determine if the correlated SNP in LD to the tagSNP overlaps a genomic biological feature. Correlated SNPs are directly imported from the current public release of the 1000 genomes database. 1000 genomes ftp servers available for the 1000 genomes public data: 1) National Center for Biotechnology Information (NCBI) \url{ftp://ftp-trace.ncbi.nih.gov/1000genomes/}; 2) European Bioinformatics Institute (EBI) \url{ftp://ftp.1000genomes.ebi.ac.uk/vol1/}.
+
+Correlated SNPs in LD to a tagSNP and overlapping genomic biological features are known as putative functional SNPs (also defined as 'Func-y-SNP' elsewhere in the package.).  
+
+%Using the location of a known tag-Single Nucleotide Polymorphisms (SNP) associated with a particular phenotype (e.g. disease, trait), FunciSNP will extract all available SNP from the 1000 Genomes Project within a selected window size (in bp, centered on each tag SNP). In addition, using the location of known biological features (e.g. statistically significant peaks identified by ChIP-seq, Chromatin ImmunoPrecipitation followed by genome-wide sequencing), correlated SNPs overlapping each peak is identified and further analyzed. The correlated SNPs overlapping a biological peak are then used to calculate the Rsquared, Dprime, p-value (as determined by fisher's exact test) and distance to the associated tag-SNP.
+}
+\value{
+\item{TSList}{
+	FunciSNP object. 
+}
+}
+\references{
+	Coetzee SG et al. submitted for review. 2012
+}
+\author{
+	Simon Coetzee, Houtan Noushmehr
+}
+\note{
+}
+
 
 \seealso{
-%% ~~objects to See Also as \code{\link{helpplaceholder<<<<<}placeholder<<<<<}, ~~~
-placeholder<<<<<}
+	\code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
+}
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+##
+## Glioblastoma analysis using FunciSNP
+##
+## Full path to the example regions file for Glioblastoma 
+#  (collected from SNPedia)
+glioma.snp <- file.path(system.file('data',
+  package='FunciSNP'),
+  dir(system.file('data',package='FunciSNP'), 
+  pattern='.snp$'));
+ 
+## Full path to the example biological features BED files 
+#  derived from the ENCODE project for Glioblastoma U-87 
+#  cell lines.
+glioma.bio <- system.file('extdata',package='FunciSNP');
 
-## The function is currently defined as
-function (snp.regions.file, bio.features.loc = NULL, bio.features.TSS = TRUE, 
-    par.threads = detectCores()/2, verbose = par.threads < 2, 
-    method.p = "BH", reduce.by.features = TRUE, search.window = 2e+05) 
-{
-    message("\n", "| | _  |  _  _ __  _    _|_ _ \n", "|^|(/_ | (_ (_)|||(/_    |_(_)\n", 
-        "\n", " __             __    _ \n", "|_    __  _  o (_ |\\||_)\n", 
-        "|  |_|| |(_  | __)| ||  \n", "\nVersion: ", package.version("FunciSNP"), 
-        "\n", "System: ", if (Sys.info()[["sysname"]] != "Windows") {
-            Sys.info()[["sysname"]]
-        placeholder<<<<<}
-        else {
-            paste(Sys.info()[["sysname"]], " :-( ; parallel code not in effect, reverting to 1 core", 
-                sep = "")
-        placeholder<<<<<}, "\n", "::args used::", "\n", "          verbose:                          ", 
-        verbose, "\n", "          cores in use:                     ", 
-        par.threads, "\n", "          snp.regions.file:                 ", 
-        as.character(snp.regions.file), "\n", "          p-value adjustment by:            ", 
-        method.p)
-    if (identical(bio.features.loc, NULL)) {
-        message("          Bio Features:                     no biofeatures selected")
-    placeholder<<<<<}
-    else {
-        message("          Bio Features:                     ", 
-            if (bio.features.TSS) {
-                (length(list.files(bio.features.loc, pattern = "*.bed$", 
-                  full.names = FALSE))) + 1
-            placeholder<<<<<}
-            else {
-                length(list.files(bio.features.loc, pattern = "*.bed$", 
-                  full.names = FALSE))
-            placeholder<<<<<}, ": ", gsub(".bed$", ", ", list.files(bio.features.loc, 
-                pattern = "*.bed$", full.names = FALSE)), if (bio.features.TSS) 
-                "knownGene.TSS.hg19")
-    placeholder<<<<<}
-    primary.server <- sample(c("ncbi", "ebi"), size = 1)
-    snp.region <- ReadRegionsFile(snp.regions.file, search.window)
-    message("          Number of TagSNPs Interrogated:   ", nrow(snp.region), 
-        " representing ", length(unique(snp.region$snp.name)), 
-        " unique tag SNPs")
-    options(mc.cores = par.threads)
-    populations <- CreatePopulations(primary.server)
-    if (identical(bio.features.loc, NULL)) {
-        bio.features.file <- NULL
-        if (bio.features.TSS) 
-            bio.features.file <- list.files(system.file("extdata", 
-                package = "FunciSNP"), pattern = "knownGene.TSS.hg19.bed", 
-                full.names = TRUE)
-    placeholder<<<<<}
-    else {
-        bio.features.file <- list.files(bio.features.loc, pattern = "*.bed$", 
-            full.names = TRUE)
-        if (bio.features.TSS) {
-            bio.features.file.TSS <- list.files(system.file("extdata", 
-                package = "FunciSNP"), pattern = "knownGene.TSS.hg19.bed", 
-                full.names = TRUE)
-            bio.features.file <- c(bio.features.file, bio.features.file.TSS)
-        placeholder<<<<<}
-    placeholder<<<<<}
-    tag.snp.names <- paste(snp.region$snp.name, ":", snp.region$snp.ethno, 
-        sep = "")
-    snp.list <- lapply(tag.snp.names, CreateTagSNP)
-    names(snp.list) <- tag.snp.names
-    snp.list <- mclapply(tag.snp.names, CreateCorrelatedSNPs, 
-        snp.list = snp.list, primary.server = primary.server, 
-        snp.region = snp.region, bio.features.file = bio.features.file, 
-        populations = populations, method.p = method.p, verbose = verbose, 
-        reduce.by.features = reduce.by.features, window.size = search.window, 
-        par.threads = par.threads)
-    names(snp.list) <- tag.snp.names
-    snp.list <- TSList(snp.list)
-    return(snp.list)
-  placeholder<<<<<}
-placeholder<<<<<}
+## FunciSNP analysis, extracts correlated SNPs from the 
+#  1000 genomes db ("ncbi") and finds overlaps between 
+#  correlated SNP and biological features and then 
+#  calculates LD (Rsquare, Dprime, distance, p-value).
+glioma <- FunciSNP(snp.regions.file=glioma.snp, 
+  bio.features.loc = glioma.bio, bio.features.TSS=FALSE);
+
+##
+data(glioma);
+class(glioma);
+glioma;
+summary(glioma);
+
+
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 placeholder<<<<<}
-\keyword{ ~kwd2 placeholder<<<<<}% __ONLY ONE__ keyword per line
+\keyword{ #kwd1 }
+\keyword{ #kwd2 }% __ONLY ONE__ keyword per line

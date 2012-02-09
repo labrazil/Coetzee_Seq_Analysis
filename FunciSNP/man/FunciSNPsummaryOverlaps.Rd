@@ -1,5 +1,5 @@
-\name{FunciSNPsummaryOverlapsplaceholder<<<<<}
-\alias{FunciSNPsummaryOverlapsplaceholder<<<<<}
+\name{FunciSNPsummaryOverlaps}
+\alias{FunciSNPsummaryOverlaps}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~

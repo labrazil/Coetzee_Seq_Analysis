@@ -20,7 +20,7 @@ FunciSNPbed(dat, rsq, path = getwd(), filename = NULL)
             an interger (0-1): \code{rsq} is the Rsquared cutoff used to subset.
 }
   \item{path}{
-           a character: \code{path} is the path to the folder where to output the BED file. Default to getwd() or current working directory.
+           a character: \code{path} is the path to the folder where to save the BED file. Default to getwd() or current working directory.
 }
   \item{filename}{
            a character: \code{filename} is the name of the BED file. If NULL, filename is 'FunciSNP_results_rsq.RSQ value.bed'

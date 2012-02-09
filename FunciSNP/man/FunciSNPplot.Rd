@@ -8,7 +8,7 @@ FunciSNPplot to visualize Func-y-SNP summary.
 FunciSNPplot is a function developed to plot various types of plots to summarize and assist end-user in making informed discoveries of FunciSNP results. Plots can be stored in a folder for future reference.
 }
 \usage{
-FunciSNPplot(dat, rsq = 0, split = FALSE, splitbysnp = FALSE, tagSummary = FALSE, heatmap = FALSE, genomicSum = FALSE, save = FALSE)
+FunciSNPplot(dat, rsq = 0, split = FALSE, splitbysnp = FALSE, tagSummary = FALSE, heatmap = FALSE, genomicSum = FALSE, save = FALSE, pathplot=getwd())
 }
 
 \arguments{
@@ -25,23 +25,26 @@ FunciSNPplot(dat, rsq = 0, split = FALSE, splitbysnp = FALSE, tagSummary = FALSE
 		logical: \code{splitbysnp} is similar to \code{split} but instead split the distribution by tagSNP.
 }
   \item{tagSummary}{
-		logical: \code{tagSummary} here~~
+		logical: \code{tagSummary} Will output two plots per biofeature. The first one is a scatter plot showing the relationship between Rsquare and Distance to tagSNP for each Func-y-SNP. The second plot is a histogram distribution of number of correlated SNPs at each Rsquare value. Each set of plot is further divided by tagSNP. Best if used with \code{rsq} value.
 }
   \item{heatmap}{
-		logical: \code{heatmap} correlation heatmap to visualize the number of correlated SNPs at each tagSNP overlapping each biological feature.
+		logical: \code{heatmap} correlation heatmap to visualize the number of correlated SNPs at each tagSNP overlapping each biological feature. Most informative if used with a \code{rsq} value.
 }
   \item{genomicSum}{
-		logical: \code{genomicSum} Stacked bar chart summarizing all correlated SNPs for each of the identified genomie features (exon, intron, 5'UTR, 3'UTR, promoter, lincRNA or in gene desert (intergentic))
+		logical: \code{genomicSum} Stacked bar chart summarizing all correlated SNPs for each of the identified genomie features (exon, intron, 5'UTR, 3'UTR, promoter, lincRNA or in gene desert (intergentic)). Most informative if used with a \code{rsq} value.
 }
   \item{save}{
 		logical: \code{save} to save outputs to folder. Set at getwd(), in folder 'FunciSNP.VERSION/plots
+}
+  \item{pathplot}{
+           a character: \code{pathplot} is the path to the folder where to save the plots. Default to getwd() or current working directory.
 }
 }
 \details{
 
 }
 \value{
-All outputs are plots in standard x11().
+Plots are generated either in X11 or in specified folder.
 }
 \references{
 	Coetzee SG et al. submitted for review. 2012
@@ -59,7 +62,12 @@ All outputs are plots in standard x11().
 	\code{\link{FunciSNP}}, \code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
 }
 \examples{
-
+data(glioma)
+gl <- FunciSNPAnnotateSummary(glioma)
+FunciSNPplot(gl)
+FunciSNPplot(gl, rsq=0, genomicSum=T, save=T)
+FunciSNPplot(gl, rsq=0.5, genomicSum=T, save=T)
+FunciSNPplot(gl, tagSummary=T, rsq=0.5)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -1,5 +1,5 @@
-\name{FunciSNPidsFromSummaryplaceholder<<<<<}
-\alias{FunciSNPidsFromSummaryplaceholder<<<<<}
+\name{FunciSNPidsFromSummary}
+\alias{FunciSNPidsFromSummary}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~
