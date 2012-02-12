@@ -884,8 +884,7 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
     rownames(rd.corr.snp.loc) <- rd.corr.snp.loc$snpid
     rd.corr.snp.loc$snpid <- NULL
 
-
-    data(TSS.human.GRCh37)
+    data(TSS.human.GRCh37, package='ChIPpeakAnno')
     data(lincRNA.hg19)
 
     ##nearest linc RNAs
