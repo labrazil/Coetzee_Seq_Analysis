@@ -6,10 +6,7 @@ Version: 0.1.7
 Date: 2012-02-07
 Author: Simon G. Coetzee (scoetzee@gmail.com) and Houtan Noushmehr (houtana@gmail.com)
 Maintainer: Simon G. Coetzee <scoetzee@gmail.com>
-Imports: Rsamtools (>= 1.6.1), rtracklayer(>= 1.14.1),
-        GGtools (>= 4.0.0), methods, ChIPpeakAnno (>= 2.2.0), parallel,
-        GenomicRanges, TxDb.Hsapiens.UCSC.hg19.knownGene,
-        VariantAnnotation, plyr
+Depends: Rsamtools (>= 1.6.1), rtracklayer(>= 1.14.1), GGtools (>= 4.0.0), methods, ChIPpeakAnno (>= 2.2.0), parallel, GenomicRanges, TxDb.Hsapiens.UCSC.hg19.knownGene, VariantAnnotation, plyr, org.Hs.eg.db, snpStats
 Suggests: gplots (>= 2.10.1), ggplot2 (>= 0.8.9), matlab (>= 0.8.9)
 Description: FunciSNP integrates information from GWAS, 1000genomes and chromatin feature to identify functional SNP in coding or non-coding regions. 
 License: GPL-3

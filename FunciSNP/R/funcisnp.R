@@ -993,7 +993,7 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
 FunciSNPsummaryOverlaps <- function(dat, rsq=0) {
   dat <- subset(dat, R.squared >= rsq)
   tag.snps.with.overlaps <- unique(as.character(dat$tag.snp.id))
-
+  require("plyr");
   tag.snp.features <- lapply(tag.snps.with.overlaps, function(x) {
                                overlap.counts <- count(as.character(dat[dat$tag.snp.id == x, ]$corr.snp.id))
                                overlap.counts$x <- as.character(overlap.counts$x)

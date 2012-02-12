@@ -1,5 +1,5 @@
-\name{FunciSNP}
-\alias{FunciSNP}
+\name{FunciSNP1}
+\alias{FunciSNP1}
 \title{
 Functional Identification of SNPs with Phenotype by Coincidence with Chromatin Biofeatures	
 }
@@ -77,9 +77,9 @@ Correlated SNPs in LD to a tagSNP and overlapping genomic biological features ar
 ##
 ## Full path to the example regions file for Glioblastoma 
 #  (collected from SNPedia)
-glioma.snp <- file.path(system.file('data',
+glioma.snp <- file.path(system.file('extdata',
   package='FunciSNP'),
-  dir(system.file('data',package='FunciSNP'), 
+  dir(system.file('extdata',package='FunciSNP'), 
   pattern='.snp$'));
  
 ## Full path to the example biological features BED files 
@@ -91,8 +91,9 @@ glioma.bio <- system.file('extdata',package='FunciSNP');
 #  1000 genomes db ("ncbi") and finds overlaps between 
 #  correlated SNP and biological features and then 
 #  calculates LD (Rsquare, Dprime, distance, p-value).
-glioma <- FunciSNP(snp.regions.file=glioma.snp, 
-  bio.features.loc = glioma.bio, bio.features.TSS=FALSE);
+# Do not run. Can take more than 5 min depending on internet connection and number of CPUs.
+#glioma <- FunciSNP(snp.regions.file=glioma.snp, 
+#  bio.features.loc = glioma.bio, bio.features.TSS=FALSE);
 
 ##
 data(glioma);

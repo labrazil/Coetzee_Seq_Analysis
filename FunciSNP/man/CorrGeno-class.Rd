@@ -3,21 +3,21 @@
 \docType{class}
 \alias{CorrGeno-class}
 
-\title{Class \code{"CorrGeno"placeholder<<<<<}placeholder<<<<<}
+\title{Class \code{"CorrGeno"}}
 \description{
 %%  ~~ A concise (1-5 lines) description of what the class is. ~~
 placeholder<<<<<}
-\section{Objects from the Classplaceholder<<<<<}{
-Objects can be created by calls of the form \code{new("CorrGeno", ...)placeholder<<<<<}.
+\section{Objects from the Class}{
+Objects can be created by calls of the form \code{new("CorrGeno", ...)}.
 %%  ~~ describe objects here ~~ 
 placeholder<<<<<}
-\section{Slotsplaceholder<<<<<}{
+\section{Slots}{
   \describe{
-    \item{\code{SnpMatrixplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"SnpMatrix"placeholder<<<<<} ~~ placeholder<<<<<}
-    \item{\code{populationsplaceholder<<<<<}:placeholder<<<<<}{Object of class \code{"list"placeholder<<<<<} ~~ placeholder<<<<<}
+    \item{\code{SnpMatrix}:}{Object of class \code{"SnpMatrix"} }
+    \item{\code{populations}:}{Object of class \code{"list"} }
   placeholder<<<<<}
 placeholder<<<<<}
-\section{Methodsplaceholder<<<<<}{
+\section{Methods}{
 No methods defined with class "CorrGeno" in the signature.
 placeholder<<<<<}
 \references{
@@ -30,7 +30,7 @@ placeholder<<<<<}
 %%  ~~further notes~~
 placeholder<<<<<}
 
-%% ~Make other sections like Warning with \section{Warning placeholder<<<<<}{....placeholder<<<<<} ~
+%% ~Make other sections like Warning with \section{Warning}{....} ~
 
 \seealso{
 %%  ~~objects to See Also as \code{\link{~~fun~~placeholder<<<<<}placeholder<<<<<}, ~~~
@@ -38,5 +38,5 @@ placeholder<<<<<}
 placeholder<<<<<}
 \examples{
 showClass("CorrGeno")
-placeholder<<<<<}
-\keyword{classesplaceholder<<<<<}
+}
+\keyword{classes}
