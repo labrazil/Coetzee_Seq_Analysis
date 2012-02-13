@@ -7,13 +7,12 @@
 \usepackage{Sweave}
 \begin{document}
 
-\title{FunciSNP: Functional Identification of SNPs with\\Phenotype by 
-Coincidence with Chromatin Biofeatures\\Vignette}
-\author{Simon G. Coetzee and Houtan Noushmehr\\\\Norris Cancer Center\\Keck 
-School of Medicine\\University of Southern California\\Los Angeles, USA.\\\\
-and\\\\Faculdade de Medicina de Ribeir\^{a}o Preto\\Departmento de 
-Gen\'{e}tica\\Universidade de S\^{a}o Paulo\\Ribeir\^{a}o Preto, S\^{a}o Paulo, 
-Brasil}
+\title{Vignette\\FunciSNP: Functional Identification of SNPs with
+\\Phenotype by Coincidence with Chromatin Biofeatures}
+\author{Simon G. Coetzee, Suhn Rhie, Gerhard A. Coetzee and Houtan 
+Noushmehr\\\\Norris Cancer Center\\Keck School of Medicine\\University
+ of Southern California\\Los Angeles, USA.
+}
 
 \maketitle
 \section*{Introduction}
@@ -277,7 +276,7 @@ FunciSNPplot(glioma.anno, tagSummary=TRUE, rsq=0.5)
 @
 \begin{figure}[ht!]
 \begin{center}
-\includegraphics{FunciSNP.0.1.7/plots/TFBS_Pol2_U87_R2vsDist_riskSNP.pdf}
+\includegraphics{FunciSNP.0.1.8/plots/TFBS_Pol2_U87_R2vsDist_riskSNP.pdf}
 \caption{\label{fig:TFBS_Pol2_U87_R2vsDist_riskSNP.pdf} Scatter plot 
 showing the relationship between Rsquare and Distance to tagSNP for each 
 FuncySNP}
@@ -287,7 +286,7 @@ FuncySNP}
 
 \begin{figure}[ht!]
 \begin{center}
-\includegraphics{FunciSNP.0.1.7/plots/TFBS_Pol2_U87_R2summary_riskSNP.pdf}
+\includegraphics{FunciSNP.0.1.8/plots/TFBS_Pol2_U87_R2summary_riskSNP.pdf}
 \caption{\label{fig:TFBS_Pol2_U87_R2summary_riskSNP.pdf} Histogram 
 distribution of number of correlated SNPs at each Rsquare value}
 {\footnotesize{}}
