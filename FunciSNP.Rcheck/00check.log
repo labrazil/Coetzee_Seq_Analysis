@@ -90,8 +90,6 @@ Extensions’ manual.
 * checking contents of ‘data’ directory ... OK
 * checking data for non-ASCII characters ... OK
 * checking data for ASCII and uncompressed saves ... OK
-* checking for left-overs from vignette generation ... NOTE
-  file ‘inst/doc/Rplots.pdf’ will not be installed: please remove it
 * checking examples ... OK
 * checking for unstated dependencies in vignettes ... NOTE
 ‘library’ or ‘require’ call not declared from: ‘gtools’

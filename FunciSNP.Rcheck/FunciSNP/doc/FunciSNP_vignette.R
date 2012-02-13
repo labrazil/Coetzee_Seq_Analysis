@@ -24,16 +24,33 @@ package.version("FunciSNP");
 
 
 ###################################################
-### code chunk number 2: FunciSNP_vignette.Rnw:79-105
+### code chunk number 2: FunciSNP_vignette.Rnw:96-102
 ###################################################
 ## Full path to the example GWAS SNP regions file for Glioblastoma 
 #  (collected from SNPedia on Jan 2012)
 glioma.snp <- file.path(system.file('extdata', package='FunciSNP'), 
 dir(system.file('extdata',package='FunciSNP'), pattern='.snp$'));
+gsnp <- read.delim(file=glioma.snp,sep=" ",header=FALSE);
+gsnp;
+
+
+###################################################
+### code chunk number 3: FunciSNP_vignette.Rnw:108-117
+###################################################
 #glioma.snp;
 ## Full path to the example biological features BED files 
 #  derived from the ENCODE project for Glioblastoma U-87 cell lines.
 glioma.bio <- system.file('extdata',package='FunciSNP');
+list.files(glioma.bio, pattern='.bed$');
+nrsf.filename <- list.files(glioma.bio, pattern='.bed$')[2];
+Nrsf <- read.delim(file=paste(glioma.bio, nrsf.filename,sep="/"), sep="\t",
+        header=FALSE);
+head(Nrsf);
+
+
+###################################################
+### code chunk number 4: FunciSNP_vignette.Rnw:120-132
+###################################################
 #glioma.bio;
 ## FunciSNP analysis, extracts correlated SNPs from the 
 #  1000 genomes db ("ncbi" or "ebi") and finds overlaps between 
@@ -47,7 +64,10 @@ glioma.bio <- system.file('extdata',package='FunciSNP');
 # glioma;
 # summary(glioma);
 
-## The glioma example set above is called directly by  
+
+###################################################
+### code chunk number 5: FunciSNP_vignette.Rnw:137-141
+###################################################
 data(glioma);
 glioma;
 summary(glioma);
@@ -55,7 +75,7 @@ class(glioma);
 
 
 ###################################################
-### code chunk number 3: FunciSNP_vignette.Rnw:114-124
+### code chunk number 6: FunciSNP_vignette.Rnw:150-160
 ###################################################
 glioma.anno <- FunciSNPAnnotateSummary(glioma);
 class(glioma.anno);
@@ -70,21 +90,31 @@ rm(gl.anno);
 
 
 ###################################################
-### code chunk number 4: FunciSNP_vignette.Rnw:132-134
+### code chunk number 7: FunciSNP_vignette.Rnw:167-168
 ###################################################
 FunciSNPtable(glioma.anno, rsq=0.5);
+
+
+###################################################
+### code chunk number 8: FunciSNP_vignette.Rnw:171-172
+###################################################
 FunciSNPtable(glioma.anno, rsq=0.5, geneSum=TRUE);
 
 
 ###################################################
-### code chunk number 5: FunciSNP_vignette.Rnw:141-143
+### code chunk number 9: FunciSNP_vignette.Rnw:180-181
 ###################################################
 FunciSNPsummaryOverlaps(glioma.anno)
+
+
+###################################################
+### code chunk number 10: FunciSNP_vignette.Rnw:185-186
+###################################################
 FunciSNPsummaryOverlaps(glioma.anno, rsq=0.5)
 
 
 ###################################################
-### code chunk number 6: FunciSNP_vignette.Rnw:152-158
+### code chunk number 11: FunciSNP_vignette.Rnw:195-201
 ###################################################
 rs6010620 <- FunciSNPidsFromSummary(glioma.anno, tagsnpid="rs6010620", 
         num.features=2, rsq=0.5)
@@ -95,7 +125,7 @@ class(rs6010620);
 
 
 ###################################################
-### code chunk number 7: FunciSNP_vignette.Rnw:172-175
+### code chunk number 12: FunciSNP_vignette.Rnw:215-218
 ###################################################
 pdf("glioma_dist.pdf")
 FunciSNPplot(glioma.anno)
@@ -103,14 +133,14 @@ dev.off()
 
 
 ###################################################
-### code chunk number 8: FunciSNP_vignette.Rnw:188-190
+### code chunk number 13: FunciSNP_vignette.Rnw:232-234
 ###################################################
 FunciSNPplot(glioma.anno, splitbysnp=TRUE)
 ggsave("glioma_dist_bysnp.pdf")
 
 
 ###################################################
-### code chunk number 9: FunciSNP_vignette.Rnw:204-207
+### code chunk number 14: FunciSNP_vignette.Rnw:248-251
 ###################################################
 pdf("glioma_genomic_sum_rcut.pdf")
 FunciSNPplot(glioma.anno, rsq=0.5, genomicSum=TRUE, save=FALSE)
@@ -118,14 +148,14 @@ dev.off()
 
 
 ###################################################
-### code chunk number 10: FunciSNP_vignette.Rnw:226-228
+### code chunk number 15: FunciSNP_vignette.Rnw:274-276
 ###################################################
 ## Following will output a series of plots for each biofeature at rsq=0.5
 FunciSNPplot(glioma.anno, tagSummary=TRUE, rsq=0.5)
 
 
 ###################################################
-### code chunk number 11: FunciSNP_vignette.Rnw:260-263
+### code chunk number 16: FunciSNP_vignette.Rnw:314-317
 ###################################################
 ## will output to current working directory.
 FunciSNPbed(glioma.anno, rsq=0.5);
@@ -133,7 +163,7 @@ FunciSNPbed(glioma.anno, rsq=0.5);
 
 
 ###################################################
-### code chunk number 12: sessionInfo
+### code chunk number 17: sessionInfo
 ###################################################
 sessionInfo()
 

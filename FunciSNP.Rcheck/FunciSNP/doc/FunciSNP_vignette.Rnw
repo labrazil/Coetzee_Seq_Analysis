@@ -17,24 +17,28 @@ Brasil}
 
 \maketitle
 \section*{Introduction}
-FunciSNP's aim is to assist in identifying putative functional SNP. Using 
-information from the 1000 genomes database as well as known position of GWAS
-tagSNP currated for a particular trait or disease, FunciSNP integrates the 
-two data along with sequence information provided by peaks identified from 
-high-throughput sequencing. FunciSNP assumes user will provide processed 
-peaks identified using any available peak algorithm, such as FindPeaks.
+FunciSNP assist in identifying putative functional SNP from previously
+ identified GWAS SNPs (tagSNP). Using information from the 1000 genomes 
+ database as well as known position of GWAS tagSNP currated for a particular 
+ trait or disease, FunciSNP integrates the two data along with sequence 
+ information provided by peaks identified from high-throughput sequencing. 
+ FunciSNP assumes user will provide peaks identified using any available 
+ ChIP peak algorithm, such as FindPeaks.
 
-This vignette provides a HOW-TO guide to setup and run FunciSNP on your 
-machine. FunciSNP was developed with the idea that a FunciSNP user will 
-have uninterupted high-speed internet access as well as a desktop machine
- with more than 4 multiple cores. If user is using a windows machine, multiple
+This vignette provides a 'HOW-TO' guide to setup and run FunciSNP on your 
+machine. FunciSNP was developed with the idea that a user will have 
+uninterupted high-speed internet access as well as a desktop machine with 
+more than 4 multiple cores. If user is using a windows machine, multiple
  cores options will not work and thus total time to complete initial FunciSNP
-  analysis will take longer than expected.
+  analysis will take longer than expected. Be sure you have uninterupted 
+  computing power when using a windows machine. If using a linux machine, 
+  please use 'screen' (see man screen for more information).
 
-Using a 64bit Linux machine running 11.04 Ubuntu with 24gig RAM and 8 cores
- and academic high-speed internet access, the amount of time to complete 99
- tagSNP across 20 different biofeatures took less than 30 min to complete. 
- We anticipate it would take about 2 hours to complete on a single core.
+Using a 64bit Linux machine running 11.04 Ubuntu OS with 24G RAM and 8 cores
+ connected to a academic high-speed internet port, the amount of time to 
+ complete 99 tagSNP across 20 different biofeatures took less than 30 min
+ to complete. We anticipate about 2 hours to complete the same analysis 
+ using one core.
 \section*{Load FunciSNP+other useful libraries}
 <<packages>>=
 #When package is offically posted in Bioconductor, uncomment next 2 lines.
@@ -60,31 +64,60 @@ package.version("FunciSNP");
 \section*{Identify FuncySNP using published GWAS SNPs and publicly available 
 biological features (ENCODE ChIPseq peaks)}
 \subsection*{FuncySNP()}
-This is the main funtion of FunciSNP. It will identify correlated SNPs which are
- in linkage disequilibrium (LD) to a known disease associated tagSNP. It will 
-also determine if the correlated SNP in LD to the tagSNP overlaps a genomic 
-biological feature. Correlated SNPs are directly imported from the current 
-public release of the 1000 genomes database. 1000 genomes ftp servers available 
-for the 1000 genomes public data: 1) National Center for Biotechnology 
-Information (NCBI) ftp://ftp-trace.ncbi.nih.gov/1000genomes/; 2) European 
-Bioinformatics Institute (EBI) ftp://ftp.1000genomes.ebi.ac.uk/vol1/.
+This section describes the main function of FunciSNP. 
+
+It will identify correlated SNPs which are in linkage disequilibrium (LD) 
+to a known disease associated tagSNP. It will also determine if the 
+correlated SNP in LD to the tagSNP overlaps a genomic biological feature. 
+Correlated SNPs are directly imported from the current public release of 
+the 1000 genomes database. 1000 genomes ftp servers available for the 
+1000 genomes public data: 1) National Center for Biotechnology Information 
+(NCBI) ftp://ftp-trace.ncbi.nih.gov/1000genomes/; 2) European Bioinformatics
+Institute (EBI) ftp://ftp.1000genomes.ebi.ac.uk/vol1/.
 
 Correlated SNPs in LD to a tagSNP and overlapping genomic biological features 
 are known as putative functional SNPs (also defined as 'FuncySNP' elsewhere in
  the package.).
 
 As an example, we collected SNPs identified by GWAS for Glioblastoma multiforme 
-(GBM). In this example, GBM includes lower grade glioma, thus we label all 
-objects with 'glioma'.
+(GBM). In this example, GBM includes lower grade glioma, thus the use of 'glioma'
+ to label all objects.
+
+GWAS SNPs file should be in a tab or whitespace separated file. Three 
+columns are required for each GWAS tagSNP. Position, rsID, population.
+Positon should be the exact postion for each rsID as determined by human
+ genome build hg19 (Chromosome:Postion). rsID should contain a unique 
+ rsID as determined by the 1000 genomes database for each identified GWAS
+  tagSNP. Population should be a three letter code to determine original 
+  ethnic population for which the associated tagSNP was identified. The 
+ three letter code should be either European (EUR), Asian (ASN), African 
+ (AFR), American (AMR), or All (ALL). List each tagSNP for multiple ethnic 
+ population.
 <<>>=
 ## Full path to the example GWAS SNP regions file for Glioblastoma 
 #  (collected from SNPedia on Jan 2012)
 glioma.snp <- file.path(system.file('extdata', package='FunciSNP'), 
 dir(system.file('extdata',package='FunciSNP'), pattern='.snp$'));
+gsnp <- read.delim(file=glioma.snp,sep=" ",header=FALSE);
+gsnp;
+@
+Each biofeature used to identify correlated SNP should be in standard BED
+ format. All biofeatures should be stored in one folder and should have 
+ file extension .bed. Here is an example of three different biofeatures
+  used for the glioma example.
+<<>>=
 #glioma.snp;
 ## Full path to the example biological features BED files 
 #  derived from the ENCODE project for Glioblastoma U-87 cell lines.
 glioma.bio <- system.file('extdata',package='FunciSNP');
+list.files(glioma.bio, pattern='.bed$');
+nrsf.filename <- list.files(glioma.bio, pattern='.bed$')[2];
+Nrsf <- read.delim(file=paste(glioma.bio, nrsf.filename,sep="/"), sep="\t",
+        header=FALSE);
+head(Nrsf);
+@
+Following will take about 10 min to run.
+<<>>=
 #glioma.bio;
 ## FunciSNP analysis, extracts correlated SNPs from the 
 #  1000 genomes db ("ncbi" or "ebi") and finds overlaps between 
@@ -97,8 +130,11 @@ glioma.bio <- system.file('extdata',package='FunciSNP');
 #           bio.features.TSS=FALSE);
 # glioma;
 # summary(glioma);
-
-## The glioma example set above is called directly by  
+@
+If you decide not to run 'FuncySNP', you can call the results as
+ follows. This was precompiled to provide user an example dataset to work 
+ with in this tutorial.
+<<>>=
 data(glioma);
 glioma;
 summary(glioma);
@@ -127,19 +163,26 @@ rm(gl.anno);
 Using a specified Rsquare value (0-1) to subset the data, a table is generated 
 which summarizes the total number of FuncySNPs, associated tagSNPs, and number
  of overlapping biofeatures. This will provide user a first look at the total 
- number of available FuncySNP at a particular Rsquare cutoff.  If geneSum is 
- set to TRUE, a list of gene names is reported instead.
+ number of available FuncySNP at a particular Rsquare cutoff.
 <<>>=
 FunciSNPtable(glioma.anno, rsq=0.5);
+@
+If 'geneSum' is set to TRUE, a list of gene names is reported instead.
+<<>>=
 FunciSNPtable(glioma.anno, rsq=0.5, geneSum=TRUE);
 @
 \subsection*{Summary of correlated SNPs overlapping biofeatures}
 This function helps in determining the number of correlated SNPs overlapping 
-a number of different biofeatures. This is similar to running 'glioma' above.
-But now you can specifically call the function and set a pre-determined rsq 
-value to subset the data and thereby obtain a more objective result.
+a number of different biofeatures. This is similar to running 'summary(glioma)'
+above, except now you can specifically call the function and set a 
+pre-determined 'rsq' value to subset the data and thereby obtain a 
+more objective and informative result.
 <<>>=
 FunciSNPsummaryOverlaps(glioma.anno)
+@
+Using a 'rsq' value, the output is subsetted to summarize the results with 
+Rsquare values greater than or equal to 'rsq'.
+<<>>=
 FunciSNPsummaryOverlaps(glioma.anno, rsq=0.5)
 @
 \subsection*{Summary of correlated SNPs for a number of different tagSNPs}
@@ -183,8 +226,9 @@ Correlated SNPs. Each marked bin contains the total number of correlated SNPs. T
 {\footnotesize{}}
 \end{center}
 \end{figure}
-Using splitbysnp argument, the same type of plot as above is generated, however
- the total number of correlated SNPs are divided by the associated tagSNP.
+Using splitbysnp argument, the same type of plot as above (Figure 
+        \ref{fig:glioma_dist.pdf}) is generated, however the total number of 
+correlated SNPs are divided by the associated tagSNP.
 <<>>=
 FunciSNPplot(glioma.anno, splitbysnp=TRUE)
 ggsave("glioma_dist_bysnp.pdf")
@@ -197,10 +241,10 @@ ggsave("glioma_dist_bysnp.pdf")
 {\footnotesize{}}
 \end{center}
 \end{figure}
-Using genomicSum argument will result the overall genomic distribution of the 
-newly identified correlated SNPs.  Using rsq value, the plot is divided into 
-all correlated SNPs vs subset. This type of plot is informs the relative 
-enrichment for genomic features.
+Using genomicSum argument set to TRUE will output the overall genomic 
+distribution of the newly identified correlated SNPs.  Using 'rsq' value, the 
+plot is divided into all correlated SNPs vs subset. This type of plot informs the 
+relative enrichment for genomic features.
 <<>>=
 pdf("glioma_genomic_sum_rcut.pdf")
 FunciSNPplot(glioma.anno, rsq=0.5, genomicSum=TRUE, save=FALSE)
@@ -216,13 +260,17 @@ all correlated SNPs for each of the identified genomie features: exon, intron,
 {\footnotesize{}}
 \end{center}
 \end{figure}
-tagSummary argument is unique in that it will automatically save the plots in a
+'tagSummary' argument is unique in that it will automatically save all plots in a
 specific folder. This is done because this function will generate a summary 
-plot for each biofeatures.  The first plot is a scatter plot showing 
+plot for each biofeature.  The first plot (Figure 
+        \ref{fig:TFBS_Pol2_U87_R2vsDist_riskSNP.pdf}) is a scatter plot showing 
 the relationship between Rsquare and Distance to tagSNP for each FuncySNP. The
- second plot is a histogram distribution of number of correlated SNPs at each 
- Rsquare value. Each set of plot is further divided by tagSNP. Best if used with
-  rsq value.
+ second plot (Figure \ref{fig:TFBS_Pol2_U87_R2summary_riskSNP.pdf}) is a 
+ histogram distribution of total number of correlated SNPs at each 
+ Rsquare value. This plot is similar to Figure \ref{fig:glioma_dist_bysnp.pdf}, 
+ except it is further divided by biofeature. Each set of plot is further divided 
+ by tagSNP to help identify locus with the most identifiable FuncySNP. This argument
+ is best used in conjunction with a 'rsq' value.
 <<>>=
 ## Following will output a series of plots for each biofeature at rsq=0.5
 FunciSNPplot(glioma.anno, tagSummary=TRUE, rsq=0.5)
@@ -249,7 +297,13 @@ distribution of number of correlated SNPs at each Rsquare value}
 \newpage
 
 \subsection*{Output results in BED format - visualize results}
-FunciSNPbed outputs a unique BED file which can be used to view in any genomic 
+Finally, after evaluating all results using the above tables and plots functions,
+ a unique pattern emerges that helps identifies a unique cluster of tagSNP 
+ and biofeature that can identify a set of FuncySNPs. To better visualize 
+ and to get a better perspective of the location of each newly identified 
+ FuncySNP, the results can be outputted using FunciSNPbed.
+
+  FunciSNPbed outputs a unique BED file which can be used to view in any genomic 
 browser compatible with BED formats. To learn more about BED formats, see UCSC 
 Genome Browser FAQ (http://genome.ucsc.edu/FAQ/FAQformat). Each tagSNP 
 which is in LD to a corresponding FuncySNP overlapping at least one biofeature
@@ -265,9 +319,11 @@ FunciSNPbed(glioma.anno, rsq=0.5);
 
 \newpage
 
+Questions or comments, please contact Simon G. Coetzee (scoetzee NEAR gmail 
+ POINT com) or Houtan Noushmehr (houtana NEAR gmail POINT com).
+
 <<sessionInfo>>=
 sessionInfo()
 @
-Questions or comments, please contact Simon G. Coetzee (scoetzee NEAR gmail 
- POINT com) or Houtan Noushmehr (houtana NEAR gmail POINT com).
+
 \end{document}

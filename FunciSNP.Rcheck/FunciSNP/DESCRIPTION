@@ -19,4 +19,4 @@ Description: FunciSNP integrates information from GWAS, 1000genomes and chromati
 License: GPL-3
 LazyLoad: yes
 Packaged: 2012-02-03 10:29:59 UTC; houtan
-Built: R 2.14.1; ; 2012-02-13 07:35:47 UTC; unix
+Built: R 2.14.1; ; 2012-02-13 08:35:35 UTC; unix
