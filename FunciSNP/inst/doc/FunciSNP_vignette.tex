@@ -7,13 +7,12 @@
 \usepackage{Sweave}
 \begin{document}
 
-\title{FunciSNP: Functional Identification of SNPs with\\Phenotype by 
-Coincidence with Chromatin Biofeatures\\Vignette}
-\author{Simon G. Coetzee and Houtan Noushmehr\\\\Norris Cancer Center\\Keck 
-School of Medicine\\University of Southern California\\Los Angeles, USA.\\\\
-and\\\\Faculdade de Medicina de Ribeir\^{a}o Preto\\Departmento de 
-Gen\'{e}tica\\Universidade de S\^{a}o Paulo\\Ribeir\^{a}o Preto, S\^{a}o Paulo, 
-Brasil}
+\title{Vignette\\FunciSNP: Functional Identification of SNPs with
+\\Phenotype by Coincidence with Chromatin Biofeatures}
+\author{Simon G. Coetzee, Suhn Rhie, Gerhard A. Coetzee and Houtan 
+Noushmehr\\\\Norris Cancer Center\\Keck School of Medicine\\University
+ of Southern California\\Los Angeles, USA.
+}
 
 \maketitle
 \section*{Introduction}
@@ -61,7 +60,7 @@ Using a 64bit Linux machine running 11.04 Ubuntu OS with 24G RAM and 8 cores
 > package.version("FunciSNP");
 \end{Sinput}
 \begin{Soutput}
-[1] "0.1.7"
+[1] "0.1.8"
 \end{Soutput}
 \end{Schunk}
 
@@ -616,8 +615,8 @@ relative enrichment for genomic features.
 > dev.off()
 \end{Sinput}
 \begin{Soutput}
-pdf 
-  2 
+X11cairo 
+       2 
 \end{Soutput}
 \end{Schunk}
 \begin{figure}[ht!]
@@ -654,7 +653,7 @@ Finished plotting  3 / 3
 \end{Schunk}
 \begin{figure}[ht!]
 \begin{center}
-\includegraphics{FunciSNP.0.1.7/plots/TFBS_Pol2_U87_R2vsDist_riskSNP.pdf}
+\includegraphics{FunciSNP.0.1.8/plots/TFBS_Pol2_U87_R2vsDist_riskSNP.pdf}
 \caption{\label{fig:TFBS_Pol2_U87_R2vsDist_riskSNP.pdf} Scatter plot 
 showing the relationship between Rsquare and Distance to tagSNP for each 
 FuncySNP}
@@ -664,7 +663,7 @@ FuncySNP}
 
 \begin{figure}[ht!]
 \begin{center}
-\includegraphics{FunciSNP.0.1.7/plots/TFBS_Pol2_U87_R2summary_riskSNP.pdf}
+\includegraphics{FunciSNP.0.1.8/plots/TFBS_Pol2_U87_R2summary_riskSNP.pdf}
 \caption{\label{fig:TFBS_Pol2_U87_R2summary_riskSNP.pdf} Histogram 
 distribution of number of correlated SNPs at each Rsquare value}
 {\footnotesize{}}
@@ -728,7 +727,7 @@ attached base packages:
  [8] datasets  methods   base     
 
 other attached packages:
- [1] FunciSNP_0.1.7                         
+ [1] FunciSNP_0.1.8                         
  [2] VariantAnnotation_1.0.5                
  [3] TxDb.Hsapiens.UCSC.hg19.knownGene_2.6.2
  [4] GenomicFeatures_1.6.7                  
@@ -740,7 +739,7 @@ other attached packages:
 [10] multtest_2.10.0                        
 [11] biomaRt_2.10.0                         
 [12] GGtools_4.0.0                          
-[13] ff_2.2-4                               
+[13] ff_2.2-5                               
 [14] bit_1.1-8                              
 [15] annotate_1.32.1                        
 [16] GGBase_3.14.0                          
@@ -748,12 +747,12 @@ other attached packages:
 [18] snpStats_1.4.1                         
 [19] Matrix_1.0-3                           
 [20] lattice_0.20-0                         
-[21] survival_2.36-12                       
+[21] survival_2.36-10                       
 [22] rtracklayer_1.14.4                     
 [23] RCurl_1.9-5                            
 [24] Rsamtools_1.6.3                        
 [25] Biostrings_2.22.0                      
-[26] GenomicRanges_1.6.4                    
+[26] GenomicRanges_1.6.6                    
 [27] IRanges_1.12.5                         
 [28] matlab_0.8.9                           
 [29] ggplot2_0.8.9                          
@@ -773,7 +772,7 @@ other attached packages:
 [43] Biobase_2.14.0                         
 
 loaded via a namespace (and not attached):
-[1] digest_0.5.1    MASS_7.3-16     parallel_2.14.1 XML_3.9-2      
+[1] digest_0.5.1    MASS_7.3-16     parallel_2.14.1 XML_3.9-4      
 [5] xtable_1.6-0    zlibbioc_1.0.0 
 \end{Soutput}
 \end{Schunk}
