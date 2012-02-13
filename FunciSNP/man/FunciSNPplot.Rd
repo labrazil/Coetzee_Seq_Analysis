@@ -41,7 +41,7 @@ FunciSNPplot(dat, rsq = 0, split = FALSE, splitbysnp = FALSE, tagSummary = FALSE
 }
 }
 \details{
-
+NA
 }
 \value{
 Plots are generated either in X11 or in specified folder.
@@ -53,21 +53,23 @@ Plots are generated either in X11 or in specified folder.
 	Simon Coetzee, Houtan Noushmehr
 }
 \note{
-
+NA
 }
 
 
 
 \seealso{
-	\code{\link{FunciSNP}}, \code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
+	\code{\link{FuncySNP}}, \code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
 }
 \examples{
 data(glioma)
 gl <- FunciSNPAnnotateSummary(glioma)
 FunciSNPplot(gl)
-FunciSNPplot(gl, rsq=0, genomicSum=T, save=T)
-FunciSNPplot(gl, rsq=0.5, genomicSum=T, save=T)
-FunciSNPplot(gl, tagSummary=T, rsq=0.5)
+FunciSNPplot(gl, rsq=0, genomicSum=TRUE, save=FALSE)
+FunciSNPplot(gl, rsq=0.5, genomicSum=TRUE, save=FALSE)
+# DO NOT RUN
+#FunciSNPplot(gl, tagSummary=TRUE, rsq=0.5)
+#
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

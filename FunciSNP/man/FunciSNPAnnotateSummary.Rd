@@ -13,7 +13,7 @@ FunciSNPAnnotateSummary(snp.list)
 
 \arguments{
   \item{snp.list}{
-          a FunciSNP object: \code{snp.list} represents the FunciSNP object output from FunciSNP. See \code{\link{FunciSNP}}.
+          a FunciSNP object: \code{snp.list} represents the FunciSNP object output from FunciSNP. See \code{\link{FuncySNP}}.
 }
 }
 \details{
@@ -29,13 +29,13 @@ data.frame with rows for each correlated SNP.
 	Simon Coetzee, Houtan Noushmehr
 }
 \note{
-
+NA
 }
 
 
 
 \seealso{
-	\code{\link{FunciSNP}}, \code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
+	\code{\link{FuncySNP}}, \code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
 }
 \examples{
 data(glioma);
@@ -44,7 +44,4 @@ dim(gl)
 head(gl)
 names(gl)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ annotation }

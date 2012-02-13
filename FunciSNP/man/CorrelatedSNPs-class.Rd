@@ -49,11 +49,10 @@
 
 \title{Class \code{"CorrelatedSNPs"}}
 \description{
-ccc%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+Class for CorrelatedSNPs
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("CorrelatedSNPs", ...)}.
-%%  ~~ describe objects here ~~ 
 }
 \section{Slots}{
   \describe{
@@ -130,20 +129,18 @@ Objects can be created by calls of the form \code{new("CorrelatedSNPs", ...)}.
 	 }
 }
 \references{
-%%  ~~put references to the literature/web site here~~
+Coetzee SG et al. submitted for review. 2012
 }
 \author{
-%%  ~~who you are~~
+Simon Coetzee, Houtan Noushmehr
 }
 \note{
-%%  ~~further notes~~
+NA
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+\code{\link{FuncySNP}}, \code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
 }
 \examples{
 showClass("CorrelatedSNPs")

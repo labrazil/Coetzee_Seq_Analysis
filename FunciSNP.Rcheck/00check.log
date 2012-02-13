@@ -1,0 +1,104 @@
+* using log directory ‘/home/houtan/Documents/Projects/gitfolder/Coetzee_Seq_Analysis/FunciSNP.Rcheck’
+* using R version 2.14.1 (2011-12-22)
+* using platform: x86_64-pc-linux-gnu (64-bit)
+* using session charset: UTF-8
+* using option ‘--no-vignettes’
+* checking for file ‘FunciSNP/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘FunciSNP’ version ‘0.1.7’
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking whether package ‘FunciSNP’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking for unstated dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+AnnotateSummary: no visible binding for global variable ‘lincRNA’
+AnnotateSummary: no visible binding for global variable
+  ‘TSS.human.GRCh37’
+AnnotateSummary: no visible binding for global variable
+  ‘nearest.TSS.distancetoFeature’
+AnnotateSummary: no visible binding for global variable ‘Intergenic’
+AnnotateSummary: no visible binding for global variable ‘Promoter’
+CreateCorrelatedSNPs: no visible global function definition for
+  ‘ALL.geno’
+CreateCorrelatedSNPs: no visible global function definition for
+  ‘AFR.geno’
+CreateCorrelatedSNPs: no visible global function definition for
+  ‘AMR.geno’
+CreateCorrelatedSNPs: no visible global function definition for
+  ‘ASN.geno’
+CreateCorrelatedSNPs: no visible global function definition for
+  ‘EUR.geno’
+CreatePopulations: no visible binding for global variable ‘AFR’
+CreatePopulations: no visible binding for global variable ‘AMR’
+CreatePopulations: no visible binding for global variable ‘ASN’
+CreatePopulations: no visible binding for global variable ‘EUR’
+CreatePopulations: no visible binding for global variable ‘ALL’
+FunciSNPplot: no visible binding for global variable ‘R.squared’
+FunciSNPplot: no visible binding for global variable ‘r.2’
+FunciSNPplot: no visible binding for global variable
+  ‘distance.from.tag’
+FunciSNPplot: no visible binding for global variable ‘variable’
+FunciSNPplot: no visible binding for global variable ‘value’
+* checking Rd files ... NOTE
+prepare_Rd: TSList-class.Rd:25-29: Dropping empty section ‘Extends’
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... WARNING
+Undocumented code objects:
+  ‘AFR.D.prime’ ‘AFR.D.prime<-’ ‘AFR.R.squared’ ‘AFR.R.squared<-’
+  ‘AFR.p.value’ ‘AFR.p.value<-’ ‘ALL.D.prime’ ‘ALL.D.prime<-’
+  ‘ALL.R.squared’ ‘ALL.R.squared<-’ ‘ALL.overlapping.snps.geno’
+  ‘ALL.p.value’ ‘ALL.p.value<-’ ‘AMR.D.prime’ ‘AMR.D.prime<-’
+  ‘AMR.R.squared’ ‘AMR.R.squared<-’ ‘AMR.p.value’ ‘AMR.p.value<-’
+  ‘ASN.D.prime’ ‘ASN.D.prime<-’ ‘ASN.R.squared’ ‘ASN.R.squared<-’
+  ‘ASN.p.value’ ‘ASN.p.value<-’ ‘D.prime.corrsnps’ ‘D.prime.corrsnps<-’
+  ‘EUR.D.prime’ ‘EUR.D.prime<-’ ‘EUR.R.squared’ ‘EUR.R.squared<-’
+  ‘EUR.p.value’ ‘EUR.p.value<-’ ‘R.squared.corrsnps’
+  ‘R.squared.corrsnps<-’ ‘alt.allele’ ‘alt.allele<-’ ‘chr’ ‘chr<-’
+  ‘correlated.snps’ ‘correlated.snps<-’ ‘genotype’ ‘genotype<-’
+  ‘overlapping.features’ ‘overlapping.features<-’ ‘pop.genotype’
+  ‘pop.genotype<-’ ‘population’ ‘population<-’ ‘position’ ‘position<-’
+  ‘ref.allele’ ‘ref.allele<-’ ‘snpid’ ‘snpid<-’
+All user-level objects in a package should have documentation entries.
+See the chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of ‘data’ directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking for left-overs from vignette generation ... NOTE
+  file ‘inst/doc/Rplots.pdf’ will not be installed: please remove it
+* checking examples ... OK
+* checking for unstated dependencies in vignettes ... NOTE
+‘library’ or ‘require’ call not declared from: ‘gtools’
+* checking package vignettes in ‘inst/doc’ ... OK
+* checking running R code from vignettes ... SKIPPED
+* checking re-building of vignettes ... SKIPPED
+* checking PDF version of manual ... OK
+WARNING: There was 1 warning, see
+  ‘/home/houtan/Documents/Projects/gitfolder/Coetzee_Seq_Analysis/FunciSNP.Rcheck/00check.log’
+for details

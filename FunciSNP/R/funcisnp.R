@@ -223,7 +223,7 @@ CreatePopulations <- function(primary.server="ncbi") {
   return(populations)
 }
 
-FunciSNP <- function(snp.regions.file, bio.features.loc = NULL,
+FuncySNP <- function(snp.regions.file, bio.features.loc = NULL,
                      bio.features.TSS = TRUE,
                      par.threads=detectCores()/2,
                      verbose = par.threads < 2, method.p = "BH",
@@ -885,7 +885,7 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
     rd.corr.snp.loc$snpid <- NULL
 
     data(TSS.human.GRCh37, package='ChIPpeakAnno')
-    data(lincRNA.hg19)
+    data(lincRNA.hg19, package='FunciSNP')
 
     ##nearest linc RNAs
     cat("Func-y-SNPs identified!!\nAnnotation will begin\n~~\n")
@@ -991,7 +991,7 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
 }
 
 FunciSNPsummaryOverlaps <- function(dat, rsq=0) {
-  dat <- subset(dat, R.squared >= rsq)
+  dat <- dat[which(dat$R.squared >= rsq), ]
   tag.snps.with.overlaps <- unique(as.character(dat$tag.snp.id))
   require("plyr");
   tag.snp.features <- lapply(tag.snps.with.overlaps, function(x) {
@@ -1028,21 +1028,21 @@ FunciSNPsummaryOverlaps <- function(dat, rsq=0) {
 
 
 FunciSNPidsFromSummary <- function(dat, tagsnpid=NULL, num.features, rsq=0) {
-  dat <- subset(dat, R.squared >= rsq)
-  if(identical(tagsnpid, NULL)) {
-    dat.sum <- FunciSNPsummaryOverlaps(dat=dat, rsq=rsq)
-    tag.snps <- dat.sum[1:nrow(dat.sum)-1, num.features]
-    tag.snps <- names(tag.snps[which(tag.snps > 0)])
-    tagsnpid <- tag.snps
-  }
+  dat <- dat[which(dat$R.squared>=rsq), ]
+      if(identical(tagsnpid, NULL)) {
+          dat.sum <- FunciSNPsummaryOverlaps(dat=dat, rsq=rsq)
+              tag.snps <- dat.sum[1:nrow(dat.sum)-1, num.features]
+              tag.snps <- names(tag.snps[which(tag.snps > 0)])
+              tagsnpid <- tag.snps
+      }
   summary.corr.snps.list <- NULL
-  for(i in tagsnpid) {
-  overlap.counts <-
-        count(
+      for(i in tagsnpid) {
+          overlap.counts <-
+              count(
         as.character(
-        dat[dat$tag.snp.id == i, ]$corr.snp.id))
-  corr.overlapping.xfeatures <-
-                  subset(overlap.counts, freq >= num.features, select=x)
+        dat[which(dat$tag.snp.id == i), ]$corr.snp.id))
+  corr.overlapping.xfeatures <- overlap.counts[which(overlap.counts$freq >= num.features), ]                
+#  subset(overlap.counts, freq >= num.features, select=x)
   corr.overlapping.xfeatures <-
                   as.character(as.list(corr.overlapping.xfeatures)$x)
   summary.corr.snps <-
@@ -1050,7 +1050,7 @@ FunciSNPidsFromSummary <- function(dat, tagsnpid=NULL, num.features, rsq=0) {
                             dat[which(dat$corr.snp.id == x), ]
                              }, dat)
   summary.corr.snps$X1 <- NULL
-  summary.corr.snps <- subset(summary.corr.snps, tag.snp.id == i)
+  summary.corr.snps <- summary.corr.snps[which(summary.corr.snps$tag.snp.id==i), ]
   summary.corr.snps.list <- rbind(summary.corr.snps.list, summary.corr.snps)
   }
   rownames(summary.corr.snps.list) <-
@@ -1068,14 +1068,14 @@ FunciSNPtable <- function(dat, rsq, geneSum = FALSE) {
   if(!geneSum){
     total.tagSNPs <-length(unique(dat[,"tag.snp.id"]))
     total.1kSNPs  <-length(unique(dat[,"corr.snp.id"]))
-    total.feature  <-length(unique(subset(dat, R.squared>rsq)[,"bio.feature"]))
+    total.feature  <-length(unique(dat[which(dat$R.squared>rsq), "bio.feature"]))
 
     total.tagSNPs.cutoff <-
-                     length(unique(subset(dat, R.squared>rsq)[,"tag.snp.id"]))
+                     length(unique(dat[which(dat$R.squared>rsq), "tag.snp.id"]))
     total.1kSNPs.cutoff  <-
-                     length(unique(subset(dat, R.squared>rsq)[,"corr.snp.id"]))
+                     length(unique(dat[which(dat$R.squared>rsq), "corr.snp.id"]))
     total.feature.cutoff  <-
-                     length(unique(subset(dat, R.squared>rsq)[,"bio.feature"]))
+                     length(unique(dat[which(dat$R.squared>rsq), "bio.feature"]))
 
     total.summary.snp.list <- matrix(c(total.tagSNPs,total.1kSNPs,total.feature,
                                        total.tagSNPs.cutoff,total.1kSNPs.cutoff,
@@ -1093,7 +1093,7 @@ FunciSNPtable <- function(dat, rsq, geneSum = FALSE) {
     return(total.summary.snp.list);
   } else {
     ###new function try out
-    dat.s <- subset(dat, R.squared > rsq)
+    dat.s <- dat[which(dat$R.squared > rsq), ]
     y <- colSums(table(dat.s$corr.snp.id, dat.s$nearest.TSS.GeneSymbol))
     y[y==0] <- NA
     y <- na.omit(y)
@@ -1111,7 +1111,8 @@ FunciSNPbed <- function(dat, rsq, path=getwd(), filename=NULL) {
 		filename <- filename
 	}
 ###new function try out
-	d.s <- subset(dat, R.squared > rsq)
+#d.s <- subset(dat, R.squared > rsq)
+	    d.s <- dat[which(dat$R.squared>rsq), ]
 		d.cor <- d.s[ which(!(duplicated(d.s[,"corr.snp.id"]))), ]
 		d.tag <- d.s[ which(!(duplicated(d.s[,"tag.snp.id"]))), ]
 		d.tag <- (d.tag[,c(1,8,8,7,10,8,8)])
@@ -1239,8 +1240,8 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
 
 			FunciSNP:::theme_white()
 
-			all.s <- try(subset(dat, R.squared >= rsq), silent = TRUE)
-			all.ss <- try(subset(dat, R.squared < rsq), silent = TRUE)
+			all.s <- try(dat[which(dat$R.squared >= rsq), ], silent = TRUE)
+			all.ss <- try(dat[which(dat$R.squared < rsq), ], silent = TRUE)
 			try(all.s$r.2 <- c("Yes"), silent = TRUE)
 			try(all.ss$r.2 <- c("No"), silent = TRUE)
 			if(nrow(all.s) > 0 && nrow(all.ss) > 0) {
@@ -1258,7 +1259,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
 			}
 		for( i in 1:length(summary(as.factor(all[,"bio.feature"]))) ){
 			bio <- names(summary(as.factor(all[,"bio.feature"])))
-				tmp <- subset(all, bio.feature==bio[i])
+				tmp <- all[which(all$bio.feature == bio[i]), ]
 
 ## plot r.2 values
 				ggplot(tmp, aes(x=R.squared, fill=factor(r.2))) + 
@@ -1304,8 +1305,8 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
 	require("gplots")
 	require('matlab')
 
-			all.s<-(table( subset(dat,R.squared>=rsq)[,"bio.feature"], 
-						subset(dat,R.squared>=rsq)[,"tag.snp.id"] ))
+			all.s<- table( dat[which(dat$R.squared>=rsq),"bio.feature"], 
+						dat[which(dat$R.squared>=rsq) ,"tag.snp.id"] )
 			all.s <- as.matrix(all.s)
 			if(save){
 			png(filename=paste(pathplot,"/FunciSNP.",package.version("FunciSNP"),
@@ -1350,9 +1351,9 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
 						"utr3",
 						"Intergenic"))
 
-				t <- subset(dat.m, value=="NO")
+				t <- dat.m[which(dat.m$value=="NO"), ]
 				t$value <- "2.NO"
-				tt <- subset(dat.m, value!="NO")
+				tt <- dat.m[which(dat.m$value!="NO"), ]
 				tt$value <- "1.YES"
 				dat.m <- rbind(t,tt)
 
@@ -1376,9 +1377,9 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
 		} else {
 
 			dat$r2 <- paste("R squared < ", rsq,sep="")
-				t <- subset(dat, R.squared>=rsq)
+				t <- dat[which(dat$R.squared>=rsq), ]
 				t$r2 <- paste("R squared >= ", rsq,sep="")
-				dat <- rbind(t, subset(dat, R.squared<rsq)) 
+				dat <- rbind(t, dat[which(dat$R.squared<rsq), ]) 
 				dat.m <- melt(dat[,c(23:29)], 
 						measure.vars=c("Promoter", 
 							"utr5", 
@@ -1387,9 +1388,9 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
 							"utr3",
 							"Intergenic"))
 
-				t <- subset(dat.m, value=="NO")
+				t <- dat.m[which(dat.m$value=="NO"), ]
 				t$value <- "2.NO"
-				tt <- subset(dat.m, value!="NO")
+				tt <- dat.m[which(dat.m$value!="NO"), ]
 				tt$value <- "1.YES"
 				dat.m <- rbind(t,tt)
 

@@ -36,24 +36,21 @@ placeholder<<<<<}
 %% ...
 placeholder<<<<<}
 \references{
-%% ~put references to the literature/web site here ~
-placeholder<<<<<}
+Coetzee SG et al. submitted for review. 2012
+}
 \author{
-%%  ~~who you are~~
-placeholder<<<<<}
+Simon Coetzee, Houtan Noushmehr
+}
 \note{
-%%  ~~further notes~~
-placeholder<<<<<}
+NA
+}
 
-%% ~Make other sections like Warning with \section{Warning placeholder<<<<<}{....placeholder<<<<<} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{helpplaceholder<<<<<}placeholder<<<<<}, ~~~
+\code{\link{FuncySNP}}, \code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
 }
 \examples{
 ## coming soon
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ ~kwd1}
 \keyword{ ~kwd2}% __ONLY ONE__ keyword per line

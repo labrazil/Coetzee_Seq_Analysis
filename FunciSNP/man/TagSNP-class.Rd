@@ -87,20 +87,18 @@ Objects can be created by calls of the form \code{new("TagSNP", ...)}.
 	 }
 }
 \references{
-%%  ~~put references to the literature/web site here~~
+Coetzee SG et al. submitted for review. 2012
 }
 \author{
-%%  ~~who you are~~
+        Simon Coetzee, Houtan Noushmehr
 }
 \note{
-%%  ~~further notes~~
+    NA
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+\code{\link{FuncySNP}}, \code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
 }
 \examples{
 showClass("TagSNP")

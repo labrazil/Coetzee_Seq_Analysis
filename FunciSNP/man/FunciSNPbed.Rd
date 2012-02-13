@@ -39,13 +39,13 @@ BED file is outputed as a tab-deliminated file in the specified 'path' folder. S
 	Simon Coetzee, Houtan Noushmehr
 }
 \note{
-
+NA
 }
 
 
 
 \seealso{
-	\code{\link{FunciSNP}}, \code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
+	\code{\link{FuncySNP}}, \code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
 }
 \examples{
 ##

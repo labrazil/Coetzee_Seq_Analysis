@@ -1,0 +1,20 @@
+* installing *source* package ‘FunciSNP’ ...
+** R
+** data
+** inst
+** preparing package for lazy loading
+Warning: replacing previous import ‘space’ when loading ‘IRanges’
+Warning: replacing previous import ‘as.list’ when loading ‘AnnotationDbi’
+Warning: replacing previous import ‘path’ when loading ‘Rsamtools’
+** help
+*** installing help indices
+** building package indices ...
+*** tangling vignette sources ...
+   ‘FunciSNP_vignette.Rnw’ 
+** testing if installed package can be loaded
+Warning messages:
+1: replacing previous import ‘space’ when loading ‘IRanges’ 
+2: replacing previous import ‘as.list’ when loading ‘AnnotationDbi’ 
+3: replacing previous import ‘path’ when loading ‘Rsamtools’ 
+
+* DONE (FunciSNP)
