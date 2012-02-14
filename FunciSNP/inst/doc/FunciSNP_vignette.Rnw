@@ -207,14 +207,14 @@ head(Nrsf);
 
 As an example, \Robject{Nrsf} was created to illustrate the format needed for
 each biofeatures. To run FuncySNP, only the path to the folder to each
-biofeature is required (\Robject{glioma.bio}.
+biofeature is required (\Robject{glioma.bio}).
 
 \subsection{FuncySNP analysis using two inputs}
 
 To run the example data could take more than 5 minutes, thus the R code is
 commented out for this tutorial. If you are interested in running the glioma
 example from scratch, please uncomment the following and rerun in your R
-session. (The main function of FunciSNP is \Rmethod{FuncySNP}.)
+session. NOTE: The main method to run FunciSNP is \Rmethod{FuncySNP}.
 
 <<>>=
 ## FunciSNP analysis, extracts correlated SNPs from the 
