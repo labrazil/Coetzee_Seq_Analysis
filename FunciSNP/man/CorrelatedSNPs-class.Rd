@@ -132,7 +132,7 @@ Objects can be created by calls of the form \code{new("CorrelatedSNPs", ...)}.
 Coetzee SG et al. submitted for review. 2012
 }
 \author{
-Simon Coetzee, Houtan Noushmehr
+Simon G. Coetzee; Houtan Noushmehr, PhD
 }
 \note{
 NA

@@ -50,7 +50,7 @@ Plots are generated either in X11 or in specified folder.
 	Coetzee SG et al. submitted for review. 2012
 }
 \author{
-	Simon Coetzee, Houtan Noushmehr
+	Simon G. Coetzee; Houtan Noushmehr, PhD
 }
 \note{
 NA

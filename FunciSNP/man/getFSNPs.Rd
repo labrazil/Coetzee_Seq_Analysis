@@ -61,7 +61,7 @@ Correlated SNPs in LD to a tagSNP and overlapping genomic biological features ar
 	Coetzee SG et al. submitted for review. 2012
 }
 \author{
-	Simon Coetzee, Houtan Noushmehr
+	Simon G. Coetzee; Houtan Noushmehr, PhD
 }
 \note{
     NA

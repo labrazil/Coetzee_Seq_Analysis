@@ -37,7 +37,7 @@ Objects can be created by calls of the form \code{new("TSList", ...)}.
     Coetzee SG et al. submitted for review. 2012
 }
 \author{
-Simon G. Coetzee and Houtan Noushmehr
+Simon G. Coetzee and Houtan Noushmehr, PhD
 }
 \note{
     NA

@@ -20,7 +20,7 @@ Package: \tab FunciSNP\cr
 	Coetzee SG et al. submitted for review. 2012
 }
 \author{
-Simon Coetzee and Houtan Noushmehr
+Simon Coetzee and Houtan Noushmehr, PhD
     
 
 Maintainer:

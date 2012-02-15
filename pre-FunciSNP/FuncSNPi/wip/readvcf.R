@@ -2,7 +2,7 @@
 
 #### FunciSNP - the Functional Integration of SNPs with Phenotype
 ####           by Coincidence with Chromatin Biofeatures
-#### Copyright (C) 2011 Simon G. Coetzee and Houtan Noushmehr
+#### Copyright (C) 2011 Simon G. Coetzee and Houtan Noushmehr, PhD
 ####
 #### This program is free software: you can redistribute it and/or modify
 #### it under the terms of the GNU General Public License as published by
