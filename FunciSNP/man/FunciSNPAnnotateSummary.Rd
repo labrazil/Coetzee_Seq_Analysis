@@ -13,7 +13,7 @@ FunciSNPAnnotateSummary(snp.list)
 
 \arguments{
   \item{snp.list}{
-          a FunciSNP object: \code{snp.list} represents the FunciSNP object output from FunciSNP. See \code{\link{FuncySNP}}.
+          a FunciSNP object: \code{snp.list} represents the FunciSNP object output from FunciSNP. See \code{\link{getFSNPs}}.
 }
 }
 \details{
@@ -35,7 +35,7 @@ NA
 
 
 \seealso{
-	\code{\link{FuncySNP}}, \code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
+	\code{\link{getFSNPs}}, \code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
 }
 \examples{
 data(glioma);
