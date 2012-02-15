@@ -25,15 +25,13 @@
         Noushmehr$^\ddagger$\footnote{houtana NEAR gmail POINT com}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
-
 \title{Using the FunciSNP package\\`Functional Identification of SNPs with\\
 Phenotype by Coincidence with Chromatin Biofeatures'}
 \maketitle
 %%% Affiliation %%%
 \begin{center}
-$^\ddagger$Norris Cancer Center\\Keck School of
-Medicine\\University of Southern California\\Los Angeles, CA,
-USA
+$^\ddagger$Norris Cancer Center\\Keck School of Medicine\\University of Southern
+California\\Los Angeles, CA, USA
 \end{center}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \tableofcontents
@@ -43,17 +41,19 @@ USA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-FunciSNP assist in identifying putative functional SNP from previously
-identified GWAS SNPs (tagSNP). Using information from the 1000 genomes database
-(1000GP) as well as known position of GWAS tagSNP currated for a particular
-trait or disease, FunciSNP integrates the two data along with sequence
-information provided by peaks identified from high-throughput sequencing.
-FunciSNP assumes user will provide peaks identified using any available ChIP
-peak algorithm, such as FindPeaks.
+\Rpackage{FunciSNP} assist in identifying putative functional SNP in LD to
+previously annotated GWAS SNPs (tagSNP). Extracting information from the 1000
+genomes database (1000GP) by relative genomic position of GWAS tagSNP currated
+for a particular trait or disease, FunciSNP aims to integrate the two
+information with sequence information provided by peaks identified from
+high-throughput sequencing. FunciSNP assumes user will provide peaks identified
+using any available ChIP peak algorithm, such as FindPeaks, HOMER, or SICER.
+\Rpackage{FunciSNP} will currate all 1000GP SNPs which are in linkage
+disequilibrium (LD) to a known disease associated tagSNP and more importantly
+determine if the 1000GP SNP in LD to the tagSNP overlaps a genomic biological
+feature.
 
-It will identify correlated SNPs which are in linkage disequilibrium (LD) to a
-known disease associated tagSNP. It will also determine if the correlated SNP in
-LD to the tagSNP overlaps a genomic biological feature. Correlated SNPs are
+Correlated SNPs are
 directly imported from the current public release of the 1000 genomes database.
 1000 genomes ftp servers available for the 1000 genomes public data: 
 
@@ -230,20 +230,18 @@ session. NOTE: The main method to run FunciSNP is \Rmethod{getFSNPs}.
 
 <<>>=
 ## FunciSNP analysis, extracts correlated SNPs from the 
-#  1000 genomes db ("ncbi" or "ebi") and finds overlaps between 
-#  correlated SNP and biological features and then 
-#  calculates LD (Rsquare, Dprime, distance, p-value).
+## 1000 genomes db ("ncbi" or "ebi") and finds overlaps between 
+## correlated SNP and biological features and then 
+## calculates LD (Rsquare, Dprime, distance, p-value).
 ## Depending on number of CPUs and internet connection, this step may take 
-# some time. Please consider using a unix machine to access multiple cores.
-# glioma <- getFSNPs(snp.regions.file=glioma.snp, 
-#           bio.features.loc = glioma.bio, 
-#           bio.features.TSS=FALSE);
-# glioma;
-# summary(glioma);
+## some time. Please consider using a unix machine to access multiple cores.
+
+# glioma <- getFSNPs(snp.regions.file=glioma.snp, bio.features.loc = glioma.bio,
+# bio.features.TSS=FALSE);
 @
 
 As an alternative, \Robject{glioma} was pre-run and stored in the package as an
-R object. To call this data object, simily run the following commands. 
+\textit{R} object. To call this data object, simily run the following commands. 
 
 <<>>=
 data(glioma);
@@ -306,9 +304,9 @@ gl.anno <- glioma.anno;
 ## remove rownames for this example section.
 rownames(gl.anno) <- c(1:length(rownames(gl.anno)))
 dim(gl.anno);
-head(gl.anno[,c(1:18,20:28)]); ## 
 names(gl.anno);
-summary(gl.anno[,c(1:18,20:28)]);
+head(gl.anno[, c(1:18,20:28)]);
+summary(gl.anno[, c(1:18,20:28)]);
 rm(gl.anno);
 @
 
