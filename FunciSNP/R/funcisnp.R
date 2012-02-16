@@ -1549,10 +1549,10 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
 
 		} else {
 
-			dat$r2 <- paste("R squared < ", rsq,sep="")
-				t <- dat[which(dat$R.squared>=rsq), ]
-				t$r2 <- paste("R squared >= ", rsq,sep="")
-				dat <- rbind(t, dat[which(dat$R.squared<rsq), ]) 
+			    dat$r2 <- paste("All 1000GP SNPs", sep="")
+				t <- dat[which(dat$R.squared >= rsq), ]
+				t$r2 <- paste("R squared >= ", rsq, sep="")
+				dat <- rbind(t, dat) 
 				dat.m <- melt(dat[,c(23:29)], 
 						measure.vars=c("Promoter", 
 							"utr5", 

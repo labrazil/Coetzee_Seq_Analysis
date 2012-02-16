@@ -587,7 +587,7 @@ UCSC Genome Browser FAQ (\url{http://genome.ucsc.edu/FAQ/FAQformat}).
 
 <<>>=
 ## will output to current working directory.
-FunciSNPbed(glioma.anno, rsq=0.5);
+FunciSNPbed(glioma.anno, rsq=0.22);
 # FunciSNPbed(rs6010620, rsq=0.5);
 @
 
@@ -597,11 +597,12 @@ initial position is provided by the first tagSNP and the first linked
 Func-y-SNP. We recommend using UCSC genome browser to view your BED files. This
 is useful so you can view all public and private tracks in relation to FunciSNP
 results. As an example, see Figure \ref{fig:FunciSNP_genome_viewer1.pdf} on page
-\pageref{fig:FunciSNP_genome_viewer1.pdf}.
+\pageref{fig:FunciSNP_genome_viewer1.pdf} or visit this saved UCSC Genome
+Browser session: \url{http://goo.gl/xrZPD}.
 
 \begin{figure}[ht!]                                                              
 \begin{center}                                                                   
-\includegraphics{UCSC_genomeviewer_glioma.png}                                    
+\includegraphics{UCSC_genomeviewer_glioma.pdf}                                    
 \caption{\label{fig:FunciSNP_genome_viewer1.pdf} FunciSNP results viewed in UCSC
 genome browser. Top track represents FunciSNP results, second track is the known
 GWAS hits.}        
