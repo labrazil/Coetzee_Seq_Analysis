@@ -101,7 +101,7 @@ Something about peak calling and available data (public/private).
 Currently, there are two options to obtain a copy of \Rpackage{FunciSNP}: 
 
 \begin{itemize}
-\item Download current source code from Coetzeesq's
+\item Download current source code from Coetzee's
 lab\footnote{\url{http://coetzeeseq.usc.edu/publication/Coetzee_SG_et_al_2012/}}
 \item Download and install from
 Bioconductor\footnote{\url{http://www.bioconductor.org}}
