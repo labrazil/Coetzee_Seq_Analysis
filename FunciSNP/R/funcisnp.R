@@ -1201,10 +1201,9 @@ FunciSNPidsFromSummary <- function(dat, tagsnpid=NULL, num.features, rsq=0) {
 
 FunciSNPtable <- function(dat, rsq, geneSum = FALSE) {
   if(!geneSum){
-    total.tagSNPs <-length(unique(dat[,"tag.snp.id"]))
-    total.1kSNPs  <-length(unique(dat[,"corr.snp.id"]))
-    total.feature  <-length(unique(dat[which(dat$R.squared>rsq),
-                "bio.feature"]))
+    total.tagSNPs <- length(unique(dat[,"tag.snp.id"]))
+    total.1kSNPs <- length(unique(dat[,"corr.snp.id"]))
+    total.feature <- length(unique(dat[,"bio.feature"]))
 
     total.tagSNPs.cutoff <-
                      length(unique(dat[which(dat$R.squared>rsq),

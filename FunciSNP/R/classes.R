@@ -362,7 +362,7 @@ setMethod("summary",
                 length(unique(object@summary.data$corr.snp.id)), "nearby, ",
                 "potentially correlated SNPs, that overlap at least one biofeature \n")
               cat("Number of potentially correlated SNPs", "\noverlapping at least x",
-                  "biofeatures, per Tag SNP at an R squared of\n")
+                  "biofeatures, per Tag SNP at a specified R squared\n")
             r.squared.values <- c(0.10, 0.50, 0.90)
             bio.features.counting <- list()
             for(i in r.squared.values) {
@@ -370,7 +370,7 @@ setMethod("summary",
               bio.features.counting[[ as.character(paste("R squared: ", 
                                                          i, 
                                                          " in ", 
-                                                         nrow(summ.overlaps), 
+                                                         nrow(summ.overlaps) - 1, 
                                                          " Tag SNPs with a total of ", 
                                                          sep="")) ]] <- summ.overlaps
             }
