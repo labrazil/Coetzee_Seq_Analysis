@@ -65,8 +65,7 @@ directly imported from the current public release of the 1000 genomes database.
 \end{itemize}
 
 Correlated SNPs in LD to a tagSNP and overlapping genomic biological features
-are known as putative functional SNPs (also defined as `Func-y-SNPs' elsewhere
-        in the package).
+are known as putative functional SNPs.
 
 This vignette provides a `HOW-TO' guide in setting up and running
 \Rpackage{FunciSNP} on your machine. FunciSNP was developed with the idea that a
@@ -77,20 +76,46 @@ initial FunciSNP analysis will take longer than expected. Be sure you
 have uninterupted computing power when using a windows machine. If using
 a linux machine, please use `screen' (see `man screen' for more
 information).
+
 \subsection{Benchmark}
 Using a 64bit Linux machine running 11.04 Ubuntu OS with 24G RAM and 8 cores
 connected to a academic high-speed internet port, the amount of time to complete
 99 tagSNP across 20 different biofeatures took less than 30 min to complete. We
 anticipate about 2 hours to complete the same analysis using one core.
 
-\subsection{GWAS SNP}
-Something about GWAS SNP goes here.
+\subsection{Genome-Wide Association Studies SNP (GWAS SNP)}
+Genome-wide association studies (GWASs) have yielded numerous single nucleotide
+polymorphisms (SNPs) associated with many phenotypes. In some cases tens of
+SNPs, called tagSNPs, mark many loci of single complex diseases such as prostate
+(> 50 loci), breast (> 20 loci), ovarian (>10 loci), colorectal (>20 loci) and
+brain cancer (>5 loci) for which functionality remains unknown. Since most of
+the tagSNPs (>80\%) are found in non-protein coding regions, finding direct
+information on the functional and/or causal variant has been an important
+limitation of GWAS data interpretation.
 
-\subsection{1000 genomes project}
-Something about the 1000GP aims and initiative goes here. 
+\subsection{1000 genomes project (1000GP)}
+The 1000 genomes project recently released a catalog of most human genomic
+variants (minor allele frequency of >0.1\%) across many different ethnic
+populations. Initially, the 1000 genomes project goal was to sequence up to 1000
+individuals, but has since sequenced more than 2000 individuals, thereby
+increasing our current knowledge of known genomic variations which currently
+sits at just over 50 million SNPs genome wide (approx. 2\% of the entire genome
+        and on average 1 SNP every 60 base pairs)
 
-\subsection{Genomic features}
-Something about peak calling and available data (public/private).
+\subsection{Genomic features (Biofeatures)}
+With the advent of advanced sequencing technologies (next-generation sequencing,
+        NGS), genomic regulatory areas in non-coding regions have been well
+characterized and annotated. Coupled with chromatin immuno-precipitation for a
+protein (e.g. transcription factor of histone) of interest, also known as
+ChIPseq, the technology have provided us with a unique view of the genomic
+landscape, thereby providing a wealth of new knowledge for genomics
+research. Work by large consortia groups such as the Encyclopedia of DNA Elements
+(ENCODE), the Roadmap Epigenomics Mapping Consortium and The Cancer
+Genome Atlas (TCGA), have made publicly available a growing catalog of many
+different histone marks, transcription factors and genome-wide sequencing
+datasets for a variety of different diseases and cell lines, including well
+characterized cancer cell lines such as MCF7 (breast cancer), HCT116 (colon
+        cancer), U87 (brain cancer) and LNCaP (prostate cancer). 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -140,8 +165,9 @@ package.version("FunciSNP");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Before we can run getFSNPs, we will need two input files. A list of tagSNp and a
-folder with all available biological features (peak files in BED format).
+Before running \Rmethod{getFSNPs}, two input files are required. A list of
+tagSNPs and a folder with all available biological features (peak files in BED
+        format).
 
 \subsection{Create a GWAS SNP file}
 
@@ -165,12 +191,13 @@ be either European (EUR), Asian (ASN), African (AFR), American (AMR), or All
 multiple ethnic population, list each duplicate tagSNP separately with the
 appropriate ethnic pouplation.
 
-As an example, we collected several GWAS SNPs significantly associated with
-Glioblastoma multiforme (GBM)\footnote{See
-\url{http://www.snpedia.com/index.php/Glioma}}. GBM is a brain cancer with
-median survival at less than 12 months, making this form of cancer one of the
-most aggressive of all cancer types. In this example, GBM includes lower grade
-glioma, therefore we use the `glioma' to label all objects.
+Several GWAS SNPs significantly associated with Glioblastoma multiforme
+(GBM)\footnote{See \url{http://www.snpedia.com/index.php/Glioma}} were collected
+for this example. GBM is a brain cancer with median survival at less than 12
+months, making this form of cancer one of the most aggressive of all cancer
+types. Currently, there is no known function of any of these associated tagSNPs.
+In this example, GBM includes lower grade glioma, therefore we use the `glioma'
+to label all objects.
 
 <<>>=
 ## Full path to the example GWAS SNP regions file for Glioblastoma 
