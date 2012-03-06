@@ -278,7 +278,7 @@ getFSNPs <- function(snp.regions.file, bio.features.loc = NULL,
             gsub(".bed$", ", ", list.files(bio.features.loc,
                                            pattern="*.bed$",
                                            full.names=FALSE)),
-            if(bio.features.TSS) "knownGene.TSS.hg19")
+            if(bio.features.TSS) "knownGene.Promoters")
   }
   primary.server <- sample(c("ncbi", "ebi"), size=1)
   snp.region <- ReadRegionsFile(snp.regions.file, search.window)
@@ -291,14 +291,14 @@ getFSNPs <- function(snp.regions.file, bio.features.loc = NULL,
             bio.features.file <- NULL
             if(bio.features.TSS) bio.features.file <-
               list.files(system.file('extdata',package='FunciSNP'),
-                         pattern="knownGene.TSS.hg19.bed", full.names = TRUE)
+                         pattern="knownGene.Promoters.bed", full.names = TRUE)
           } else {
             bio.features.file <- list.files(bio.features.loc, pattern="*.bed$",
                                             full.names = TRUE)
             if(bio.features.TSS) {
               bio.features.file.TSS <-
                 list.files(system.file('extdata',package='FunciSNP'),
-                           pattern="knownGene.TSS.hg19.bed", full.names = TRUE)
+                           pattern="knownGene.Promoters.bed", full.names = TRUE)
               bio.features.file <- c(bio.features.file, bio.features.file.TSS)
             }
           }
