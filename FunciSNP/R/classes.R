@@ -11,22 +11,22 @@ setClass("CorrelatedSNPs",
                         ref.allele="character",
                         alt.allele="character",
                         overlapping.features="GRanges",
-                        genotype="CorrGeno",
-                        ALL.R.squared="matrix",
-                        AFR.R.squared="matrix",
-                        AMR.R.squared="matrix",
-                        ASN.R.squared="matrix",
-                        EUR.R.squared="matrix",
-                        ALL.D.prime="matrix",
-                        AFR.D.prime="matrix",
-                        AMR.D.prime="matrix",
-                        ASN.D.prime="matrix",
-                        EUR.D.prime="matrix",
-                        ALL.p.value="list",
-                        AFR.p.value="list",
-                        AMR.p.value="list",
-                        ASN.p.value="list",
-                        EUR.p.value="list"
+                        genotype="CorrGeno"
+#                       ALL.R.squared="matrix",
+#                       AFR.R.squared="matrix",
+#                       AMR.R.squared="matrix",
+#                       ASN.R.squared="matrix",
+#                       EUR.R.squared="matrix",
+#                       ALL.D.prime="matrix",
+#                       AFR.D.prime="matrix",
+#                       AMR.D.prime="matrix",
+#                       ASN.D.prime="matrix",
+#                       EUR.D.prime="matrix",
+#                       ALL.yafsnp.pvalue="list",
+#                       AFR.yafsnp.pvalue="list",
+#                       AMR.yafsnp.pvalue="list",
+#                       ASN.yafsnp.pvalue="list",
+#                       EUR.yafsnp.pvalue="list"
                         )
          )
 
@@ -37,10 +37,11 @@ setClass("TagSNP",
                         population="character",
                         ref.allele="character",
                         alt.allele="character",
-                        overlapping.features="GRanges",
+#                        overlapping.features="GRanges",
                         genotype="SnpMatrix",
-                        R.squared.corrsnps="dgCMatrix",
-                        D.prime.corrsnps="dgCMatrix",
+                        yafsnp.rsq="dgCMatrix",
+                        yafsnp.dprime="dgCMatrix",
+                        yafsnp.pvalue="list",
                         correlated.snps="CorrelatedSNPs"
                         )
          )
@@ -112,13 +113,13 @@ setReplaceMethod("alt.allele", "TagSNP", function(x, value) {
                  x@alt.allele <- value
                  x
          })
-setGeneric("overlapping.features", function(x) standardGeneric("overlapping.features"))
-setMethod("overlapping.features", "TagSNP", function(x) x@overlapping.features)
-setGeneric("overlapping.features<-", function(x, value) standardGeneric("overlapping.features<-"))
-setReplaceMethod("overlapping.features", "TagSNP", function(x, value) {
-                 x@overlapping.features <- value
-                 x
-         })
+#setGeneric("overlapping.features", function(x) standardGeneric("overlapping.features"))
+#setMethod("overlapping.features", "TagSNP", function(x) x@overlapping.features)
+#setGeneric("overlapping.features<-", function(x, value) standardGeneric("overlapping.features<-"))
+#setReplaceMethod("overlapping.features", "TagSNP", function(x, value) {
+#                 x@overlapping.features <- value
+#                 x
+#         })
 setGeneric("genotype", function(x) standardGeneric("genotype"))
 setMethod("genotype", "TagSNP", function(x) x@genotype)
 setGeneric("genotype<-", function(x, value) standardGeneric("genotype<-"))
@@ -126,18 +127,25 @@ setReplaceMethod("genotype", "TagSNP", function(x, value) {
                  x@genotype <- value
                  x
          })
-setGeneric("R.squared.corrsnps", function(x) standardGeneric("R.squared.corrsnps"))
-setMethod("R.squared.corrsnps", "TagSNP", function(x) x@R.squared.corrsnps)
-setGeneric("R.squared.corrsnps<-", function(x, value) standardGeneric("R.squared.corrsnps<-"))
-setReplaceMethod("R.squared.corrsnps", "TagSNP", function(x, value) {
-                 x@R.squared.corrsnps <- value
+setGeneric("yafsnp.rsq", function(x) standardGeneric("yafsnp.rsq"))
+setMethod("yafsnp.rsq", "TagSNP", function(x) x@yafsnp.rsq)
+setGeneric("yafsnp.rsq<-", function(x, value) standardGeneric("yafsnp.rsq<-"))
+setReplaceMethod("yafsnp.rsq", "TagSNP", function(x, value) {
+                 x@yafsnp.rsq <- value
                  x
          })
-setGeneric("D.prime.corrsnps", function(x) standardGeneric("D.prime.corrsnps"))
-setMethod("D.prime.corrsnps", "TagSNP", function(x) x@D.prime.corrsnps)
-setGeneric("D.prime.corrsnps<-", function(x, value) standardGeneric("D.prime.corrsnps<-"))
-setReplaceMethod("D.prime.corrsnps", "TagSNP", function(x, value) {
-                 x@D.prime.corrsnps <- value
+setGeneric("yafsnp.dprime", function(x) standardGeneric("yafsnp.dprime"))
+setMethod("yafsnp.dprime", "TagSNP", function(x) x@yafsnp.dprime)
+setGeneric("yafsnp.dprime<-", function(x, value) standardGeneric("yafsnp.dprime<-"))
+setReplaceMethod("yafsnp.dprime", "TagSNP", function(x, value) {
+                 x@yafsnp.dprime <- value
+                 x
+         })
+setGeneric("yafsnp.pvalue", function(x) standardGeneric("yafsnp.pvalue"))
+setMethod("yafsnp.pvalue", "TagSNP", function(x) x@yafsnp.pvalue)
+setGeneric("yafsnp.pvalue<-", function(x, value) standardGeneric("yafsnp.pvalue<-"))
+setReplaceMethod("yafsnp.pvalue", "TagSNP", function(x, value) {
+                 x@yafsnp.pvalue <- value
                  x
          })
 setGeneric("correlated.snps", function(x) standardGeneric("correlated.snps"))
@@ -176,6 +184,8 @@ setReplaceMethod("alt.allele", "CorrelatedSNPs", function(x, value) {
                  x@alt.allele <- value
                  x
          })
+setGeneric("overlapping.features", function(x) standardGeneric("overlapping.features"))
+setGeneric("overlapping.features<-", function(x, value) standardGeneric("overlapping.features<-"))
 setMethod("overlapping.features", "CorrelatedSNPs", function(x) x@overlapping.features)
 setReplaceMethod("overlapping.features", "CorrelatedSNPs", function(x, value) {
                  x@overlapping.features <- value
@@ -197,111 +207,111 @@ setReplaceMethod("pop.genotype", "CorrelatedSNPs", function(x, value) {
                  x
           })
 
-setGeneric("ALL.R.squared", function(x) standardGeneric("ALL.R.squared"))
-setGeneric("ALL.R.squared<-", function(x, value) standardGeneric("ALL.R.squared<-"))
-setMethod("ALL.R.squared", "CorrelatedSNPs", function(x) x@ALL.R.squared)
-setReplaceMethod("ALL.R.squared", "CorrelatedSNPs", function(x, value) {
-                 x@ALL.R.squared <- value
-                 x
-         })
-setGeneric("AFR.R.squared", function(x) standardGeneric("AFR.R.squared"))
-setGeneric("AFR.R.squared<-", function(x, value) standardGeneric("AFR.R.squared<-"))
-setMethod("AFR.R.squared", "CorrelatedSNPs", function(x) x@AFR.R.squared)
-setReplaceMethod("AFR.R.squared", "CorrelatedSNPs", function(x, value) {
-                 x@AFR.R.squared <- value
-                 x
-         })
-setGeneric("AMR.R.squared", function(x) standardGeneric("AMR.R.squared"))
-setGeneric("AMR.R.squared<-", function(x, value) standardGeneric("AMR.R.squared<-"))
-setMethod("AMR.R.squared", "CorrelatedSNPs", function(x) x@AMR.R.squared)
-setReplaceMethod("AMR.R.squared", "CorrelatedSNPs", function(x, value) {
-                 x@AMR.R.squared <- value
-                 x
-         })
-setGeneric("ASN.R.squared", function(x) standardGeneric("ASN.R.squared"))
-setGeneric("ASN.R.squared<-", function(x, value) standardGeneric("ASN.R.squared<-"))
-setMethod("ASN.R.squared", "CorrelatedSNPs", function(x) x@ASN.R.squared)
-setReplaceMethod("ASN.R.squared", "CorrelatedSNPs", function(x, value) {
-                 x@ASN.R.squared <- value
-                 x
-         })
-setGeneric("EUR.R.squared", function(x) standardGeneric("EUR.R.squared"))
-setGeneric("EUR.R.squared<-", function(x, value) standardGeneric("EUR.R.squared<-"))
-setMethod("EUR.R.squared", "CorrelatedSNPs", function(x) x@EUR.R.squared)
-setReplaceMethod("EUR.R.squared", "CorrelatedSNPs", function(x, value) {
-                 x@EUR.R.squared <- value
-                 x
-         })
-setGeneric("ALL.D.prime", function(x) standardGeneric("ALL.D.prime"))
-setGeneric("ALL.D.prime<-", function(x, value) standardGeneric("ALL.D.prime<-"))
-setMethod("ALL.D.prime", "CorrelatedSNPs", function(x) x@ALL.D.prime)
-setReplaceMethod("ALL.D.prime", "CorrelatedSNPs", function(x, value) {
-                 x@ALL.D.prime <- value
-                 x
-         })
-setGeneric("AFR.D.prime", function(x) standardGeneric("AFR.D.prime"))
-setGeneric("AFR.D.prime<-", function(x, value) standardGeneric("AFR.D.prime<-"))
-setMethod("AFR.D.prime", "CorrelatedSNPs", function(x) x@AFR.D.prime)
-setReplaceMethod("AFR.D.prime", "CorrelatedSNPs", function(x, value) {
-                 x@AFR.D.prime <- value
-                 x
-         })
-setGeneric("AMR.D.prime", function(x) standardGeneric("AMR.D.prime"))
-setGeneric("AMR.D.prime<-", function(x, value) standardGeneric("AMR.D.prime<-"))
-setMethod("AMR.D.prime", "CorrelatedSNPs", function(x) x@AMR.D.prime)
-setReplaceMethod("AMR.D.prime", "CorrelatedSNPs", function(x, value) {
-                 x@AMR.D.prime <- value
-                 x
-         })
-setGeneric("ASN.D.prime", function(x) standardGeneric("ASN.D.prime"))
-setGeneric("ASN.D.prime<-", function(x, value) standardGeneric("ASN.D.prime<-"))
-setMethod("ASN.D.prime", "CorrelatedSNPs", function(x) x@ASN.D.prime)
-setReplaceMethod("ASN.D.prime", "CorrelatedSNPs", function(x, value) {
-                 x@ASN.D.prime <- value
-                 x
-         })
-setGeneric("EUR.D.prime", function(x) standardGeneric("EUR.D.prime"))
-setGeneric("EUR.D.prime<-", function(x, value) standardGeneric("EUR.D.prime<-"))
-setMethod("EUR.D.prime", "CorrelatedSNPs", function(x) x@EUR.D.prime)
-setReplaceMethod("EUR.D.prime", "CorrelatedSNPs", function(x, value) {
-                 x@EUR.D.prime <- value
-                 x
-         })
-setGeneric("ALL.p.value", function(x) standardGeneric("ALL.p.value"))
-setGeneric("ALL.p.value<-", function(x, value) standardGeneric("ALL.p.value<-"))
-setMethod("ALL.p.value", "CorrelatedSNPs", function(x) x@ALL.p.value)
-setReplaceMethod("ALL.p.value", "CorrelatedSNPs", function(x, value) {
-                 x@ALL.p.value <- value
-                 x
-         })
-setGeneric("AFR.p.value", function(x) standardGeneric("AFR.p.value"))
-setGeneric("AFR.p.value<-", function(x, value) standardGeneric("AFR.p.value<-"))
-setMethod("AFR.p.value", "CorrelatedSNPs", function(x) x@AFR.p.value)
-setReplaceMethod("AFR.p.value", "CorrelatedSNPs", function(x, value) {
-                 x@AFR.p.value <- value
-                 x
-         })
-setGeneric("AMR.p.value", function(x) standardGeneric("AMR.p.value"))
-setGeneric("AMR.p.value<-", function(x, value) standardGeneric("AMR.p.value<-"))
-setMethod("AMR.p.value", "CorrelatedSNPs", function(x) x@AMR.p.value)
-setReplaceMethod("AMR.p.value", "CorrelatedSNPs", function(x, value) {
-                 x@AMR.p.value <- value
-                 x
-         })
-setGeneric("ASN.p.value", function(x) standardGeneric("ASN.p.value"))
-setGeneric("ASN.p.value<-", function(x, value) standardGeneric("ASN.p.value<-"))
-setMethod("ASN.p.value", "CorrelatedSNPs", function(x) x@ASN.p.value)
-setReplaceMethod("ASN.p.value", "CorrelatedSNPs", function(x, value) {
-                 x@ASN.p.value <- value
-                 x
-         })
-setGeneric("EUR.p.value", function(x) standardGeneric("EUR.p.value"))
-setGeneric("EUR.p.value<-", function(x, value) standardGeneric("EUR.p.value<-"))
-setMethod("EUR.p.value", "CorrelatedSNPs", function(x) x@EUR.p.value)
-setReplaceMethod("EUR.p.value", "CorrelatedSNPs", function(x, value) {
-                 x@EUR.p.value <- value
-                 x
-         })
+#setGeneric("ALL.R.squared", function(x) standardGeneric("ALL.R.squared"))
+#setGeneric("ALL.R.squared<-", function(x, value) standardGeneric("ALL.R.squared<-"))
+#setMethod("ALL.R.squared", "CorrelatedSNPs", function(x) x@ALL.R.squared)
+#setReplaceMethod("ALL.R.squared", "CorrelatedSNPs", function(x, value) {
+#                 x@ALL.R.squared <- value
+#                 x
+#         })
+#setGeneric("AFR.R.squared", function(x) standardGeneric("AFR.R.squared"))
+#setGeneric("AFR.R.squared<-", function(x, value) standardGeneric("AFR.R.squared<-"))
+#setMethod("AFR.R.squared", "CorrelatedSNPs", function(x) x@AFR.R.squared)
+#setReplaceMethod("AFR.R.squared", "CorrelatedSNPs", function(x, value) {
+#                 x@AFR.R.squared <- value
+#                 x
+#         })
+#setGeneric("AMR.R.squared", function(x) standardGeneric("AMR.R.squared"))
+#setGeneric("AMR.R.squared<-", function(x, value) standardGeneric("AMR.R.squared<-"))
+#setMethod("AMR.R.squared", "CorrelatedSNPs", function(x) x@AMR.R.squared)
+#setReplaceMethod("AMR.R.squared", "CorrelatedSNPs", function(x, value) {
+#                 x@AMR.R.squared <- value
+#                 x
+#         })
+#setGeneric("ASN.R.squared", function(x) standardGeneric("ASN.R.squared"))
+#setGeneric("ASN.R.squared<-", function(x, value) standardGeneric("ASN.R.squared<-"))
+#setMethod("ASN.R.squared", "CorrelatedSNPs", function(x) x@ASN.R.squared)
+#setReplaceMethod("ASN.R.squared", "CorrelatedSNPs", function(x, value) {
+#                 x@ASN.R.squared <- value
+#                 x
+#         })
+#setGeneric("EUR.R.squared", function(x) standardGeneric("EUR.R.squared"))
+#setGeneric("EUR.R.squared<-", function(x, value) standardGeneric("EUR.R.squared<-"))
+#setMethod("EUR.R.squared", "CorrelatedSNPs", function(x) x@EUR.R.squared)
+#setReplaceMethod("EUR.R.squared", "CorrelatedSNPs", function(x, value) {
+#                 x@EUR.R.squared <- value
+#                 x
+#         })
+#setGeneric("ALL.D.prime", function(x) standardGeneric("ALL.D.prime"))
+#setGeneric("ALL.D.prime<-", function(x, value) standardGeneric("ALL.D.prime<-"))
+#setMethod("ALL.D.prime", "CorrelatedSNPs", function(x) x@ALL.D.prime)
+#setReplaceMethod("ALL.D.prime", "CorrelatedSNPs", function(x, value) {
+#                 x@ALL.D.prime <- value
+#                 x
+#         })
+#setGeneric("AFR.D.prime", function(x) standardGeneric("AFR.D.prime"))
+#setGeneric("AFR.D.prime<-", function(x, value) standardGeneric("AFR.D.prime<-"))
+#setMethod("AFR.D.prime", "CorrelatedSNPs", function(x) x@AFR.D.prime)
+#setReplaceMethod("AFR.D.prime", "CorrelatedSNPs", function(x, value) {
+#                 x@AFR.D.prime <- value
+#                 x
+#         })
+#setGeneric("AMR.D.prime", function(x) standardGeneric("AMR.D.prime"))
+#setGeneric("AMR.D.prime<-", function(x, value) standardGeneric("AMR.D.prime<-"))
+#setMethod("AMR.D.prime", "CorrelatedSNPs", function(x) x@AMR.D.prime)
+#setReplaceMethod("AMR.D.prime", "CorrelatedSNPs", function(x, value) {
+#                 x@AMR.D.prime <- value
+#                 x
+#         })
+#setGeneric("ASN.D.prime", function(x) standardGeneric("ASN.D.prime"))
+#setGeneric("ASN.D.prime<-", function(x, value) standardGeneric("ASN.D.prime<-"))
+#setMethod("ASN.D.prime", "CorrelatedSNPs", function(x) x@ASN.D.prime)
+#setReplaceMethod("ASN.D.prime", "CorrelatedSNPs", function(x, value) {
+#                 x@ASN.D.prime <- value
+#                 x
+#         })
+#setGeneric("EUR.D.prime", function(x) standardGeneric("EUR.D.prime"))
+#setGeneric("EUR.D.prime<-", function(x, value) standardGeneric("EUR.D.prime<-"))
+#setMethod("EUR.D.prime", "CorrelatedSNPs", function(x) x@EUR.D.prime)
+#setReplaceMethod("EUR.D.prime", "CorrelatedSNPs", function(x, value) {
+#                 x@EUR.D.prime <- value
+#                 x
+#         })
+#setGeneric("ALL.yafsnp.pvalue", function(x) standardGeneric("ALL.yafsnp.pvalue"))
+#setGeneric("ALL.yafsnp.pvalue<-", function(x, value) standardGeneric("ALL.yafsnp.pvalue<-"))
+#setMethod("ALL.yafsnp.pvalue", "CorrelatedSNPs", function(x) x@ALL.yafsnp.pvalue)
+#setReplaceMethod("ALL.yafsnp.pvalue", "CorrelatedSNPs", function(x, value) {
+#                 x@ALL.yafsnp.pvalue <- value
+#                 x
+#         })
+#setGeneric("AFR.yafsnp.pvalue", function(x) standardGeneric("AFR.yafsnp.pvalue"))
+#setGeneric("AFR.yafsnp.pvalue<-", function(x, value) standardGeneric("AFR.yafsnp.pvalue<-"))
+#setMethod("AFR.yafsnp.pvalue", "CorrelatedSNPs", function(x) x@AFR.yafsnp.pvalue)
+#setReplaceMethod("AFR.yafsnp.pvalue", "CorrelatedSNPs", function(x, value) {
+#                 x@AFR.yafsnp.pvalue <- value
+#                 x
+#         })
+#setGeneric("AMR.yafsnp.pvalue", function(x) standardGeneric("AMR.yafsnp.pvalue"))
+#setGeneric("AMR.yafsnp.pvalue<-", function(x, value) standardGeneric("AMR.yafsnp.pvalue<-"))
+#setMethod("AMR.yafsnp.pvalue", "CorrelatedSNPs", function(x) x@AMR.yafsnp.pvalue)
+#setReplaceMethod("AMR.yafsnp.pvalue", "CorrelatedSNPs", function(x, value) {
+#                 x@AMR.yafsnp.pvalue <- value
+#                 x
+#         })
+#setGeneric("ASN.yafsnp.pvalue", function(x) standardGeneric("ASN.yafsnp.pvalue"))
+#setGeneric("ASN.yafsnp.pvalue<-", function(x, value) standardGeneric("ASN.yafsnp.pvalue<-"))
+#setMethod("ASN.yafsnp.pvalue", "CorrelatedSNPs", function(x) x@ASN.yafsnp.pvalue)
+#setReplaceMethod("ASN.yafsnp.pvalue", "CorrelatedSNPs", function(x, value) {
+#                 x@ASN.yafsnp.pvalue <- value
+#                 x
+#         })
+#setGeneric("EUR.yafsnp.pvalue", function(x) standardGeneric("EUR.yafsnp.pvalue"))
+#setGeneric("EUR.yafsnp.pvalue<-", function(x, value) standardGeneric("EUR.yafsnp.pvalue<-"))
+#setMethod("EUR.yafsnp.pvalue", "CorrelatedSNPs", function(x) x@EUR.yafsnp.pvalue)
+#setReplaceMethod("EUR.yafsnp.pvalue", "CorrelatedSNPs", function(x, value) {
+#                 x@EUR.yafsnp.pvalue <- value
+#                 x
+#         })
 setGeneric("ALL.overlapping.snps.geno", function(object) standardGeneric("ALL.overlapping.snps.geno"))
 setMethod("ALL.overlapping.snps.geno",
           "TagSNP",

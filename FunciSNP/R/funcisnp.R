@@ -174,39 +174,41 @@ CreateCorrelatedSNPs<- function(tag.snp.name, snp.list, primary.server,
         unique(names(overlapping.features(correlated.snps(tag.snp.complete))))
       tag.snp.complete <- FilteredLDTesting(tag.snp.complete, verbose)
       if(verbose) message("Calculating p-value for ", tag.snp.name)
-      ALL.p.value(correlated.snps(tag.snp.complete)) <-
-        ChiSquaredPvalue(ALL.overlapping.snps.geno(tag.snp.complete),
-                         snpid(tag.snp.complete), method.p)
-      AFR.p.value(correlated.snps(tag.snp.complete)) <-
-        ChiSquaredPvalue(AFR.overlapping.snps.geno(tag.snp.complete),
-                         snpid(tag.snp.complete), method.p)
-      AMR.p.value(correlated.snps(tag.snp.complete)) <-
-        ChiSquaredPvalue(AMR.overlapping.snps.geno(tag.snp.complete),
-                         snpid(tag.snp.complete), method.p)
-      ASN.p.value(correlated.snps(tag.snp.complete)) <-
-        ChiSquaredPvalue(ASN.overlapping.snps.geno(tag.snp.complete),
-                         snpid(tag.snp.complete), method.p)
-      EUR.p.value(correlated.snps(tag.snp.complete)) <-
-        ChiSquaredPvalue(EUR.overlapping.snps.geno(tag.snp.complete),
-                         snpid(tag.snp.complete), method.p)
+      yafsnp.pvalue(tag.snp.complete) <- ChiSquaredPvalue(tag.snp.complete, snpid(tag.snp.complete), method.p)
+#     ALL.p.value(correlated.snps(tag.snp.complete)) <-
+#       ChiSquaredPvalue(ALL.overlapping.snps.geno(tag.snp.complete),
+#                        snpid(tag.snp.complete), method.p)
+#     AFR.p.value(correlated.snps(tag.snp.complete)) <-
+#       ChiSquaredPvalue(AFR.overlapping.snps.geno(tag.snp.complete),
+#                        snpid(tag.snp.complete), method.p)
+#     AMR.p.value(correlated.snps(tag.snp.complete)) <-
+#       ChiSquaredPvalue(AMR.overlapping.snps.geno(tag.snp.complete),
+#                        snpid(tag.snp.complete), method.p)
+#     ASN.p.value(correlated.snps(tag.snp.complete)) <-
+#       ChiSquaredPvalue(ASN.overlapping.snps.geno(tag.snp.complete),
+#                        snpid(tag.snp.complete), method.p)
+#     EUR.p.value(correlated.snps(tag.snp.complete)) <-
+#       ChiSquaredPvalue(EUR.overlapping.snps.geno(tag.snp.complete),
+#                        snpid(tag.snp.complete), method.p)
     } else {
       tag.snp.complete <- LDTesting(tag.snp.complete, verbose)
       if(verbose) message("Calculating p-value for ", tag.snp.name)
-      ALL.p.value(correlated.snps(tag.snp.complete)) <-
-        ChiSquaredPvalue(ALL.geno(correlated.snps(tag.snp.complete)),
-                         snpid(tag.snp.complete), method.p)
-      AFR.p.value(correlated.snps(tag.snp.complete)) <-
-        ChiSquaredPvalue(AFR.geno(correlated.snps(tag.snp.complete)),
-                         snpid(tag.snp.complete), method.p)
-      AMR.p.value(correlated.snps(tag.snp.complete)) <-
-        ChiSquaredPvalue(AMR.geno(correlated.snps(tag.snp.complete)),
-                         snpid(tag.snp.complete), method.p)
-      ASN.p.value(correlated.snps(tag.snp.complete)) <-
-        ChiSquaredPvalue(ASN.geno(correlated.snps(tag.snp.complete)),
-                         snpid(tag.snp.complete), method.p)
-      EUR.p.value(correlated.snps(tag.snp.complete)) <-
-        ChiSquaredPvalue(EUR.geno(correlated.snps(tag.snp.complete)),
-                         snpid(tag.snp.complete), method.p)
+      yafsnp.pvalue(tag.snp.complete) <- ChiSquaredPvalue(tag.snp.complete, snpid(tag.snp.complete), method.p)
+#      ALL.p.value(correlated.snps(tag.snp.complete)) <-
+#        ChiSquaredPvalue(ALL.geno(correlated.snps(tag.snp.complete)),
+#                         snpid(tag.snp.complete), method.p)
+#      AFR.p.value(correlated.snps(tag.snp.complete)) <-
+#        ChiSquaredPvalue(AFR.geno(correlated.snps(tag.snp.complete)),
+#                         snpid(tag.snp.complete), method.p)
+#      AMR.p.value(correlated.snps(tag.snp.complete)) <-
+#        ChiSquaredPvalue(AMR.geno(correlated.snps(tag.snp.complete)),
+#                         snpid(tag.snp.complete), method.p)
+#      ASN.p.value(correlated.snps(tag.snp.complete)) <-
+#        ChiSquaredPvalue(ASN.geno(correlated.snps(tag.snp.complete)),
+#                         snpid(tag.snp.complete), method.p)
+#      EUR.p.value(correlated.snps(tag.snp.complete)) <-
+#        ChiSquaredPvalue(EUR.geno(correlated.snps(tag.snp.complete)),
+#                         snpid(tag.snp.complete), method.p)
     }
     message("\nTag SNP ", snpid(tag.snp.complete), " has completed")
     return(tag.snp.complete)
@@ -233,7 +235,7 @@ CreatePopulations <- function(primary.server="ncbi") {
 }
 
 getFSNPs <- function(snp.regions.file, bio.features.loc = NULL,
-                     bio.features.TSS = TRUE,
+                     built.in.biofeatures = TRUE,
                      par.threads=detectCores()/2,
                      verbose = par.threads < 2, method.p = "BH",
                      reduce.by.features = TRUE, search.window = 200000 ) {
@@ -266,10 +268,10 @@ getFSNPs <- function(snp.regions.file, bio.features.loc = NULL,
             selected")
   } else {
     message("          Bio Features:                     ",
-            if(bio.features.TSS) {
+            if(built.in.biofeatures) {
               (length(list.files(bio.features.loc,
                                  pattern="*.bed$",
-                                 full.names=FALSE))) + 1
+                                 full.names=FALSE))) + 3
             } else {
               length(list.files(bio.features.loc,
                                 pattern="*.bed$",
@@ -278,7 +280,7 @@ getFSNPs <- function(snp.regions.file, bio.features.loc = NULL,
             gsub(".bed$", ", ", list.files(bio.features.loc,
                                            pattern="*.bed$",
                                            full.names=FALSE)),
-            if(bio.features.TSS) "knownGene.Promoters")
+            if(built.in.biofeatures) "knownGene.Promoters, Encode_DnaseCluster, CTCF_Xie_etal_2007")
   }
   primary.server <- sample(c("ncbi", "ebi"), size=1)
   snp.region <- ReadRegionsFile(snp.regions.file, search.window)
@@ -289,17 +291,17 @@ getFSNPs <- function(snp.regions.file, bio.features.loc = NULL,
           populations <- CreatePopulations(primary.server)
           if(identical(bio.features.loc, NULL)) {
             bio.features.file <- NULL
-            if(bio.features.TSS) bio.features.file <-
-              list.files(system.file('extdata',package='FunciSNP'),
-                         pattern="knownGene.Promoters.bed", full.names = TRUE)
+            if(built.in.biofeatures) bio.features.file <-
+              list.files(system.file('extdata/builtInFeatures',package='FunciSNP'),
+                         pattern="known.bed$", full.names = TRUE)
           } else {
             bio.features.file <- list.files(bio.features.loc, pattern="*.bed$",
                                             full.names = TRUE)
-            if(bio.features.TSS) {
-              bio.features.file.TSS <-
-                list.files(system.file('extdata',package='FunciSNP'),
-                           pattern="knownGene.Promoters.bed", full.names = TRUE)
-              bio.features.file <- c(bio.features.file, bio.features.file.TSS)
+            if(built.in.biofeatures) {
+              bio.features.file.known <-
+                list.files(system.file('extdata/builtInFeatures',package='FunciSNP'),
+                           pattern="known.bed$", full.names = TRUE)
+              bio.features.file <- c(bio.features.file, bio.features.file.known)
             }
           }
           tag.snp.names <- paste(snp.region$snp.name, ":", snp.region$snp.ethno, sep="")
@@ -529,7 +531,7 @@ FilterByFeatures <- function(bio.features.file = NULL, tag.snp.name,
   if(identical(bio.features.file, NULL)) {
     snps.included <- close.snp.ranges
   } else {
-    bio.features.file.interval <- import(bio.features.file, asRangedData =
+    bio.features.file.interval <- import.bed(bio.features.file, asRangedData =
                                          FALSE)
     bio.features.file.interval <- IRanges::sort(bio.features.file.interval)
     elementMetadata(bio.features.file.interval) <- NULL
@@ -585,7 +587,7 @@ FilterByFeatures <- function(bio.features.file = NULL, tag.snp.name,
 }
 
 LDTesting <- function(tag.snp.complete, verbose = TRUE) {
-  if(verbose) message("Calculating R^2 and D' for ", snpid(tag.snp.complete))
+  if(verbose) message("Calculating R\u00B2 and D' for ", snpid(tag.snp.complete))
   snp.name.chosen <- snpid(tag.snp.complete)
   #  snp.name.chosen <- grep("^rs", unlist(strsplit(snp.list.name, ":")),
   #  value=T)
@@ -675,11 +677,11 @@ LDTesting <- function(tag.snp.complete, verbose = TRUE) {
   depth=corr.snp.depth)
 
 
-  R.squared.corrsnps(tag.snp.complete) <-
+  yafsnp.rsq(tag.snp.complete) <-
     ld(pop.genotype(correlated.snps(tag.snp.complete),
                     population(tag.snp.complete)),
        stats="R.squared", depth=corr.snp.depth)
-  D.prime.corrsnps(tag.snp.complete) <-
+  yafsnp.dprime(tag.snp.complete) <-
     ld(pop.genotype(correlated.snps(tag.snp.complete),
                     population(tag.snp.complete)),
        stats="D.prime", depth=corr.snp.depth)
@@ -691,19 +693,19 @@ FilteredLDTesting <- function(tag.snp.complete, verbose = TRUE) {
   if(ncol(eval(parse(text=(paste(population(tag.snp.complete),
                                  ".overlapping.snps.geno(tag.snp.complete)",
                                  sep=""))))) > 1) {
-    if(verbose) message("Calculating R^2 and D' for ", snpid(tag.snp.complete))
+    if(verbose) message("Calculating R\u00B2 and D' for ", snpid(tag.snp.complete))
     snp.name.chosen <- snpid(tag.snp.complete)
     #  snp.name.chosen <- grep("^rs", unlist(strsplit(snp.list.name, ":")),
     #  value=T)
     corr.snp.depth <- (dim(eval(parse(text=(paste(population(tag.snp.complete),
                                                   ".overlapping.snps.geno(tag.snp.complete)",
                                                   sep="")))))[2]) - 1
-    R.squared.corrsnps(tag.snp.complete) <-
+    yafsnp.rsq(tag.snp.complete) <-
       ld(eval(parse(text=(paste(population(tag.snp.complete),
                                 ".overlapping.snps.geno(tag.snp.complete)",
                                 sep="")))), stats="R.squared",
          depth=corr.snp.depth)
-    D.prime.corrsnps(tag.snp.complete) <-
+    yafsnp.dprime(tag.snp.complete) <-
       ld(eval(parse(text=(paste(population(tag.snp.complete),
                                 ".overlapping.snps.geno(tag.snp.complete)",
                                 sep="")))), stats="D.prime", depth=corr.snp.depth)
@@ -714,114 +716,172 @@ FilteredLDTesting <- function(tag.snp.complete, verbose = TRUE) {
 }
 
 ChiSquaredPvalue <- function(tag.snp.complete, tag.snp.id, method.p) {
+tag.snp.complete <- eval(parse(text=(paste(population(tag.snp.complete),
+                                ".overlapping.snps.geno(tag.snp.complete)",
+                                sep=""))))
+corr.snp.depth <- (dim(tag.snp.complete)[2]) - 1
+
   snp.list <- lapply(colnames(tag.snp.complete),
                      function(x) as(tag.snp.complete[, x], "character"))
   names(snp.list) <- colnames(tag.snp.complete)
-  genotype.table.snps <- lapply(snp.list,
-                                function(x) table(unlist(snp.list[tag.snp.id]),
-                                                  unlist(x),
-                                                  dnn = (c("tag", "corr"))))
 
-  pre.genotype.table.snps <- genotype.table.snps
-  genotype.table.snps <-
-    lapply(pre.genotype.table.snps, function(x) {
-           #   message("\n", x)
-           x <- as.matrix(x)
-           if((dim(x) > 3)[1]) {
-             x <- x[1:3, 1:ncol(x)]
-           }
-           if((dim(x) > 3)[2]) {
-             x <- x[1:nrow(x), 1:3]
-           }
-           xnames <- dimnames(x)
-           #   message(x)
-           #   message(xnames)
+# genotype.table.snps <- lapply(snp.list,
+#                               function(x) table(unlist(snp.list[tag.snp.id]),
+#                                                 unlist(x),
+#                                                 dnn = (c("tag", "corr"))))
+###TEST
 
-           #message(xnames)
-           ##rows
-           #message(1)
-           if(dim(x)[1] == 1 && length(grep("A/A",dimnames(x)[[1]])) >= 1) {
-             x <- rbind("A/A"=x[1, ], "A/B"=0, "B/B"=0)
-             xnames$tag <- c("A/A", "A/B", "B/B")
-             dimnames(x) <- xnames
+  genotype.table.snps <- lapply(colnames(tag.snp.complete), function(x) {
+         freq <- col.summary(tag.snp.complete[, x])[, c("P.AA", "P.AB", "P.BB")]
+         tag.freq <- col.summary(tag.snp.complete[, tag.snp.id])[, c("P.AA", "P.AB", "P.BB")]
+         genotype.table <- table(unlist(snp.list[tag.snp.id]),
+                                 unlist(snp.list[x]),
+                                 dnn = (c("tag", "corr")))
+         if(identical(min(tag.freq), 0)) {
+           fix.geno.table <- array(dim=c(3,3))
+           if(identical((tag.freq)$P.AA, 0)) {
+             fix.geno.table[1, ] <- 0
+           } else {
+             fix.geno.table[1, 1:ncol(genotype.table)] <- genotype.table["A/A", ]
            }
-           #message(1)
-           if(dim(x)[1] == 1 && length(grep("A/B", dimnames(x)[[1]])) >= 1) {
-             x <- rbind("A/A"=0, "A/B"=x[1, ], "B/B"=0)
-             xnames$tag <- c("A/A", "A/B", "B/B")
-             dimnames(x) <- xnames
+           if(identical((tag.freq)$P.AB, 0)) {
+             fix.geno.table[2, ] <- 0
+           } else {
+             fix.geno.table[2, 1:ncol(genotype.table)] <- genotype.table["A/B", ]
            }
-           #message(1)
-           if(dim(x)[1] == 1 && length(grep("B/B", dimnames(x)[[1]])) >= 1) {
-             x <- rbind("A/A"=0, "A/B"=0, "B/B"=x[1, ])
-             xnames$tag <- c("A/A", "A/B", "B/B")
-             dimnames(x) <- xnames
+           if(identical((tag.freq)$P.BB, 0)) {
+             fix.geno.table[3, ] <- 0
+           } else {
+             fix.geno.table[3, 1:ncol(genotype.table)] <- genotype.table["B/B", ]
            }
-           #message(1)
+           genotype.table <- fix.geno.table
+         }
+         if(identical(min(freq), 0)) {
+           fix.geno.table <- array(dim=c(3,3))
+           if(identical((freq)$P.AA, 0)) {
+             fix.geno.table[, 1] <- 0
+           } else {
+             fix.geno.table[1:nrow(genotype.table), 1] <- genotype.table[, "A/A"]
+           }
+           if(identical((freq)$P.AB, 0)) {
+             fix.geno.table[, 2] <- 0
+           } else {
+             fix.geno.table[1:nrow(genotype.table), 2] <- genotype.table[, "A/B"]
+           }
+           if(identical((freq)$P.BB, 0)) {
+             fix.geno.table[, 3] <- 0
+           } else {
+             fix.geno.table[1:nrow(genotype.table), 3] <- genotype.table[, "B/B"]
+           }
+           genotype.table <- fix.geno.table
+         }
+         return(genotype.table)
+                                })
 
-           if(dim(x)[1] == 2 && length(grep("A/A", dimnames(x)[[1]])) < 1) {
-             x <- rbind("A/A"=0, as.matrix(x[1:2, ]))
-             xnames$tag <- c("A/A", "A/B", "B/B")
-             dimnames(x) <- xnames
-           }
-           #message(1)
-           if(dim(x)[1] == 2 && length(grep("A/B", dimnames(x)[[1]])) < 1) {
-             x <- rbind("A/A"=as.matrix(x[1, ]), "A/B"=0, "B/B"=as.matrix(x[2,
-                                                                          ]))
-             xnames$tag <- c("A/A", "A/B", "B/B")
-             dimnames(x) <- xnames
-           }
-           #message(1)
-           if(dim(x)[1] == 2 && length(grep("B/B", dimnames(x)[[1]])) < 1) {
-             x <- rbind(as.matrix(x[1:2, ]), "B/B"=0)
-             xnames$tag <- c("A/A", "A/B", "B/B")
-             dimnames(x) <- xnames
-           }
-           #message(1)
-           ##columns
-           if(dim(x)[2] == 1 && length(grep("A/A", dimnames(x)[[2]])) >= 1) {
-             x <- cbind("A/A"=x[, 1], "A/B"=0, "B/B"=0)
-             xnames$corr <- c("A/A", "A/B", "B/B")
-             dimnames(x) <- xnames
-           }
-           #message(1)
-           if(dim(x)[2] == 1 && length(grep("A/B", dimnames(x)[[2]])) >= 1) {
-             x <- cbind("A/A"=0, "A/B"=x[, 1], "B/B"=0)
-             xnames$corr <- c("A/A", "A/B", "B/B")
-             dimnames(x) <- xnames
-           }
-           #message(1)
-           if(dim(x)[2] == 1 && length(grep("B/B", dimnames(x)[[2]])) >= 1) {
-             x <- cbind("A/A"=0, "A/B"=0, "B/B"=x[, 1])
-             xnames$corr <- c("A/A", "A/B", "B/B")
-             dimnames(x) <- xnames
-           }
+  names(genotype.table.snps) <- colnames(tag.snp.complete)
 
-           #message(1)
-           if(dim(x)[2] == 2 && length(grep("A/A", dimnames(x)[[2]])) < 1) {
-             x <- cbind("A/A"=0, x[, 1:2])
-             xnames$corr <- c("A/A", "A/B", "B/B")
-             dimnames(x) <- xnames
-           }
-           #message(1)
-           if(dim(x)[2] == 2 && length(grep("A/B", dimnames(x)[[2]])) < 1) {
-             x <- cbind("A/A"=x[, 1], "A/B"=0, "B/B"=x[, 2])
-             xnames$corr <- c("A/A", "A/B", "B/B")
-             dimnames(x) <- xnames
-           }
-           #message(1)
-           if(dim(x)[2] == 2 && length(grep("B/B", dimnames(x)[[2]])) < 1) {
-             x <- cbind(x[, 1:2], "B/B"=0)
-             xnames$corr <- c("A/A", "A/B", "B/B")
-             dimnames(x) <- xnames
-           }
-           #message(1)
-           return(x)
-                                }
-  )
+###TEST END
+
+# pre.genotype.table.snps <- genotype.table.snps
+# genotype.table.snps <-
+#   lapply(pre.genotype.table.snps, function(x) {
+#          #   message("\n", x)
+#          x <- as.matrix(x)
+#          if((dim(x) > 3)[1]) {
+#            x <- x[1:3, 1:ncol(x)]
+#          }
+#          if((dim(x) > 3)[2]) {
+#            x <- x[1:nrow(x), 1:3]
+#          }
+#          xnames <- dimnames(x)
+#          #   message(x)
+#          #   message(xnames)
+
+#          #message(xnames)
+#          ##rows
+#          #message(1)
+#          if(dim(x)[1] == 1 && length(grep("A/A",dimnames(x)[[1]])) >= 1) {
+#            x <- rbind("A/A"=x[1, ], "A/B"=0, "B/B"=0)
+#            xnames$tag <- c("A/A", "A/B", "B/B")
+#            dimnames(x) <- xnames
+#          }
+#          #message(1)
+#          if(dim(x)[1] == 1 && length(grep("A/B", dimnames(x)[[1]])) >= 1) {
+#            x <- rbind("A/A"=0, "A/B"=x[1, ], "B/B"=0)
+#            xnames$tag <- c("A/A", "A/B", "B/B")
+#            dimnames(x) <- xnames
+#          }
+#          #message(1)
+#          if(dim(x)[1] == 1 && length(grep("B/B", dimnames(x)[[1]])) >= 1) {
+#            x <- rbind("A/A"=0, "A/B"=0, "B/B"=x[1, ])
+#            xnames$tag <- c("A/A", "A/B", "B/B")
+#            dimnames(x) <- xnames
+#          }
+#          #message(1)
+
+#          if(dim(x)[1] == 2 && length(grep("A/A", dimnames(x)[[1]])) < 1) {
+#            x <- rbind("A/A"=0, as.matrix(x[1:2, ]))
+#            xnames$tag <- c("A/A", "A/B", "B/B")
+#            dimnames(x) <- xnames
+#          }
+#          #message(1)
+#          if(dim(x)[1] == 2 && length(grep("A/B", dimnames(x)[[1]])) < 1) {
+#            x <- rbind("A/A"=as.matrix(x[1, ]), "A/B"=0, "B/B"=as.matrix(x[2,
+#                                                                         ]))
+#            xnames$tag <- c("A/A", "A/B", "B/B")
+#            dimnames(x) <- xnames
+#          }
+#          #message(1)
+#          if(dim(x)[1] == 2 && length(grep("B/B", dimnames(x)[[1]])) < 1) {
+#            x <- rbind(as.matrix(x[1:2, ]), "B/B"=0)
+#            xnames$tag <- c("A/A", "A/B", "B/B")
+#            dimnames(x) <- xnames
+#          }
+#          #message(1)
+#          ##columns
+#          if(dim(x)[2] == 1 && length(grep("A/A", dimnames(x)[[2]])) >= 1) {
+#            x <- cbind("A/A"=x[, 1], "A/B"=0, "B/B"=0)
+#            xnames$corr <- c("A/A", "A/B", "B/B")
+#            dimnames(x) <- xnames
+#          }
+#          #message(1)
+#          if(dim(x)[2] == 1 && length(grep("A/B", dimnames(x)[[2]])) >= 1) {
+#            x <- cbind("A/A"=0, "A/B"=x[, 1], "B/B"=0)
+#            xnames$corr <- c("A/A", "A/B", "B/B")
+#            dimnames(x) <- xnames
+#          }
+#          #message(1)
+#          if(dim(x)[2] == 1 && length(grep("B/B", dimnames(x)[[2]])) >= 1) {
+#            x <- cbind("A/A"=0, "A/B"=0, "B/B"=x[, 1])
+#            xnames$corr <- c("A/A", "A/B", "B/B")
+#            dimnames(x) <- xnames
+#          }
+
+#          #message(1)
+#          if(dim(x)[2] == 2 && length(grep("A/A", dimnames(x)[[2]])) < 1) {
+#            x <- cbind("A/A"=0, x[, 1:2])
+#            xnames$corr <- c("A/A", "A/B", "B/B")
+#            dimnames(x) <- xnames
+#          }
+#          #message(1)
+#          if(dim(x)[2] == 2 && length(grep("A/B", dimnames(x)[[2]])) < 1) {
+#            x <- cbind("A/A"=x[, 1], "A/B"=0, "B/B"=x[, 2])
+#            xnames$corr <- c("A/A", "A/B", "B/B")
+#            dimnames(x) <- xnames
+#          }
+#          #message(1)
+#          if(dim(x)[2] == 2 && length(grep("B/B", dimnames(x)[[2]])) < 1) {
+#            x <- cbind(x[, 1:2], "B/B"=0)
+#            xnames$corr <- c("A/A", "A/B", "B/B")
+#            dimnames(x) <- xnames
+#          }
+#          #message(1)
+#          return(x)
+#                               }
+# )
   OR <- ld(tag.snp.complete[, tag.snp.id],
            tag.snp.complete[, !colnames(tag.snp.complete) %in% tag.snp.id],
-           stats="OR", depth=10000)
+           stats="OR", depth=corr.snp.depth)
   p.e <- lapply(colnames(tag.snp.complete), function(x, tag.snp.id) {
                 if(!(identical(x, tag.snp.id))) {
                   genotype.table.snps[[x]][2, 2] * OR[, x]/(1 + OR[, x])
@@ -885,34 +945,17 @@ SNPSummary <- function(snp.list) {
     id.matrix$complete.pos <- as.numeric(id.matrix$complete.pos)
     id.matrix <- id.matrix[order(id.matrix$overlap.pos), ]
 
-    elementMetadata(overlapping.features(correlated.snps(snp.list)))[,
-                                                                     "corr.snp.id"] <- snpid(correlated.snps(snp.list))[id.matrix$complete.pos]
-    elementMetadata(overlapping.features(correlated.snps(snp.list)))[,
-                                                                     "corr.snp.position"] <-
-                                                                       position(correlated.snps(snp.list))[id.matrix$complete.pos]
-                                                                       elementMetadata(overlapping.features(correlated.snps(snp.list)))[,
-                                                                                                                                        "tag.snp.id"] <- snpid(snp.list)
-                                                                       elementMetadata(overlapping.features(correlated.snps(snp.list)))[,
-                                                                                                                                        "tag.snp.position"] <- position(snp.list)
-                                                                       elementMetadata(overlapping.features(correlated.snps(snp.list)))[,
-                                                                                                                                        "D.prime"] <- D.prime.corrsnps(snp.list)[,
-                                                                                                                                        snpid(snp.list)][snpid(correlated.snps(snp.list))[id.matrix$complete.pos]]
-                                                                       elementMetadata(overlapping.features(correlated.snps(snp.list)))[,
-                                                                                                                                        "R.squared"] <- R.squared.corrsnps(snp.list)[,
-                                                                                                                                        snpid(snp.list)][snpid(correlated.snps(snp.list))[id.matrix$complete.pos]]
-                                                                       elementMetadata(overlapping.features(correlated.snps(snp.list)))[,
-                                                                                                                                        "p.value"] <- eval(parse(text=(paste(population(snp.list),
-                                                                                                                                                                             ".p.value(correlated.snps(snp.list))[[2]][snpid(correlated.snps(snp.list))[id.matrix$complete.pos]]",
-                                                                                                                                                                             sep=""))))
-                                                                                                                                        elementMetadata(overlapping.features(correlated.snps(snp.list)))[,
-                                                                                                                                                                                                         "distance.from.tag"] <-
-                                                                                                                                                                                                           position(correlated.snps(snp.list))[id.matrix$complete.pos] -
-                                                                                                                                                                                                           position(snp.list)
-                                                                                                                                                                                                           elementMetadata(overlapping.features(correlated.snps(snp.list)))[,
-                                                                                                                                                                                                                                                                            "population.count"] <- length(genotype(snp.list))
-                                                                                                                                                                                                           elementMetadata(overlapping.features(correlated.snps(snp.list)))[,
-                                                                                                                                                                                                                                                                            "population"] <- population(snp.list)
-                                                                                                                                                                                                           return(overlapping.features(correlated.snps(snp.list)))
+    elementMetadata(overlapping.features(correlated.snps(snp.list)))[,"corr.snp.id"] <- snpid(correlated.snps(snp.list))[id.matrix$complete.pos]
+    elementMetadata(overlapping.features(correlated.snps(snp.list)))[,"corr.snp.position"] <- position(correlated.snps(snp.list))[id.matrix$complete.pos]
+    elementMetadata(overlapping.features(correlated.snps(snp.list)))[,"tag.snp.id"] <- snpid(snp.list)
+    elementMetadata(overlapping.features(correlated.snps(snp.list)))[,"tag.snp.position"] <- position(snp.list)
+    elementMetadata(overlapping.features(correlated.snps(snp.list)))[,"D.prime"] <- yafsnp.dprime(snp.list)[, snpid(snp.list)][snpid(correlated.snps(snp.list))[id.matrix$complete.pos]]
+    elementMetadata(overlapping.features(correlated.snps(snp.list)))[,"R.squared"] <- yafsnp.rsq(snp.list)[, snpid(snp.list)][snpid(correlated.snps(snp.list))[id.matrix$complete.pos]]
+    elementMetadata(overlapping.features(correlated.snps(snp.list)))[,"p.value"] <- yafsnp.pvalue(snp.list)[[2]][snpid(correlated.snps(snp.list))[id.matrix$complete.pos]]
+    elementMetadata(overlapping.features(correlated.snps(snp.list)))[,"distance.from.tag"] <- position(correlated.snps(snp.list))[id.matrix$complete.pos] - position(snp.list)
+    elementMetadata(overlapping.features(correlated.snps(snp.list)))[,"population.count"] <- length(genotype(snp.list))
+    elementMetadata(overlapping.features(correlated.snps(snp.list)))[,"population"] <- population(snp.list)
+    return(overlapping.features(correlated.snps(snp.list)))
   } else {
     return(NULL)
   }
@@ -1316,13 +1359,13 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
       geom_histogram(binwidth = 0.05) + 
       geom_vline(xintercept = 0.5, linetype = 2) + 
       scale_x_continuous(
-                         "1000GP SNPs R squared to tagSNP (0-1)") + 
+                         "1000GP SNPs R\u00B2 to tagSNP (0-1)") + 
          scale_y_continuous(
                             "Total # of 1000GP SNPs associated with tagSNP") + 
          opts(legend.position = "none", axis.text.y = theme_text(), 
               axis.text.x = theme_text(angle = 90), 
               title = 
-              "Distribution of 1000GP SNPs for each tagSNP\nat Rsquared values") + 
+              "Distribution of 1000GP SNPs for each tagSNP\nat R\u00B2 values") + 
          facet_wrap(chromosome ~ tag.snp.id)
          if(save){
            ggsave(file=paste(pathplot, "/FunciSNP.",
@@ -1356,13 +1399,13 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
            ylim = c(0, ht), 
            pch = "*", 
            main = paste(
-                        "Distribution of 1000GP SNPs by Rsquare values\n",
+                        "Distribution of 1000GP SNPs by R\u00B2 values\n",
                         "Total # of 1000GP SNPs: ",dim(dat)[1],
                         "\n(with an Rsq value: ", sum(hh.c$freq),
                         "; unique 1000GP SNPs: ", 
                         length(unique(hh$corr.snp.id)),")", 
                         sep = ""),
-           xlab = "R square values (0-1)", 
+           xlab = "R\u00B2 values (0-1)", 
            ylab = "Number of 1000GP SNPs")
       abline(v = 0.1, lty = 2, col = "red")
       abline(v = 0.2, lty = 2, col = "red")
@@ -1424,12 +1467,12 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
       ggplot(tmp, aes(x=R.squared, fill=factor(r.2))) + 
       geom_histogram(binwidth=0.05) + 
       geom_vline(xintercept = rsq, linetype=2) +
-      scale_x_continuous("Rsquare Values (0-1)", limits=c(0,1)) + 
+      scale_x_continuous("R\u00B2 Values (0-1)", limits=c(0,1)) + 
       scale_y_continuous("Total # of 1000GP SNPs associated with riskSNP") + 
       scale_fill_manual(values = c("Yes" = "Red", "No" = "Black")) +
       opts(legend.position = "none", axis.text.y = theme_text(), 
            axis.text.x = theme_text(angle=90), 
-           title = paste("Distribution of 1000GP SNPs Rsquared",
+           title = paste("Distribution of 1000GP SNPs R\u00B2",
                          "\ndivided by tagSNP & Overlapping biofeature:\n ", 
                          bio[i], sep="")) +
          facet_wrap(chromosome ~ tag.snp.id)
@@ -1444,7 +1487,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
          geom_point() + 
          geom_vline(xintercept = rsq, linetype=2) +
          #geom_abline(intercept = 0, slope = 1) +
-         scale_x_continuous("Rsquare Values (0-1)", limits=c(0,1)) + 
+         scale_x_continuous("R\u00B2 Values (0-1)", limits=c(0,1)) + 
          scale_y_continuous(
                             "Distance to 1000GP SNPs associated with tagSNP (bp)",
                             formatter="comma") + 
@@ -1500,7 +1543,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
               dendrogram=c("none"),
               main = paste(
                            "tagSNP vs Biofeature\n1000GP SNP with", 
-                           "Rsquares  >=", 
+                           "R\u00B2 >=", 
                            " ", rsq, sep="")
               )
     if(save) {
@@ -1550,7 +1593,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
 
       dat$r2 <- paste("All 1000GP SNPs", sep="")
       t <- dat[which(dat$R.squared >= rsq), ]
-      t$r2 <- paste("R squared >= ", rsq, sep="")
+      t$r2 <- paste("R\u00B2 >= ", rsq, sep="")
       dat <- rbind(t, dat) 
       dat.m <- melt(dat[,c(23:29)], 
                     measure.vars=c("Promoter", 
@@ -1573,10 +1616,10 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
       opts(axis.text.y = theme_text(), 
            axis.text.x = theme_text(angle = 90), 
            title = paste("Distribution of 1000GP SNPs across Genomic Features\n",
-                         " at Rsquared cut-off of", rsq, sep=" ")) +
+                         " at R\u00B2 cut-off of", rsq, sep=" ")) +
          scale_fill_manual(values = c("1.YES" = "Red", "2.NO" = "Black"),"Overlap") +
          #scale_x_continuous("Genomic Features") +
-         scale_y_continuous("Percent of Total 1000GP SNPs at Rsquared cut-off") +
+         scale_y_continuous("Percent of Total 1000GP SNPs at R\u00B2 cut-off") +
 
          facet_wrap(~ r2)
          if(save){
