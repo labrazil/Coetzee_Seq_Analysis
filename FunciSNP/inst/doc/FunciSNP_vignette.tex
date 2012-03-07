@@ -21,8 +21,9 @@
 \newcommand{\Rmethod}[1]{{\textit{#1}}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \author{Simon G. Coetzee$^\ddagger$\footnote{scoetzee NEAR gmail POINT com},
-    Suhn Rhie$^\ddagger$, Gerhard A. Coetzee$^\ddagger$ and Houtan
-        Noushmehr$^\ddagger$\footnote{houtana NEAR gmail POINT com}}
+    Suhn K. Rhie$^\ddagger$, Benjamin P. Berman$^\ddagger$,\\Gerhard A.
+        Coetzee$^\ddagger$ and Houtan Noushmehr$^\ddagger$\footnote{houtana NEAR
+            gmail POINT com}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \title{Using the FunciSNP package\\`Functional Identification of SNPs with\\
@@ -245,10 +246,13 @@ pair of each annotated TSS.
 > as.matrix(list.files(glioma.bio, pattern='.bed$'));
 \end{Sinput}
 \begin{Soutput}
-     [,1]                    
-[1,] "knownGene.TSS.hg19.bed"
-[2,] "TFBS_Nrsf_U87.bed"     
-[3,] "TFBS_Pol2_U87.bed"     
+     [,1]                       
+[1,] "CTCF_only.bed"            
+[2,] "EncodeDnaseI_only.bed"    
+[3,] "EncodeDnaseI_withCTCF.bed"
+[4,] "knownGene.Promoters.bed"  
+[5,] "TFBS_Nrsf_U87.bed"        
+[6,] "TFBS_Pol2_U87.bed"        
 \end{Soutput}
 \begin{Sinput}
 > nrsf.filename <- list.files(glioma.bio, pattern='.bed$')[2];
@@ -263,32 +267,32 @@ pair of each annotated TSS.
 > dim(Nrsf);
 \end{Sinput}
 \begin{Soutput}
-[1] 1264    6
+[1] 175508      3
 \end{Soutput}
 \begin{Sinput}
 > dim(PolII);
 \end{Sinput}
 \begin{Soutput}
-[1] 10918     6
+[1] 4978    3
 \end{Soutput}
 \begin{Sinput}
 > dim(Promoters);
 \end{Sinput}
 \begin{Soutput}
-[1] 39701     6
+[1] 9917    3
 \end{Soutput}
 \begin{Sinput}
 > ## Example of what the BED format looks like:
 > head(Nrsf);
 \end{Sinput}
 \begin{Soutput}
-    V1        V2        V3                      V4 V5 V6
-1 chr5 178601706 178602140 Merged-chr5-178601923-1  0  +
-2 chr5 178850156 178850592 Merged-chr5-178850374-1  0  +
-3 chr5 179015119 179015553 Merged-chr5-179015336-1  0  +
-4 chr7     23844     24636     Merged-chr7-24240-1  0  +
-5 chr7     65601     66065     Merged-chr7-65833-1  0  +
-6 chr7    128907    129421    Merged-chr7-129164-1  0  +
+    V1     V2     V3
+1 chr1 564460 564670
+2 chr1 565260 565710
+3 chr1 565840 566070
+4 chr1 566700 567310
+5 chr1 567440 567910
+6 chr1 568060 568710
 \end{Soutput}
 \end{Schunk}
 
@@ -344,24 +348,24 @@ the results (\Rmethod{summary}), type the following commands:
 \end{Sinput}
 \begin{Soutput}
 TagSNP List with  4  Tag SNPs and 
- 778 nearby,  potentially correlated SNPs, that overlap at least one biofeature 
+ 1205 nearby,  potentially correlated SNPs, that overlap at least one biofeature 
 $`R squared: 0.1`
             Total R.sq>=0.1 Percent
-tagSNPs         4         3   75.00
-1K SNPs       778        64    8.23
-Biofeatures     3         3  100.00
+tagSNPs         4         4   100.0
+1K SNPs      1205        88     7.3
+Biofeatures     4         4   100.0
 
 $`R squared: 0.5`
             Total R.sq>=0.5 Percent
 tagSNPs         4         3   75.00
-1K SNPs       778        44    5.66
-Biofeatures     3         2   66.67
+1K SNPs      1205        48    3.98
+Biofeatures     4         3   75.00
 
 $`R squared: 0.9`
             Total R.sq>=0.9 Percent
 tagSNPs         4         1   25.00
-1K SNPs       778        13    1.67
-Biofeatures     3         2   66.67
+1K SNPs      1205        13    1.08
+Biofeatures     4         2   50.00
 \end{Soutput}
 \end{Schunk}
 
@@ -382,22 +386,23 @@ represented among the 13 1000GP SNPs.
 \end{Sinput}
 \begin{Soutput}
 TagSNP List with  4  Tag SNPs and 
- 778 nearby,  potentially correlated SNPs, that overlap at least one biofeature 
+ 1205 nearby,  potentially correlated SNPs, that overlap at least one biofeature 
 Number of potentially correlated SNPs 
 overlapping at least x biofeatures, per Tag SNP at a specified R squared
-$`R squared: 0.1 in 3 Tag SNPs with a total of `
-                    bio.1 bio.2
-rs4977756               3     0
-rs498872                9     2
-rs6010620              52     9
-TOTAL # 1000GP SNPs    64    11
+$`R squared: 0.1 in 4 Tag SNPs with a total of `
+                    bio.1 bio.2 bio.3
+rs2736100               1     0     0
+rs4977756              11     0     0
+rs498872               18     2     0
+rs6010620              58    10     4
+TOTAL # 1000GP SNPs    88    12     4
 
 $`R squared: 0.5 in 3 Tag SNPs with a total of `
-                    bio.1 bio.2
-rs4977756               2     0
-rs498872                2     0
-rs6010620              40     6
-TOTAL # 1000GP SNPs    44     6
+                    bio.1 bio.2 bio.3
+rs4977756               5     0     0
+rs498872                3     0     0
+rs6010620              40     6     3
+TOTAL # 1000GP SNPs    48     6     3
 
 $`R squared: 0.9 in 1 Tag SNPs with a total of `
                     bio.1
@@ -445,7 +450,7 @@ sections for more details). The following step will output the data.frame.
 > dim(gl.anno);
 \end{Sinput}
 \begin{Soutput}
-[1] 862  28
+[1] 1371   28
 \end{Soutput}
 \begin{Sinput}
 > names(gl.anno);
@@ -470,13 +475,13 @@ sections for more details). The following step will output the data.frame.
 > head(gl.anno[, c(1:18,20:28)]);
 \end{Sinput}
 \begin{Soutput}
-  chromosome bio.feature.start bio.feature.end        bio.feature  corr.snp.id
-1          5           1200710         1201809 knownGene.TSS.hg19 chr5:1200720
-2          5           1200710         1201809 knownGene.TSS.hg19 chr5:1200766
-3          5           1200710         1201809 knownGene.TSS.hg19 chr5:1200817
-4          5           1200710         1201809 knownGene.TSS.hg19 chr5:1200946
-5          5           1200710         1201809 knownGene.TSS.hg19 chr5:1200976
-6          5           1200710         1201809 knownGene.TSS.hg19 chr5:1201033
+  chromosome bio.feature.start bio.feature.end         bio.feature  corr.snp.id
+1          5           1200710         1201809 knownGene.Promoters chr5:1200720
+2          5           1200710         1201809 knownGene.Promoters chr5:1200766
+3          5           1200710         1201809 knownGene.Promoters chr5:1200817
+4          5           1200710         1201809 knownGene.Promoters chr5:1200946
+5          5           1200710         1201809 knownGene.Promoters chr5:1200976
+6          5           1200710         1201809 knownGene.Promoters chr5:1201033
   corr.snp.position tag.snp.id tag.snp.position   D.prime    R.squared p.value
 1           1200720  rs2736100          1286516        NA           NA       1
 2           1200766  rs2736100          1286516        NA           NA       1
@@ -518,64 +523,64 @@ sections for more details). The following step will output the data.frame.
 \end{Sinput}
 \begin{Soutput}
   chromosome        bio.feature.start   bio.feature.end    
- Length:862         Min.   :  1200710   Min.   :  1201809  
- Class :character   1st Qu.: 62295044   1st Qu.: 62295926  
- Mode  :character   Median : 62326155   Median : 62337392  
-                    Mean   : 65165595   Mean   : 65169512  
-                    3rd Qu.: 62374564   3rd Qu.: 62376020  
-                    Max.   :118531575   Max.   :118532674  
+ Length:1371        Min.   :  1200710   Min.   :  1201809  
+ Class :character   1st Qu.: 22079881   1st Qu.: 22080370  
+ Mode  :character   Median : 62315624   Median : 62324005  
+                    Mean   : 56394593   Mean   : 56397247  
+                    3rd Qu.: 62369936   3rd Qu.: 62371110  
+                    Max.   :118574381   Max.   :118574590  
                                                            
-             bio.feature           corr.snp.id  corr.snp.position  
- knownGene.TSS.hg19:372   chr11:118442863:  2   Min.   :  1200720  
- TFBS_Nrsf_U87     : 22   chr11:118443036:  2   1st Qu.: 62295889  
- TFBS_Pol2_U87     :468   chr11:118443046:  2   Median : 62327508  
-                          chr11:118478342:  2   Mean   : 65167605  
-                          chr20:62289690 :  2   3rd Qu.: 62375255  
-                          chr20:62289873 :  2   Max.   :118532636  
-                          (Other)        :850                      
+              bio.feature           corr.snp.id   corr.snp.position  
+ Encode_DnaseCluster:509   chr11:118442863:   3   Min.   :  1200720  
+ knownGene.Promoters:372   chr11:118443036:   3   1st Qu.: 22080066  
+ TFBS_Nrsf_U87      : 22   chr11:118443046:   3   Median : 62318595  
+ TFBS_Pol2_U87      :468   chr20:62289690 :   3   Mean   : 56395952  
+                           chr20:62289873 :   3   3rd Qu.: 62370349  
+                           chr20:62290057 :   3   Max.   :118574557  
+                           (Other)        :1353                      
      tag.snp.id  tag.snp.position       D.prime            R.squared        
- rs2736100: 96   Min.   :  1286516   Min.   :7.835e-04   Min.   :9.520e-08  
- rs4977756: 25   1st Qu.: 62309839   1st Qu.:9.338e-01   1st Qu.:7.765e-04  
- rs498872 :166   Median : 62309839   Median :1.000e+00   Median :4.501e-03  
- rs6010620:575   Mean   : 65163135   Mean   :8.995e-01   Mean   :1.258e-01  
-                 3rd Qu.: 62309839   3rd Qu.:1.000e+00   3rd Qu.:2.804e-02  
+ rs2736100:232   Min.   :  1286516   Min.   :7.835e-04   Min.   :9.520e-08  
+ rs4977756:203   1st Qu.: 22068652   1st Qu.:9.204e-01   1st Qu.:1.127e-03  
+ rs498872 :253   Median : 62309839   Median :1.000e+00   Median :4.501e-03  
+ rs6010620:683   Mean   : 56390082   Mean   :8.717e-01   Mean   :1.026e-01  
+                 3rd Qu.: 62309839   3rd Qu.:1.000e+00   3rd Qu.:2.632e-02  
                  Max.   :118477367   Max.   :1.000e+00   Max.   :9.776e-01  
-                                     NA's   :4.710e+02   NA's   :4.710e+02  
+                                     NA's   :7.670e+02   NA's   :7.670e+02  
     p.value           distance.from.tag population.count population
- Min.   :2.115e-163   Min.   :-100000   Min.   :286.0    ASN: 96   
- 1st Qu.: 1.000e+00   1st Qu.: -19966   1st Qu.:379.0    EUR:766   
- Median : 1.000e+00   Median :  13942   Median :379.0              
- Mean   : 7.989e-01   Mean   :   4470   Mean   :368.6              
- 3rd Qu.: 1.000e+00   3rd Qu.:  25290   3rd Qu.:379.0              
- Max.   : 1.000e+00   Max.   :  67371   Max.   :379.0              
+ Min.   :9.021e-175   Min.   :-100000   Min.   :286.0    ASN: 232  
+ 1st Qu.: 1.000e+00   1st Qu.: -26778   1st Qu.:379.0    EUR:1139  
+ Median : 1.000e+00   Median :  14153   Median :379.0              
+ Mean   : 8.084e-01   Mean   :   5870   Mean   :363.3              
+ 3rd Qu.: 1.000e+00   3rd Qu.:  37188   3rd Qu.:379.0              
+ Max.   : 1.000e+00   Max.   :  97190   Max.   :379.0              
                                                                    
       nearest.lincRNA.ID nearest.lincRNA.distancetoFeature
- TCONS_00010241: 96      Min.   :-265183                  
- TCONS_00015797: 25      1st Qu.: -92280                  
- TCONS_00020001:166      Median :  59111                  
- TCONS_00027984: 26      Mean   :   2073                  
- TCONS_00028269:549      3rd Qu.:  73343                  
+ TCONS_00010241:232      Min.   :-266862                  
+ TCONS_00015797:203      1st Qu.:-133416                  
+ TCONS_00020001:253      Median :  55916                  
+ TCONS_00027984: 44      Mean   :  -1509                  
+ TCONS_00028269:639      3rd Qu.:  77246                  
                          Max.   : 246019                  
                                                           
  nearest.lincRNA.coverage    nearest.TSS.GeneSymbol      nearest.TSS.ensembl
- downstream:565           TNFRSF6B      :305        ENSG00000243509:305     
- inside    :  9           PHLDB1        : 86        ENSG00000019144: 86     
- upstream  :288           ZGPAT         : 68        ENSG00000197114: 68     
-                          RTEL1;TNFRSF6B: 37        ENSG00000229299: 59     
-                          SLC6A18       : 34        ENSG00000026036: 37     
-                          (Other)       :202        ENSG00000244977: 36     
-                          NA's          :130        (Other)        :271     
- nearest.TSS.coverage nearest.TSS.distancetoFeature Promoter   utr5    
- downstream:103       Min.   :-16454.0              NO :694   NO :825  
- inside    :311       1st Qu.: -3117.0              YES:168   YES: 37  
- upstream  :448       Median :   -76.0                                 
-                      Mean   :   890.4                                 
-                      3rd Qu.:  2305.8                                 
-                      Max.   : 28781.0                                 
-                                                                       
-  Exon     Intron     utr3     Intergenic
- NO :776   NO :413   NO :702   NO :810   
- YES: 86   YES:449   YES:160   YES: 52   
+ downstream:830           TNFRSF6B      :327        ENSG00000243509:327     
+ inside    : 12           PHLDB1        :134        ENSG00000019144:134     
+ upstream  :529           ZGPAT         : 68        ENSG00000244977:116     
+                          SLC6A18       : 61        ENSG00000215221: 85     
+                          RTEL1;TNFRSF6B: 43        ENSG00000197114: 68     
+                          (Other)       :304        ENSG00000164363: 61     
+                          NA's          :434        (Other)        :580     
+ nearest.TSS.coverage nearest.TSS.distancetoFeature Promoter    utr5     
+ downstream:350       Min.   :-20118                NO :1177   NO :1318  
+ inside    :437       1st Qu.: -2049                YES: 194   YES:  53  
+ upstream  :584       Median :   641                                     
+                      Mean   :  7950                                     
+                      3rd Qu.: 10782                                     
+                      Max.   : 99932                                     
+                                                                         
+  Exon      Intron     utr3      Intergenic
+ NO :1272   NO :575   NO :1199   NO :1209  
+ YES:  99   YES:796   YES: 172   YES: 162  
 \end{Soutput}
 \begin{Sinput}
 > rm(gl.anno);
@@ -620,9 +625,9 @@ now specify the Rsquare cutoffs.  In this case, we used rsq = 0.44 (to get a
 \end{Sinput}
 \begin{Soutput}
             Total R.sq>=0.44 Percent
-tagSNPs         4          3   75.00
-1K SNPs       778         46    5.91
-Biofeatures     3          2   66.67
+tagSNPs         4          4   100.0
+1K SNPs      1205         53     4.4
+Biofeatures     4          3    75.0
 \end{Soutput}
 \end{Schunk}
 
@@ -641,10 +646,11 @@ near the same gene.
 2          LIME1
 3         PHLDB1
 4       SLC2A4RG
-5       TNFRSF6B
-6           TREH
-7          ZGPAT
-8 RTEL1;TNFRSF6B
+5           TERT
+6       TNFRSF6B
+7           TREH
+8          ZGPAT
+9 RTEL1;TNFRSF6B
 \end{Soutput}
 \end{Schunk}
 
@@ -661,12 +667,12 @@ subset the data and thereby obtain a more objective and informative result.
 > FunciSNPsummaryOverlaps(glioma.anno)
 \end{Sinput}
 \begin{Soutput}
-                    bio.1 bio.2
-rs2736100              41     0
-rs4977756              12     0
-rs498872               59     3
-rs6010620             236    40
-TOTAL # 1000GP SNPs   348    43
+                    bio.1 bio.2 bio.3
+rs2736100              94     0     0
+rs4977756              84     1     0
+rs498872               87     8     1
+rs6010620             266    52    11
+TOTAL # 1000GP SNPs   531    61    12
 \end{Soutput}
 \end{Schunk}
 
@@ -678,11 +684,12 @@ Rsquare values $\ge$ `rsq'.
 > FunciSNPsummaryOverlaps(glioma.anno, rsq=0.44)
 \end{Sinput}
 \begin{Soutput}
-                    bio.1 bio.2
-rs4977756               2     0
-rs498872                2     0
-rs6010620              42     7
-TOTAL # 1000GP SNPs    46     7
+                    bio.1 bio.2 bio.3
+rs2736100               1     0     0
+rs4977756               6     0     0
+rs498872                4     0     0
+rs6010620              42     8     3
+TOTAL # 1000GP SNPs    53     8     3
 \end{Soutput}
 \end{Schunk}
 
@@ -702,7 +709,7 @@ associated with `rs6010620' and which overlap at least 2 different biofeatures.
 > dim(rs6010620);
 \end{Sinput}
 \begin{Soutput}
-[1] 14 28
+[1] 19 28
 \end{Soutput}
 \begin{Sinput}
 > class(rs6010620);
@@ -832,9 +839,10 @@ Func-y-SNP.
 > FunciSNPplot(glioma.anno, tagSummary=TRUE, rsq=0.5)
 \end{Sinput}
 \begin{Soutput}
-Finished plotting  1 / 3 
-Finished plotting  2 / 3 
-Finished plotting  3 / 3 
+Finished plotting  1 / 4 
+Finished plotting  2 / 4 
+Finished plotting  3 / 4 
+Finished plotting  4 / 4 
 \end{Soutput}
 \end{Schunk}
 
@@ -942,8 +950,8 @@ UCSC Genome Browser FAQ (\url{http://genome.ucsc.edu/FAQ/FAQformat}).
 > FunciSNPbed(glioma.anno, rsq=0.22);
 \end{Sinput}
 \begin{Soutput}
-Total corSNP (RED):  57 
-Total tagSNP (BLK):  3 
+Total corSNP (RED):  71 
+Total tagSNP (BLK):  4 
 \end{Soutput}
 \begin{Sinput}
 > # FunciSNPbed(rs6010620, rsq=0.5);
@@ -983,7 +991,7 @@ Questions or comments, please contact Simon G. Coetzee (scoetzee NEAR gmail
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{itemize}\raggedright
-  \item R version 2.14.1 (2011-12-22), \verb|x86_64-pc-linux-gnu|
+  \item R version 2.14.2 (2012-02-29), \verb|x86_64-pc-linux-gnu|
   \item Locale: \verb|LC_CTYPE=en_US.UTF-8|, \verb|LC_NUMERIC=C|, \verb|LC_TIME=en_US.UTF-8|, \verb|LC_COLLATE=en_US.UTF-8|, \verb|LC_MONETARY=en_US.UTF-8|, \verb|LC_MESSAGES=en_US.UTF-8|, \verb|LC_PAPER=C|, \verb|LC_NAME=C|, \verb|LC_ADDRESS=C|, \verb|LC_TELEPHONE=C|, \verb|LC_MEASUREMENT=en_US.UTF-8|, \verb|LC_IDENTIFICATION=C|
   \item Base packages: base, datasets, graphics, grDevices, grid,
     methods, splines, stats, tools, utils
@@ -1002,7 +1010,7 @@ Questions or comments, please contact Simon G. Coetzee (scoetzee NEAR gmail
     survival~2.36-12, TxDb.Hsapiens.UCSC.hg19.knownGene~2.6.2,
     VariantAnnotation~1.0.5
   \item Loaded via a namespace (and not attached): digest~0.5.1,
-    MASS~7.3-16, parallel~2.14.1, XML~3.9-2, xtable~1.6-0,
+    MASS~7.3-16, parallel~2.14.2, XML~3.9-2, xtable~1.6-0,
     zlibbioc~1.0.0
 \end{itemize}
 \textcopyleft  2012. All rights reversed (\textbf{respect the work})! This
