@@ -1282,7 +1282,7 @@ FunciSNPbed <- function(dat, rsq, path=getwd(), filename=NULL) {
                      paste(d.s[1,8]-500,"-",d.s[1,6]+500,sep="")
                    }
                    ,
-                   "\ntrack name=\"FunciSNP_results\" description=\"Funci{SNP} results (ver. ", 
+                   "\ntrack name=\"FunciSNP_results\" description=\"Funci{SNP} Results : Rsquare cut-off at ", rsq, " (ver. ", 
                    package.version("FunciSNP"),")\" visibility=3 itemRgb=\"On\"", sep=""), con)
   write.table(y, row.names=F, col.names=F, sep="\t", file=con, quote=F)
   close(con)
