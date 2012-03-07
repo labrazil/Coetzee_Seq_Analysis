@@ -1271,7 +1271,8 @@ FunciSNPbed <- function(dat, rsq, path=getwd(), filename=NULL) {
                             "rsquare", "strand", "snp.pos.s", "snp.pos.e", "color")
   dimnames(d.tag)[[2]] <- dimnames(d.cor)[[2]] 
   y <- rbind(d.tag, d.cor); 
-  y$rsquare <- round(y$rsquare, digits=4)
+y$rsquare <- round(y$rsquare, digits=4)
+y$snp.id <- paste(y$snp.id, ".", y$rsquare, sep="")  
   con <- file(paste(path,filename,sep="/"),open="wt")
   writeLines(paste("browser position chr",d.s[1,1],":",
                    if(d.s[1,6]<d.s[1,8]){    
@@ -1280,7 +1281,8 @@ FunciSNPbed <- function(dat, rsq, path=getwd(), filename=NULL) {
                      paste(d.s[1,8]-500,"-",d.s[1,6]+500,sep="")
                    }
                    ,
-                   "\ntrack name=\"FunciSNP_results\" description=\"Results of FunciSNP (ver. ", 
+                   "\ntrack name=\"FunciSNP_results\" description=\"Funci{SNP}
+results (ver. ", 
                    package.version("FunciSNP"),")\" visibility=3 itemRgb=\"On\"", sep=""), con)
   write.table(y, row.names=F, col.names=F, sep="\t", file=con, quote=F)
   close(con)
