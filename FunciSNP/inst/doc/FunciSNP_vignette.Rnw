@@ -21,8 +21,9 @@
 \newcommand{\Rmethod}[1]{{\textit{#1}}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \author{Simon G. Coetzee$^\ddagger$\footnote{scoetzee NEAR gmail POINT com},
-    Suhn Rhie$^\ddagger$, Gerhard A. Coetzee$^\ddagger$ and Houtan
-        Noushmehr$^\ddagger$\footnote{houtana NEAR gmail POINT com}}
+    Suhn K. Rhie$^\ddagger$, Benjamin P. Berman$^\ddagger$,\\Gerhard A.
+        Coetzee$^\ddagger$ and Houtan Noushmehr$^\ddagger$\footnote{houtana NEAR
+            gmail POINT com}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \title{Using the FunciSNP package\\`Functional Identification of SNPs with\\

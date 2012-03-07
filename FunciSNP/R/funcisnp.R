@@ -1313,8 +1313,10 @@ FunciSNPbed <- function(dat, rsq, path=getwd(), filename=NULL) {
   dimnames(d.cor)[[2]] <- c("chr", "snp.pos.s", "snp.pos.e", "snp.id",
                             "rsquare", "strand", "snp.pos.s", "snp.pos.e", "color")
   dimnames(d.tag)[[2]] <- dimnames(d.cor)[[2]] 
+  d.cor$rsquare <- round(d.cor$rsquare, digits=4);
+  d.tag$rsquare <- round(d.tag$rsquare, digits=4);
+  d.cor$snp.id <- paste(d.cor$snp.id, "--", d.cor$rsquare, sep="")  
   y <- rbind(d.tag, d.cor); 
-  y$rsquare <- round(y$rsquare, digits=4)
   con <- file(paste(path,filename,sep="/"),open="wt")
   writeLines(paste("browser position chr",d.s[1,1],":",
                    if(d.s[1,6]<d.s[1,8]){    
@@ -1323,7 +1325,7 @@ FunciSNPbed <- function(dat, rsq, path=getwd(), filename=NULL) {
                      paste(d.s[1,8]-500,"-",d.s[1,6]+500,sep="")
                    }
                    ,
-                   "\ntrack name=\"FunciSNP_results\" description=\"Results of FunciSNP (ver. ", 
+                   "\ntrack name=\"FunciSNP_results\" description=\"Funci{SNP} Results : Rsquare cut-off at ", rsq, " (ver. ", 
                    package.version("FunciSNP"),")\" visibility=3 itemRgb=\"On\"", sep=""), con)
   write.table(y, row.names=F, col.names=F, sep="\t", file=con, quote=F)
   close(con)
@@ -1333,7 +1335,7 @@ FunciSNPbed <- function(dat, rsq, path=getwd(), filename=NULL) {
       dim(d.tag)[1],"\n")
   message("\nTo view results, submit bed file as a\ncustom track in ", 
           "UCSC Genome Browser (genome.ucsc.edu),", 
-          " \n\nNow have fun with your new Func-y-SNP",
+          " \n\nNow have fun with your new YAFSNPs",
           if(dim(d.cor)[1]>1){"s"}else{""},"!!\n####");
 
 }
