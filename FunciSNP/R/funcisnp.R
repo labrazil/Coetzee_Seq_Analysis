@@ -271,7 +271,7 @@ getFSNPs <- function(snp.regions.file, bio.features.loc = NULL,
             if(built.in.biofeatures) {
               (length(list.files(bio.features.loc,
                                  pattern="*.bed$",
-                                 full.names=FALSE))) + 3
+                                 full.names=FALSE))) + 4
             } else {
               length(list.files(bio.features.loc,
                                 pattern="*.bed$",
@@ -280,13 +280,20 @@ getFSNPs <- function(snp.regions.file, bio.features.loc = NULL,
             gsub(".bed$", ", ", list.files(bio.features.loc,
                                            pattern="*.bed$",
                                            full.names=FALSE)),
-            if(built.in.biofeatures) "knownGene.Promoters, Encode_DnaseCluster, CTCF_Xie_etal_2007")
+
+            if(built.in.biofeatures) {
+            builtins <- gsub(".bed$", ", ", list.files(system.file('extdata/builtInFeatures',
+                                                                   package='FunciSNP'),
+                                              pattern="*.bed$",
+                                              full.names=FALSE))
+            builtins[length(builtins)] <- sub(", $", "", builtins[length(builtins)])
+            builtins
+            }
   }
   primary.server <- sample(c("ncbi", "ebi"), size=1)
   snp.region <- ReadRegionsFile(snp.regions.file, search.window)
   message("          Number of TagSNPs Interrogated:   ", nrow(snp.region),
-          " representing ", length(unique(snp.region$snp.name)), " unique tag
-          SNPs")
+          " representing ", length(unique(snp.region$snp.name)), " unique tagSNPs")
           options(mc.cores=par.threads)
           populations <- CreatePopulations(primary.server)
           if(identical(bio.features.loc, NULL)) {
@@ -1154,7 +1161,7 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
     if(isTRUE(length(promoter.intergenic.rows) > 0)){
       summary.snp.list[promoter.intergenic.rows,"Intergenic"] <- "NO";
     }
-    cat(" ... done\n\nNow do the Funcy Dance!\n");
+    cat(" ... done\n\nNow do the Funci Dance!\n");
     #rm("lincRNA"); ## remove object after annotation
     #rm("TSS.human.GRCh37"); ## remove object after annotation
     return(summary.snp.list)
