@@ -10,7 +10,7 @@ Given a set of known tag-SNPs associated with a particular phenotype (e.g. disea
 }
 \usage{
 getFSNPs(snp.regions.file, bio.features.loc = NULL,
-                     built.in.features = TRUE,
+                     built.in.biofeatures = TRUE,
                      par.threads=detectCores()/2,
                      verbose = par.threads < 2, method.p = "BH",
                      reduce.by.features = TRUE, search.window = 200000)
