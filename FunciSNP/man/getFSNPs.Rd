@@ -10,7 +10,7 @@ Given a set of known tag-SNPs associated with a particular phenotype (e.g. disea
 }
 \usage{
 getFSNPs(snp.regions.file, bio.features.loc = NULL,
-                     bio.features.TSS = TRUE,
+                     built.in.biofeatures = TRUE,
                      par.threads=detectCores()/2,
                      verbose = par.threads < 2, method.p = "BH",
                      reduce.by.features = TRUE, search.window = 200000)
@@ -25,8 +25,8 @@ getFSNPs(snp.regions.file, bio.features.loc = NULL,
 	\item{bio.features.loc}{
 		path: Location of the biological features folder: Each biological feature for a particular genomic phenotype should be separated as individual BED files (tab deliminated file with chr, start and end). See UCSC for more information about BED formats \url{http://genome.ucsc.edu/FAQ/FAQformat.html#format1}. See example below. Default set to NULL.
 	}
-	\item{bio.features.TSS}{
-		logical: To include promoter regions as an additional biofeature in the analysis. Promoters defined as -1000 to +100 bp of a known TSS. File extracted on Feb. 9, 2012 from UCSC genome table browser. Default set to TRUE.
+	\item{built.in.biofeatures}{
+		logical: To include promoter regions, Encode DNaseI and CTCF sites as an additional biofeature in the analysis. Promoters defined as -1000 to +100 bp of a known TSS. File extracted on Feb. 9, 2012 from UCSC genome table browser. Default set to TRUE.
 	}
 	\item{par.threads}{
 		an integer: Number of CPU cores to use for FunciSNP analysis. Default set at detectCores()/2. If par.threads > 1, then by default "verbose" = FALSE.	
@@ -93,7 +93,7 @@ glioma.bio <- system.file('extdata',package='FunciSNP');
 #  calculates LD (Rsquare, Dprime, distance, p-value).
 # Do not run. Can take more than 5 min depending on internet connection and number of CPUs.
 #glioma <- getFSNPs(snp.regions.file=glioma.snp, 
-#  bio.features.loc = glioma.bio, bio.features.TSS=FALSE);
+#  bio.features.loc = glioma.bio);
 
 ##
 data(glioma);
