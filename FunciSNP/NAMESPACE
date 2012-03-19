@@ -7,7 +7,10 @@ importFrom(snpStats, ld)
 import(GGtools)
 import(TxDb.Hsapiens.UCSC.hg19.knownGene)
 import(ChIPpeakAnno)
+import(ggplot2)
+importFrom(matlab, jet.colors)
 importFrom(VariantAnnotation, locateVariants)
+importFrom(reshape, melt)
 import(org.Hs.eg.db)
 
 exportMethods(

@@ -289,6 +289,7 @@ getFSNPs <- function(snp.regions.file, bio.features.loc = NULL,
             builtins[length(builtins)] <- sub(", $", "", builtins[length(builtins)])
             builtins
             }
+            )
   }
   primary.server <- sample(c("ncbi", "ebi"), size=1)
   snp.region <- ReadRegionsFile(snp.regions.file, search.window)
@@ -550,12 +551,10 @@ FilterByFeatures <- function(bio.features.file = NULL, tag.snp.name,
                           unlist(strsplit(bio.features.file, "/")),
                           value=TRUE))-4))
 
-    overlaps <-
-      findOverlaps(bio.features.file.interval,
-                   close.snp.ranges,
-                   select="all")
-    snps.included <-
-      lapply(queryHits(overlaps), function(x) bio.features.file.interval[x])
+    overlaps <- findOverlaps(bio.features.file.interval,
+                             close.snp.ranges,
+                             select="all")
+    snps.included <- lapply(queryHits(overlaps), function(x) bio.features.file.interval[x])
 
     ##write method to call a specific snp that occurs under two peaks
     ##use the following technique test00[names(test00)=="rs123456"]
@@ -1446,6 +1445,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
                               package.version("FunciSNP"), "/plots",
                               sep=""), showWarnings = FALSE, recursive=TRUE), silent=TRUE)
     require("ggplot2")
+    require("reshape")
 
     ### ggplot2 plots#####
 
