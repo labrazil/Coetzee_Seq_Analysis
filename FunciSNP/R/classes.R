@@ -5,7 +5,7 @@ setClass("CorrGeno",
          )
 
 setClass("CorrelatedSNPs",
-         representation(chromosome="integer",
+         representation(chromosome="character",
                         position="integer",
                         snpid="character",
                         ref.allele="character",
@@ -31,7 +31,7 @@ setClass("CorrelatedSNPs",
          )
 
 setClass("TagSNP",
-         representation(chromosome="integer",
+         representation(chromosome="character",
                         position="integer",
                         snpid="character",
                         population="character",

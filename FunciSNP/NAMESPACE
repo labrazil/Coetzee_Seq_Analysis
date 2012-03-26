@@ -11,7 +11,6 @@ import(ggplot2)
 importFrom(matlab, jet.colors)
 importFrom(VariantAnnotation, locateVariants)
 importFrom(reshape, melt)
-import(org.Hs.eg.db)
 
 exportMethods(
     "alt.allele<-", "alt.allele",

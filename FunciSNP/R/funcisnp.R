@@ -168,9 +168,8 @@ CreateCorrelatedSNPs<- function(tag.snp.name, snp.list, primary.server,
                                          tag.snp.name=tag.snp.name,
                                          tag.snp.complete=tag.snp.complete,
                                          verbose=verbose)))
-    tag.snp.complete <<- tag.snp.complete
     if(reduce.by.features) {
-      overlapping.snps <-
+    overlapping.snps <-
         unique(names(overlapping.features(correlated.snps(tag.snp.complete))))
       tag.snp.complete <- FilteredLDTesting(tag.snp.complete, verbose)
       if(verbose) message("Calculating p-value for ", tag.snp.name)
@@ -491,7 +490,7 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
   tag.population <- getElement(populations, tag.ethno)
 
   corr.snps <- new("CorrelatedSNPs",
-                   chromosome=as.integer(snps.support[, 1]),
+                   chromosome=as.character(snps.support[, 1]),
                    position=as.integer(snps.support[, 2]),
                    snpid=ifelse(snps.support[, 3] == ".",
                                 paste("chr", snps.support[, 1], ":",
@@ -506,7 +505,7 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
                    )
 
   correlated.snps(snp.list[[tag.snp.name]]) <- corr.snps
-  chr(snp.list[[tag.snp.name]]) <- as.integer(tag.support[1])
+  chr(snp.list[[tag.snp.name]]) <- as.character(tag.support[1])
   position(snp.list[[tag.snp.name]]) <- as.integer(tag.support[2])
   ref.allele(snp.list[[tag.snp.name]]) <- as.character(tag.support[4])
   alt.allele(snp.list[[tag.snp.name]]) <- as.character(tag.support[5])
@@ -726,11 +725,9 @@ tag.snp.complete <- eval(parse(text=(paste(population(tag.snp.complete),
                                 ".overlapping.snps.geno(tag.snp.complete)",
                                 sep=""))))
 corr.snp.depth <- (dim(tag.snp.complete)[2]) - 1
-
   snp.list <- lapply(colnames(tag.snp.complete),
                      function(x) as(tag.snp.complete[, x], "character"))
   names(snp.list) <- colnames(tag.snp.complete)
-
 # genotype.table.snps <- lapply(snp.list,
 #                               function(x) table(unlist(snp.list[tag.snp.id]),
 #                                                 unlist(x),
@@ -745,6 +742,8 @@ corr.snp.depth <- (dim(tag.snp.complete)[2]) - 1
                                  dnn = (c("tag", "corr")))
          if(identical(min(tag.freq), 0)) {
            fix.geno.table <- array(dim=c(3,3))
+           colnames(fix.geno.table) <- c("A/A", "A/B", "B/B")
+           rownames(fix.geno.table) <- c("A/A", "A/B", "B/B")
            if(identical((tag.freq)$P.AA, 0)) {
              fix.geno.table[1, ] <- 0
            } else {
@@ -764,6 +763,8 @@ corr.snp.depth <- (dim(tag.snp.complete)[2]) - 1
          }
          if(identical(min(freq), 0)) {
            fix.geno.table <- array(dim=c(3,3))
+           colnames(fix.geno.table) <- c("A/A", "A/B", "B/B")
+           rownames(fix.geno.table) <- c("A/A", "A/B", "B/B")
            if(identical((freq)$P.AA, 0)) {
              fix.geno.table[, 1] <- 0
            } else {
@@ -783,9 +784,7 @@ corr.snp.depth <- (dim(tag.snp.complete)[2]) - 1
          }
          return(genotype.table)
                                 })
-
   names(genotype.table.snps) <- colnames(tag.snp.complete)
-
 ###TEST END
 
 # pre.genotype.table.snps <- genotype.table.snps
@@ -1030,7 +1029,8 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
     rd.corr.snp.loc$snpid <- NULL
 
     data(TSS.human.GRCh37, package='ChIPpeakAnno')
-    data(lincRNA.hg19, package='FunciSNP')
+#    data(refseqgenes, package='FunciSNP')
+#    data(lincRNA.hg19, package='FunciSNP')
 
     ##nearest linc RNAs
     cat("Putative Functional SNPs identified!!\nAnnotation will begin\n~~\n")
@@ -1059,36 +1059,31 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
     cat("Adding gene annotations\n\n")
     require("org.Hs.eg.db")
     nearest.TSS <- annotatePeakInBatch(myPeakList = rd.corr.snp.loc,
-                                       AnnotationData = TSS.human.GRCh37,
-                                       output="nearestStart")                                       
-    nearest.TSS <- addGeneIDs(nearest.TSS,
-                              "org.Hs.eg.db",
-                              IDs2Add = c("symbol", "refseq"),
-                              silence = TRUE)
+                                       AnnotationData = refseqgenes,
+                                       output="nearestStart")
     nearest.TSS <- as(nearest.TSS, "GRanges")
     nearest.TSS <- nearest.TSS[order(elementMetadata(nearest.TSS)[, "peak"]), ]
+    zz <<- nearest.TSS
     summary.snp.list <- summary.snp.list[order(row.names(summary.snp.list)), ]
-
-    summary.snp.list$nearest.TSS.GeneSymbol <- elementMetadata(nearest.TSS)[,
-                                                                            "symbol"]
-    summary.snp.list$nearest.TSS.GeneSymbol <-
-      as.factor(summary.snp.list$nearest.TSS.GeneSymbol)
+    yy <<- summary.snp.list
 
     summary.snp.list$nearest.TSS.refseq <- NA
-    summary.snp.list$nearest.TSS.refseq <- elementMetadata(nearest.TSS)[,
-                                                                        "refseq"]
+    summary.snp.list$nearest.TSS.refseq <- elementMetadata(nearest.TSS)[, "feature"]
     summary.snp.list$nearest.TSS.refseq <-
       as.factor(summary.snp.list$nearest.TSS.refseq)
-
+    
+    summary.snp.list$nearest.TSS.GeneSymbol <- NA
+    summary.snp.list$nearest.TSS.GeneSymbol <- refseqgenes$genesymbol[match(summary.snp.list$nearest.TSS.refseq, refseqgenes$refseq)]
+    summary.snp.list$nearest.TSS.GeneSymbol <-
+      as.factor(summary.snp.list$nearest.TSS.GeneSymbol)
+    
     summary.snp.list$nearest.TSS.ensembl <- NA
-    summary.snp.list$nearest.TSS.ensembl <- elementMetadata(nearest.TSS)[,
-                                                                         "feature"]
+    summary.snp.list$nearest.TSS.ensembl <- refseqgenes$ensembl[match(summary.snp.list$nearest.TSS.refseq, refseqgenes$refseq)]
     summary.snp.list$nearest.TSS.ensembl <-
       as.factor(summary.snp.list$nearest.TSS.ensembl)
 
     summary.snp.list$nearest.TSS.coverage <- NA
-    summary.snp.list$nearest.TSS.coverage <- elementMetadata(nearest.TSS)[,
-                                                                          "insideFeature"]
+    summary.snp.list$nearest.TSS.coverage <- elementMetadata(nearest.TSS)[, "insideFeature"]
     summary.snp.list$nearest.TSS.coverage <-
       as.factor(summary.snp.list$nearest.TSS.coverage)
 
@@ -1161,8 +1156,6 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
       summary.snp.list[promoter.intergenic.rows,"Intergenic"] <- "NO";
     }
     cat(" ... done\n\nNow do the Funci Dance!\n");
-    #rm("lincRNA"); ## remove object after annotation
-    #rm("TSS.human.GRCh37"); ## remove object after annotation
     return(summary.snp.list)
 
   }
