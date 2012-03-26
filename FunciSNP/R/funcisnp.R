@@ -1057,7 +1057,7 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
     cat(" ... done\n")
     ##nearest TSS (conanical gene)
     cat("Adding gene annotations\n\n")
-    require("org.Hs.eg.db")
+#    require("org.Hs.eg.db")
     nearest.TSS <- annotatePeakInBatch(myPeakList = rd.corr.snp.loc,
                                        AnnotationData = refseqgenes,
                                        output="nearestStart")
