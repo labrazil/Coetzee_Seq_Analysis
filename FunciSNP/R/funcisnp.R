@@ -517,14 +517,15 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
 
 FilterByFeatures <- function(bio.features.file = NULL, tag.snp.name,
                              tag.snp.complete, verbose = TRUE) {
-  if(verbose) message("Filtering ", snpid(tag.snp.complete), " against ",
-                      c(substr(grep(".bed$",
-                                    unlist(strsplit(bio.features.file, "/")),
-                                    value=TRUE),
-                               1, nchar(grep(".bed$",
-                                             unlist(strsplit(bio.features.file,
-                                                             "/")),
-                                             value=TRUE))-4)))
+
+  ending.in.bed <- c(substr(grep(".bed$",
+                                 unlist(strsplit(bio.features.file, "/")), value=TRUE),
+                            1,
+                            nchar(grep(".bed$",
+                                       unlist(strsplit(bio.features.file, "/")),
+                                       value=TRUE))-4))
+
+  if(verbose) message("Filtering ", snpid(tag.snp.complete), " against ", ending.in.bed[[length(ending.in.bed)]])
   close.snp.ranges <-
     GRanges(seqnames=paste(
                            "chr",
@@ -542,19 +543,11 @@ FilterByFeatures <- function(bio.features.file = NULL, tag.snp.name,
                                          FALSE)
     bio.features.file.interval <- IRanges::sort(bio.features.file.interval)
     elementMetadata(bio.features.file.interval) <- NULL
-    elementMetadata(bio.features.file.interval)[, "feature"] <-
-      c(substr(grep(".bed$",
-                    unlist(strsplit(bio.features.file, "/")), value=TRUE),
-               1,
-               nchar(grep(".bed$",
-                          unlist(strsplit(bio.features.file, "/")),
-                          value=TRUE))-4))
-
+    elementMetadata(bio.features.file.interval)[, "feature"] <- ending.in.bed[[length(ending.in.bed)]]
     overlaps <- findOverlaps(bio.features.file.interval,
                              close.snp.ranges,
                              select="all")
     snps.included <- lapply(queryHits(overlaps), function(x) bio.features.file.interval[x])
-
     ##write method to call a specific snp that occurs under two peaks
     ##use the following technique test00[names(test00)=="rs123456"]
   }
@@ -1063,9 +1056,7 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
                                        output="nearestStart")
     nearest.TSS <- as(nearest.TSS, "GRanges")
     nearest.TSS <- nearest.TSS[order(elementMetadata(nearest.TSS)[, "peak"]), ]
-    zz <<- nearest.TSS
     summary.snp.list <- summary.snp.list[order(row.names(summary.snp.list)), ]
-    yy <<- summary.snp.list
 
     summary.snp.list$nearest.TSS.refseq <- NA
     summary.snp.list$nearest.TSS.refseq <- elementMetadata(nearest.TSS)[, "feature"]
