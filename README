@@ -9,3 +9,9 @@ Each folder represents one in house script. View README within is folder for mor
 ##
 Feb 3, 2012 - Reorganized folder project. Added new versions of FunciSNP.
 
+
+new version of TSS.human.GRCh37
+from genomebrowser on 2012-03-26 
+filtered only rows with "hg19.knonwCanonical.transcript" != "na"
+no duplicated ensembl id's allowed no "na" ensembl id's allowed
+

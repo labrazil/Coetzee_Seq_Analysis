@@ -1073,12 +1073,12 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
       as.factor(summary.snp.list$nearest.TSS.refseq)
     
     summary.snp.list$nearest.TSS.GeneSymbol <- NA
-    summary.snp.list$nearest.TSS.GeneSymbol <- refseqgenes$genesymbol[match(summary.snp.list$nearest.TSS.refseq, refseqgenes$refseq)]
+    summary.snp.list$nearest.TSS.GeneSymbol <- refseqgenes$genesymbol[match(summary.snp.list$nearest.TSS.refseq, refseqgenes$names)]
     summary.snp.list$nearest.TSS.GeneSymbol <-
       as.factor(summary.snp.list$nearest.TSS.GeneSymbol)
     
     summary.snp.list$nearest.TSS.ensembl <- NA
-    summary.snp.list$nearest.TSS.ensembl <- refseqgenes$ensembl[match(summary.snp.list$nearest.TSS.refseq, refseqgenes$refseq)]
+    summary.snp.list$nearest.TSS.ensembl <- refseqgenes$ensembl[match(summary.snp.list$nearest.TSS.refseq, refseqgenes$names)]
     summary.snp.list$nearest.TSS.ensembl <-
       as.factor(summary.snp.list$nearest.TSS.ensembl)
 
