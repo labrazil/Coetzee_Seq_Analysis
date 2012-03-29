@@ -1152,6 +1152,22 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
   }
 }
 
+bedColors <- function(dat, rsq=0) {
+  dat <- dat[which(dat$R.squared >= rsq), ]
+  tag.snps.with.overlaps <- unique(as.character(dat$tag.snp.id))
+  require("plyr")
+  corr.snp.counts <- lapply(tag.snps.with.overlaps, function(x) {
+                                  count(as.character(dat[dat$tag.snp.id == x,]$corr.snp.id))})
+  corr.snp.counts <- do.call("rbind", corr.snp.counts)
+  max.freq <- max(corr.snp.counts$freq)
+#  corr.snp.counts$score <- ((corr.snp.counts$freq) / (max.freq)) * 1000
+  colors <- t(col2rgb(jet.colors(max.freq)))
+  corr.snp.counts$color <- unlist(lapply(corr.snp.counts$freq, function(x) {
+                                         do.call(paste, c(as.list(colors[x, ]), sep=","))}))
+  return(corr.snp.counts)
+}
+
+
 FunciSNPsummaryOverlaps <- function(dat, rsq=0) {
   dat <- dat[which(dat$R.squared >= rsq), ]
   tag.snps.with.overlaps <- unique(as.character(dat$tag.snp.id))
@@ -1296,13 +1312,17 @@ FunciSNPbed <- function(dat, rsq, path=getwd(), filename=NULL) {
   d.tag[,7] <- d.tag[,7]+1
   d.cor$strand <- "+"
   d.tag$strand <- "+"
-  d.cor$color <- "255,0,0"
+  d.cor$color <- NA
   d.tag$color <- "0,0,0"
   d.cor <- d.cor[,c(1:5,8,6:7,9)]
   d.tag <- d.tag[,c(1:5,8,6:7,9)]
   dimnames(d.cor)[[2]] <- c("chr", "snp.pos.s", "snp.pos.e", "snp.id",
                             "rsquare", "strand", "snp.pos.s", "snp.pos.e", "color")
-  dimnames(d.tag)[[2]] <- dimnames(d.cor)[[2]] 
+  dimnames(d.tag)[[2]] <- dimnames(d.cor)[[2]]
+
+  bed.colors <- bedColors(d.s)
+  d.cor$color <- bed.colors$color[ match(d.cor$snp.id, bed.colors[ ,1])]
+
   d.cor$rsquare <- round(d.cor$rsquare, digits=4);
   d.tag$rsquare <- round(d.tag$rsquare, digits=4);
   d.cor$snp.id <- paste(d.cor$snp.id, "--", d.cor$rsquare, sep="")  
