@@ -1152,7 +1152,7 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
   }
 }
 
-bedColors <- function(dat, rsq=0) {
+bedColors <- function(dat, rsq=0, filename, filepath) {
   dat <- dat[which(dat$R.squared >= rsq), ]
   tag.snps.with.overlaps <- unique(as.character(dat$tag.snp.id))
   require("plyr")
@@ -1164,6 +1164,16 @@ bedColors <- function(dat, rsq=0) {
   colors <- t(col2rgb(jet.colors(max.freq)))
   corr.snp.counts$color <- unlist(lapply(corr.snp.counts$freq, function(x) {
                                          do.call(paste, c(as.list(colors[x, ]), sep=","))}))
+  png(file=paste(filepath, filename, sep="/"), width=800, height=200)
+  z <- seq(-1, 1, length = 200)
+  n <- max.freq
+  image(matrix(z, ncol = 1), col = jet.colors(n), 
+        xaxt = "n", yaxt = "n", main = "Overlap count Key")
+  box()
+  par(usr = c(0, n, 0, n))
+  axis(1, at = c(0:n))
+  dev.off()
+  
   return(corr.snp.counts)
 }
 
@@ -1297,6 +1307,8 @@ FunciSNPbed <- function(dat, rsq, path=getwd(), filename=NULL) {
   }else{
     filename <- filename
   }
+  key.filename <- paste(filename, "colorkey", "png", sep=".")
+  key.path <- path
   ###new function try out
   #d.s <- subset(dat, R.squared > rsq)
   d.s <- dat[which(dat$R.squared>rsq), ]
@@ -1320,7 +1332,7 @@ FunciSNPbed <- function(dat, rsq, path=getwd(), filename=NULL) {
                             "rsquare", "strand", "snp.pos.s", "snp.pos.e", "color")
   dimnames(d.tag)[[2]] <- dimnames(d.cor)[[2]]
 
-  bed.colors <- bedColors(d.s)
+  bed.colors <- bedColors(d.s, filename = key.filename, filepath = key.path)
   d.cor$color <- bed.colors$color[ match(d.cor$snp.id, bed.colors[ ,1])]
 
   d.cor$rsquare <- round(d.cor$rsquare, digits=4);
