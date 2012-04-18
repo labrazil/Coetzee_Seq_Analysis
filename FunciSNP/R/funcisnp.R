@@ -380,26 +380,25 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
   }
 
   tabix.header <-
-    try(strsplit(headerTabix(variants.reference)$header, split="\t")[[6]],
+    try(strsplit(headerTabix(variants.reference)$header, split="\t"),
         silent = TRUE)
+  tabix.header <- tabix.header[[length(tabix.header)]]
   while(inherits(tabix.header, "try-error")){
     Sys.sleep(wait.time)
     tabix.header <-
-      try(strsplit(headerTabix(variants.reference)$header, split="\t")[[6]],
+      try(strsplit(headerTabix(variants.reference)$header, split="\t"),
           silent = TRUE)
+    tabix.header <- tabix.header[[length(tabix.header)]]
   }
 
   if(verbose) message("scanning tabix file for ", tag.id)
 
-  tabix.file <-
-    try(strsplit(scanTabix(kgeno, param=param)[[1]], split="\t"), silent = TRUE)
-  while(inherits(tabix.file, "try-error")) {
+  chunk <- try(scanTabix(kgeno, param=param), silent = TRUE)
+  while(inherits(chunk, "try-error")) {
     message("Delay Connecting to ", primary.server, ", waiting ", wait.time,
             " seconds to try SNP ", tag.id, " again")
     Sys.sleep(wait.time)
-    tabix.file <-
-      try(strsplit(scanTabix(kgeno, param=param)[[1]], split="\t"), silent =
-          TRUE)
+    chunk <- try(scanTabix(kgeno, param=param), silent = TRUE)
     wait.time <- sample(primes, size=1)
     if(primary.server == "ncbi") {
       primary.server <- "ebi"
@@ -414,22 +413,69 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
             ".phase1.projectConsensus.genotypes.vcf.gz", sep="")
     kgeno <- TabixFile(variants.reference)
   }
-  snps.support <- lapply(tabix.file, function(x) x[1:5])
+
+
+  ##### modified code from GGtools vcf2sm and parsVCFrec to work with remote tabix files
+  if (Rsamtools:::isOpen(kgeno)) Rsamtools:::close.TabixFile(kgeno)
+  Rsamtools:::open.TabixFile(kgeno)
+  tabix.header <-
+    try(strsplit(headerTabix(kgeno)$header, split="\t"),
+        silent = TRUE)
+  tabix.header <- tabix.header[[length(tabix.header)]]
+  while(inherits(tabix.header, "try-error")){
+    Sys.sleep(wait.time)
+    tabix.header <-
+      try(strsplit(headerTabix(kgeno)$header, split="\t"),
+          silent = TRUE)
+    tabix.header <- tabix.header[[length(tabix.header)]]
+  }
+  sampids <- tabix.header[10:length(tabix.header)]
+  out <- list()
+  for (i in 1:length(chunk)) {
+    if (length(chunk[[i]]) == 0) next
+    out[[i]] = lapply(chunk[[i]], function(rec) {
+                      zzz <<- rec
+                      vec <- strsplit(rec, "\t")[[1]]
+                      meta <- vec[1:9]
+                      calls <- vec[-c(1:9)]
+                      nalt <- strsplit(calls, "")
+                      nums <- lapply(nalt, "[", c(1,3))  # extract the call components
+                      hasmiss <- which(sapply(nums, function(x) any(x == ".")))
+                      nalt <- sapply(nums, function(x) 2-sum(x=="0"))  # this is correct only for diallelic locus; note in doc
+                      if (length(hasmiss)>0) nalt[hasmiss] <- -1
+                      nalt <- nalt+1
+                      chr <- meta[1]
+                      id <- meta[3]
+                      loc <- meta[2]
+                      if (id == "." ) id <- paste("chr", chr, ":", loc, sep="")
+                      x <- list(chr=chr, id=id, loc=loc, ref=meta[4], alt=meta[5], depth=meta[8],
+                                calls=as.raw(nalt), support=meta[1:5])
+                      return(x)
+          })
+  }
+  out <- unlist(out, recursive=FALSE)
+  if (length(out) == 0) return(NULL)
+  rsid <- sapply(out, "[[", "id")
+  nsnp <- length(out)
+  mat <- matrix(as.raw(0), nr=length(sampids), ncol=nsnp)
+  for (i in 1:nsnp) mat[,i] = out[[i]]$calls
+  rownames(mat) <- sampids
+  colnames(mat) <- rsid
+  Rsamtools:::close.TabixFile(kgeno)
+  snps.geno <- new("SnpMatrix", mat)
+  snps.support <- sapply(out, "[[", "support")
+  ## End Code Adpated from GGtools
   snps.support <-
     t(as.data.frame(snps.support, stringsAsFactors = FALSE))
 
   timer <- 0
   while(match(tag.id, snps.support[, 3], nomatch=0) == 0 && timer < 5) {
-    tabix.file <-
-      try(strsplit(scanTabix(kgeno, param=param)[[1]], split="\t"), silent =
-          TRUE)
-    while(inherits(tabix.file, "try-error")) {
+    chunk <- try(scanTabix(kgeno, param=param), silent = TRUE)
+    while(inherits(chunk, "try-error")) {
       message("Delay Connecting to ", primary.server, ", waiting ", wait.time,
               " seconds to try SNP ", tag.id, " again")
       Sys.sleep(wait.time)
-      tabix.file <-
-        try(strsplit(scanTabix(kgeno, param=param)[[1]], split="\t"), silent =
-            TRUE)
+      chunk <- try(scanTabix(kgeno, param=param), silent = TRUE)
       wait.time <- sample(primes, size=1)
       if(primary.server == "ncbi") {
         primary.server <- "ebi"
@@ -444,37 +490,63 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
               ".phase1.projectConsensus.genotypes.vcf.gz", sep="")
       kgeno <- TabixFile(variants.reference)
     }
-    snps.support <- lapply(tabix.file, function(x) x[1:5])
+    ##### modified code from GGtools vcf2sm and parsVCFeec to work with remote tabix files
+    if (Rsamtools:::isOpen(kgeno)) Rsamtools:::close.TabixFile(kgeno)
+    Rsamtools:::open.TabixFile(kgeno)
+    tabix.header <-
+      try(strsplit(headerTabix(kgeno)$header, split="\t"),
+          silent = TRUE)
+    tabix.header <- tabix.header[[length(tabix.header)]]
+    while(inherits(tabix.header, "try-error")){
+      Sys.sleep(wait.time)
+      tabix.header <-
+        try(strsplit(headerTabix(kgeno)$header, split="\t"),
+            silent = TRUE)
+      tabix.header <- tabix.header[[length(tabix.header)]]
+    }
+    sampids <- tabix.header[10:length(tabix.header)]
+    out <- list()
+    for (i in 1:length(chunk)) {
+      if (length(chunk[[i]]) == 0) next
+      out[[i]] = lapply(chunk[[i]], function(rec) {
+                        xxx <- rec
+                        vec <- strsplit(rec, "\t")[[1]]
+                        meta <- vec[1:9]
+                        calls <- vec[-c(1:9)]
+                        nalt <- strsplit(calls, "")
+                        nums <- lapply(nalt, "[", c(1,3))  # extract the call components
+                        hasmiss <- which(sapply(nums, function(x) any(x == ".")))
+                        nalt <- sapply(nums, function(x) 2-sum(x=="0"))  # this is correct only for diallelic locus; note in doc
+                        if (length(hasmiss)>0) nalt[hasmiss] <- -1
+                        nalt <- nalt+1
+                        chr <- meta[1]
+                        id <- meta[3]
+                        loc <- meta[2]
+                        if (id == "." ) id <- paste("chr", chr, ":", loc, sep="")
+                        x <- list(chr=chr, id=id, loc=loc, ref=meta[4], alt=meta[5], depth=meta[8],
+                                  calls=as.raw(nalt), support=meta[1:5])
+                        return(x)
+            })
+    }
+    out <- unlist(out, recursive=FALSE)
+    if (length(out) == 0) return(NULL)
+    rsid <- sapply(out, "[[", "id")
+    nsnp <- length(out)
+    mat <- matrix(as.raw(0), nr=length(sampids), ncol=nsnp)
+    for (i in 1:nsnp) mat[,i] = out[[i]]$calls
+    rownames(mat) <- sampids
+    colnames(mat) <- rsid
+    Rsamtools:::close.TabixFile(kgeno)
+    snps.geno <- new("SnpMatrix", mat)
+    snps.support <- sapply(out, "[[", "support")
+    ## End Code Adpated from GGtools
     snps.support <-
       t(as.data.frame(snps.support, stringsAsFactors = FALSE))
     timer <- timer + 1
   }
 
-
   colnames(snps.support) <- tabix.header[1:5]
   row.names(snps.support) <- NULL
-
-  if(verbose) message("creating snpMatrix for ", tag.id)
-  snps.geno <- try(vcf2sm(kgeno, gr=param, nmetacol=9L), silent = TRUE)
-  while(inherits(snps.geno, "try-error")) {
-    message("Delay Connecting to ", primary.server, ", waiting ", wait.time,
-            " seconds to try SNP ", tag.id, " again")
-    Sys.sleep(wait.time)
-    snps.geno <- try(vcf2sm(kgeno, gr=param, nmetacol=9L), silent = TRUE)
-    wait.time <- sample(primes, size=1)
-    if(primary.server == "ncbi") {
-      primary.server <- "ebi"
-    } else {
-      primary.server <- "ncbi"
-    }
-    onek.genome.server <- ServerCheck(primary.server, verbose = FALSE)
-    variants.reference <-
-      paste(onek.genome.server,
-            "/ftp/release/20101123/interim_phase1_release/ALL.chr",
-            snp.region$snp.chromosome[snp.region$snp.name == tag.id][1],
-            ".phase1.projectConsensus.genotypes.vcf.gz", sep="")
-    kgeno <- TabixFile(variants.reference)
-  }
 
   if((match(tag.id, snps.support[, 3], nomatch=0) == 0) || (dim(snps.support)[1]
                                                             != dim(snps.geno)[2])) {
@@ -880,6 +952,9 @@ corr.snp.depth <- (dim(tag.snp.complete)[2]) - 1
   OR <- ld(tag.snp.complete[, tag.snp.id],
            tag.snp.complete[, !colnames(tag.snp.complete) %in% tag.snp.id],
            stats="OR", depth=corr.snp.depth)
+  tag.snp.complete.study <<- tag.snp.complete
+  tag.snp.id.study <<- tag.snp.id
+  genotype.table.snps.study <<- genotype.table.snps
   p.e <- lapply(colnames(tag.snp.complete), function(x, tag.snp.id) {
                 if(!(identical(x, tag.snp.id))) {
                   genotype.table.snps[[x]][2, 2] * OR[, x]/(1 + OR[, x])

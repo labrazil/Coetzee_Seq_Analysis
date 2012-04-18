@@ -1,7 +1,7 @@
 Package: FunciSNP
 Type: Package
 Title: The Functional Integration of SNPs with Phenotype by Coincidence with Chromatin Biofeatures
-Version: 0.1.13
+Version: 0.1.14
 Date: 2012-02-13
 Author: Simon G. Coetzee (simon NEAR simoncoetzee POINT com) and Houtan Noushmehr, PhD (houtana NEAR gmail POINT com)
 Maintainer: Simon G. Coetzee <simon@simoncoetzee.com>
