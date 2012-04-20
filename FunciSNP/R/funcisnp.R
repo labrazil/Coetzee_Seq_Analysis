@@ -1606,8 +1606,6 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
             " folder in ", pathplot, " for all plots.\n\n")
   }
   if(heatmap){
-#    require("gplots")
-#    require('matlab')
 
     all.s<- table( dat[which(dat$R.squared>=rsq),"bio.feature"], 
                   dat[which(dat$R.squared>=rsq) ,"tag.snp.id"] )
@@ -1620,52 +1618,61 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
           width = 3000, 
           height = 3000)
     }
+    x <- as.matrix(all.s)
+    dd.col <- as.dendrogram(hclust(dist(x)))
+    col.ord <- order.dendrogram(dd.col)
+    dd.row <- as.dendrogram(hclust(dist(t(x))))
+    row.ord <- order.dendrogram(dd.row)
+    xx <- all.s[col.ord, row.ord]
+    xx_names <- attr(xx, "dimnames")
+    df <- as.data.frame(xx)
+    colnames(df) <- xx_names[[2]]
+    df$sig <- xx_names[[1]]
+    df$sig <- with(df, factor(sig, levels=sig, ordered=T))
+    mdf <- melt(df, id.vars="sig")
+    mdf$value <- as.numeric(mdf$value)
+    all.s <- mdf
+    xxxx <<- all.s
     if(isTRUE(heatmap.key)) {
-    hm.notes <- format(round(all.s, 2))
-    x <<- all.s
-    y <<- hm.notes
-    all.s <- melt(all.s)
-    all.s <- all.s[with(all.s, order(-value)), ]
-    all.s.u <- unique(all.s[,2])
-    ggplot(all.s, aes(Var.2, Var.1, label=value)) + geom_tile(aes(fill=value), color="gray") + scale_fill_gradient(low="white", high="steelblue") + geom_text(size=2.5) + labs(x = "", y = "") + opts(legend.position = "none", axis.ticks = theme_blank(), axis.text.x = theme_text(angle=90, hjust = 1), panel.background = theme_rect(fill="white", colour="white")) + scale_x_discrete(limits=all.s.u)
-#    heatmap.2(
-#              all.s,
-#              na.rm=TRUE,
-#              scale="none",
-#              col=rev(terrain.colors(max(all.s, na.rm=TRUE))),
-#              key=TRUE,
-#              symkey=FALSE,
-#              density.info="none",
-#              trace="none",
-#              xlab="tagSNP",
-#              ylab="Biofeature",
-#              cellnote=hm.notes,
-#              colsep=c(1:(ncol(all.s)-1)),
-#              rowsep=c(1:(nrow(all.s)-1)),
-#              sepwidth=c(0.01, 0.01),
-#              sepcolor="black",
-#              notecol="black",
-#              notecex=0.75, 
-#              Rowv=FALSE,
-#              Colv=TRUE,
-#              cexRow=1,
-#              cexCol=1,
-#              keysize=0.75,
-#              dendrogram=c("none"),
-#              main = paste(
-#                           "tagSNP vs Biofeature\n1000GP SNP with", 
-#                           "R\u00B2 >=", 
-#                           " ", rsq, sep=""))
+      plot.here <- ggplot(all.s, aes(variable, sig, label=value)) + geom_tile(aes(fill=value), color="gray") + scale_fill_gradient(low="white", high="steelblue") + geom_text(size=2.5) + labs(x = "", y = "") + opts(legend.position = "none", axis.ticks = theme_blank(), axis.text.x = theme_text(angle=90, hjust = 1), panel.background = theme_rect(fill="white", colour="white"))
+      #    heatmap.2(
+      #              all.s,
+      #              na.rm=TRUE,
+      #              scale="none",
+      #              col=rev(terrain.colors(max(all.s, na.rm=TRUE))),
+      #              key=TRUE,
+      #              symkey=FALSE,
+      #              density.info="none",
+      #              trace="none",
+      #              xlab="tagSNP",
+      #              ylab="Biofeature",
+      #              cellnote=hm.notes,
+      #              colsep=c(1:(ncol(all.s)-1)),
+      #              rowsep=c(1:(nrow(all.s)-1)),
+      #              sepwidth=c(0.01, 0.01),
+      #              sepcolor="black",
+      #              notecol="black",
+      #              notecex=0.75, 
+      #              Rowv=FALSE,
+      #              Colv=TRUE,
+      #              cexRow=1,
+      #              cexCol=1,
+      #              keysize=0.75,
+      #              dendrogram=c("none"),
+      #              main = paste(
+      #                           "tagSNP vs Biofeature\n1000GP SNP with", 
+      #                           "R\u00B2 >=", 
+      #                           " ", rsq, sep=""))
     } else {
-    ggplot(all.s, aes(Var.2, Var.1, label=value)) + geom_tile(aes(fill=value), color="gray") + scale_fill_gradient(low="white", high="steelblue") + labs(x = "", y = "") + opts(legend.position = "none", axis.ticks = theme_blank(), axis.text.x = theme_text(angle=90, hjust = 1), panel.background = theme_rect(fill="white", colour="white")) + scale_x_discrete(limits=all.s.u)
-#    heatmap.2(
-#              all.s,
-#              na.rm=TRUE,
-#              scale="none",
-#              col=rev(terrain.colors(max(all.s, na.rm=TRUE))),
-#              key=TRUE,
-#              symkey=FALSE,
-#              density.info="none",
+      plot.here <- ggplot(all.s, aes(variable, sig, label=value)) + geom_tile(aes(fill=value), color="gray") + scale_fill_gradient(low="white", high="steelblue") + labs(x = "", y = "") + opts(legend.position = "none", axis.ticks = theme_blank(), axis.text.x = theme_text(angle=90, hjust = 1), panel.background = theme_rect(fill="white", colour="white"))
+      #    heatmap.2(
+      #              all.s,
+      #              na.rm=TRUE,
+      #              scale="none",
+      #              col=rev(terrain.colors(max(all.s, na.rm=TRUE))),
+      #              key=TRUE,
+      #              symkey=FALSE,
+      #              density.info="none",
 #              trace="none",
 #              xlab="tagSNP",
 #              ylab="Biofeature",
@@ -1690,6 +1697,8 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
       dev.off()
       #	message("\nSee ",paste("FunciSNP.",package.version("FunciSNP"),
       #	 "/plots/",sep=""), "folder in ", pathplot," for heatmap.\n\n")
+    } else {
+      show(plot.here)
     }
 
   }
