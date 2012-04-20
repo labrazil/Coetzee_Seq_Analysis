@@ -6,7 +6,7 @@ Date: 2012-02-13
 Author: Simon G. Coetzee (simon NEAR simoncoetzee POINT com) and Houtan Noushmehr, PhD (houtana NEAR gmail POINT com)
 Maintainer: Simon G. Coetzee <simon@simoncoetzee.com>
 biocViews: Infrastructure, DataRepresentation, DataImport, SequenceMatching, Annotation
-Depends: R (>= 2.14.0), Rsamtools (>= 1.6.1), rtracklayer(>= 1.14.1), GGtools (>= 4.0.0), methods, ChIPpeakAnno (>= 2.2.0), GenomicRanges, TxDb.Hsapiens.UCSC.hg19.knownGene, VariantAnnotation, plyr, org.Hs.eg.db, snpStats, gplots (>= 2.10.1), ggplot2 (>= 0.9.0), matlab (>= 0.8.9), reshape (>= 0.8.4)
+Depends: R (>= 2.14.0), Rsamtools (>= 1.6.1), rtracklayer(>= 1.14.1), GGtools (>= 4.0.0), methods, ChIPpeakAnno (>= 2.2.0), GenomicRanges, TxDb.Hsapiens.UCSC.hg19.knownGene, VariantAnnotation, plyr, org.Hs.eg.db, snpStats, ggplot2 (>= 0.9.0), reshape (>= 0.8.4)
 Imports: IRanges, AnnotationDbi
 Enhances: parallel
 Description: FunciSNP integrates information from GWAS, 1000genomes and chromatin feature to identify functional SNP in coding or non-coding regions. 

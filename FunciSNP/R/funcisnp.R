@@ -434,7 +434,6 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
   for (i in 1:length(chunk)) {
     if (length(chunk[[i]]) == 0) next
     out[[i]] = lapply(chunk[[i]], function(rec) {
-                      zzz <<- rec
                       vec <- strsplit(rec, "\t")[[1]]
                       meta <- vec[1:9]
                       calls <- vec[-c(1:9)]
@@ -952,9 +951,6 @@ corr.snp.depth <- (dim(tag.snp.complete)[2]) - 1
   OR <- ld(tag.snp.complete[, tag.snp.id],
            tag.snp.complete[, !colnames(tag.snp.complete) %in% tag.snp.id],
            stats="OR", depth=corr.snp.depth)
-  tag.snp.complete.study <<- tag.snp.complete
-  tag.snp.id.study <<- tag.snp.id
-  genotype.table.snps.study <<- genotype.table.snps
   p.e <- lapply(colnames(tag.snp.complete), function(x, tag.snp.id) {
                 if(!(identical(x, tag.snp.id))) {
                   genotype.table.snps[[x]][2, 2] * OR[, x]/(1 + OR[, x])
@@ -1162,10 +1158,13 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
       gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),]
     cat("\nAdding genomic annotations")
     gf.overlaps <- locateVariants(gr.corr.snp.loc,
-                                  TxDb.Hsapiens.UCSC.hg19.knownGene)
+                                  TxDb.Hsapiens.UCSC.hg19.knownGene,
+                                  AllVariants())
     #cat(" ... done")
-    genomic.feature <-as.character(gf.overlaps$Location)
-    queryRow <-(gf.overlaps$queryHits)
+    #genomic.feature <- as.character(gf.overlaps$Location)
+    #queryRow <-(gf.overlaps$queryHits)
+    genomic.feature <- genomic.feature <- as.character(elementMetadata(gf.overlaps)[, "location" ])
+    queryRow <- elementMetadata(gf.overlaps)[, "queryID"]
     ddd <-(cbind(queryRow, genomic.feature)) ## used for identifying intergenic
 
     ## create set columns with null values ('NO')
@@ -1183,8 +1182,7 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
                                                     ]$Promoter <- "YES"
     summary.snp.list$Promoter <- as.factor(summary.snp.list$Promoter)
     ## utr5 defined
-    utr5.rows <- as.numeric(subset(ddd, genomic.feature=="5'UTR",
-                                   select="queryRow"))
+    utr5.rows <- as.numeric(subset(ddd, genomic.feature=="fiveUTR")[,1])
     if(isTRUE(length(unique(utr5.rows)) > 0)){
       summary.snp.list[utr5.rows,"utr5"] <- "YES"; 
       summary.snp.list$utr5 <- as.factor(summary.snp.list$utr5)
@@ -1202,16 +1200,14 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
       summary.snp.list$Intron <- as.factor(summary.snp.list$Intron)
     }
     ## utr3 defined
-    utr3.rows <- as.numeric(subset(ddd, genomic.feature=="3'UTR")[,1])
+    utr3.rows <- as.numeric(subset(ddd, genomic.feature=="threeUTR")[,1])
     if(isTRUE(length(unique(utr3.rows)) > 0)){
       summary.snp.list[utr3.rows,"utr3"] <- "YES";
       summary.snp.list$utr3 <- as.factor(summary.snp.list$utr3)
     }
 
-
     ## intergenic defined
-    intergenic.rows <- as.numeric(subset(ddd,
-                                         genomic.feature=="intergenic")[,1])
+    intergenic.rows <- as.numeric(subset(ddd, genomic.feature=="intergenic")[,1])
     if(isTRUE(length(unique(intergenic.rows)) > 0)){
       summary.snp.list[intergenic.rows,"Intergenic"] <- "YES";
       summary.snp.list$Intergenic <- as.factor(summary.snp.list$Intergenic)
@@ -1439,7 +1435,7 @@ FunciSNPbed <- function(dat, rsq, path=getwd(), filename=NULL) {
 
 
 FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE, 
-                          tagSummary = FALSE, heatmap = FALSE, 
+                          tagSummary = FALSE, heatmap = FALSE, heatmap.key = FALSE,
                           genomicSum = FALSE, save = FALSE, pathplot=getwd()) 
 {
   if(sum(c(split,tagSummary,heatmap,genomicSum)) == 0){
@@ -1610,8 +1606,8 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
             " folder in ", pathplot, " for all plots.\n\n")
   }
   if(heatmap){
-    require("gplots")
-    require('matlab')
+#    require("gplots")
+#    require('matlab')
 
     all.s<- table( dat[which(dat$R.squared>=rsq),"bio.feature"], 
                   dat[which(dat$R.squared>=rsq) ,"tag.snp.id"] )
@@ -1624,28 +1620,72 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
           width = 3000, 
           height = 3000)
     }
-    heatmap.2(
-              all.s,
-              na.rm=TRUE,
-              scale="none",
-              col=jet.colors(max(all.s,na.rm=T)),
-              key=TRUE,
-              symkey=FALSE,
-              density.info="none",
-              trace="none",
-              xlab="tagSNP",
-              ylab="Biofeature",
-              Rowv=FALSE,
-              Colv=TRUE,
-              cexRow=1,
-              cexCol=1,
-              keysize=0.75,
-              dendrogram=c("none"),
-              main = paste(
-                           "tagSNP vs Biofeature\n1000GP SNP with", 
-                           "R\u00B2 >=", 
-                           " ", rsq, sep="")
-              )
+    if(isTRUE(heatmap.key)) {
+    hm.notes <- format(round(all.s, 2))
+    x <<- all.s
+    y <<- hm.notes
+    all.s <- melt(all.s)
+    all.s <- all.s[with(all.s, order(-value)), ]
+    all.s.u <- unique(all.s[,2])
+    ggplot(all.s, aes(Var.2, Var.1, label=value)) + geom_tile(aes(fill=value), color="gray") + scale_fill_gradient(low="white", high="steelblue") + geom_text(size=2.5) + labs(x = "", y = "") + opts(legend.position = "none", axis.ticks = theme_blank(), axis.text.x = theme_text(angle=90, hjust = 1), panel.background = theme_rect(fill="white", colour="white")) + scale_x_discrete(limits=all.s.u)
+#    heatmap.2(
+#              all.s,
+#              na.rm=TRUE,
+#              scale="none",
+#              col=rev(terrain.colors(max(all.s, na.rm=TRUE))),
+#              key=TRUE,
+#              symkey=FALSE,
+#              density.info="none",
+#              trace="none",
+#              xlab="tagSNP",
+#              ylab="Biofeature",
+#              cellnote=hm.notes,
+#              colsep=c(1:(ncol(all.s)-1)),
+#              rowsep=c(1:(nrow(all.s)-1)),
+#              sepwidth=c(0.01, 0.01),
+#              sepcolor="black",
+#              notecol="black",
+#              notecex=0.75, 
+#              Rowv=FALSE,
+#              Colv=TRUE,
+#              cexRow=1,
+#              cexCol=1,
+#              keysize=0.75,
+#              dendrogram=c("none"),
+#              main = paste(
+#                           "tagSNP vs Biofeature\n1000GP SNP with", 
+#                           "R\u00B2 >=", 
+#                           " ", rsq, sep=""))
+    } else {
+    ggplot(all.s, aes(Var.2, Var.1, label=value)) + geom_tile(aes(fill=value), color="gray") + scale_fill_gradient(low="white", high="steelblue") + labs(x = "", y = "") + opts(legend.position = "none", axis.ticks = theme_blank(), axis.text.x = theme_text(angle=90, hjust = 1), panel.background = theme_rect(fill="white", colour="white")) + scale_x_discrete(limits=all.s.u)
+#    heatmap.2(
+#              all.s,
+#              na.rm=TRUE,
+#              scale="none",
+#              col=rev(terrain.colors(max(all.s, na.rm=TRUE))),
+#              key=TRUE,
+#              symkey=FALSE,
+#              density.info="none",
+#              trace="none",
+#              xlab="tagSNP",
+#              ylab="Biofeature",
+#              colsep=c(1:(ncol(all.s)-1)),
+#              rowsep=c(1:(nrow(all.s)-1)),
+#              sepwidth=c(0.01, 0.01),
+#              sepcolor="black",
+#              Rowv=FALSE,
+#              Colv=TRUE,
+#              cexRow=1,
+#              cexCol=1,
+#              keysize=0.75,
+#              dendrogram=c("none"),
+#              main = paste(
+#                           "tagSNP vs Biofeature\n1000GP SNP with ", 
+#                           "R\u00B2 >=", 
+#                           " ", rsq, sep="")
+#              )
+    }
+    ### reverse matrix/dataframe x <- x[nrow(x):1, ]
     if(save) {
       dev.off()
       #	message("\nSee ",paste("FunciSNP.",package.version("FunciSNP"),
