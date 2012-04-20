@@ -1610,14 +1610,6 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
     all.s<- table( dat[which(dat$R.squared>=rsq),"bio.feature"], 
                   dat[which(dat$R.squared>=rsq) ,"tag.snp.id"] )
     all.s <- as.matrix(all.s)
-    if(save){
-      png(filename=paste(pathplot, "/FunciSNP.",
-                         package.version("FunciSNP"),
-                         "/plots/FunciSNP_heatmap.png", sep=""), bg = "white",
-          res = 300,
-          width = 3000, 
-          height = 3000)
-    }
     x <- as.matrix(all.s)
     dd.col <- as.dendrogram(hclust(dist(x)))
     col.ord <- order.dendrogram(dd.col)
@@ -1634,7 +1626,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
     all.s <- mdf
     xxxx <<- all.s
     if(isTRUE(heatmap.key)) {
-      plot.here <- ggplot(all.s, aes(variable, sig, label=value)) + geom_tile(aes(fill=value), color="gray") + scale_fill_gradient(low="white", high="steelblue") + geom_text(size=2.5) + labs(x = "", y = "") + opts(legend.position = "none", axis.ticks = theme_blank(), axis.text.x = theme_text(angle=90, hjust = 1), panel.background = theme_rect(fill="white", colour="white"))
+      plot.here <- ggplot(all.s, aes(variable, sig, label=value)) + geom_tile(aes(fill=value), color="gray") + scale_fill_gradient(low="white", high="palevioletred4", guide=guide_colorbar(direction = "horizontal", barheight = .5, "")) + geom_text(size=2.5) + labs(x = "", y = "") + opts(axis.ticks = theme_blank(), axis.text.x = theme_text(angle=90, hjust = 1, size=8), axis.text.y = theme_text(hjust=1, size=8), panel.background = theme_rect(fill="white", colour="white"), title=paste("tagSNP vs Biofeature\n1000GP SNP with R\u00B2 >= ", rsq, sep=""), legend.position = c(0,1), legend.justification=c(0,0))
       #    heatmap.2(
       #              all.s,
       #              na.rm=TRUE,
@@ -1664,7 +1656,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
       #                           "R\u00B2 >=", 
       #                           " ", rsq, sep=""))
     } else {
-      plot.here <- ggplot(all.s, aes(variable, sig, label=value)) + geom_tile(aes(fill=value), color="gray") + scale_fill_gradient(low="white", high="steelblue") + labs(x = "", y = "") + opts(legend.position = "none", axis.ticks = theme_blank(), axis.text.x = theme_text(angle=90, hjust = 1), panel.background = theme_rect(fill="white", colour="white"))
+      plot.here <- ggplot(all.s, aes(variable, sig, label=value)) + geom_tile(aes(fill=value), color="gray") + scale_fill_gradient(low="white", high="palevioletred4", guide=guide_colorbar(direction = "horizontal", barheight = .5, "")) + labs(x = "", y = "") + opts(axis.ticks = theme_blank(), axis.text.x = theme_text(angle=90, hjust = 1, size=8), axis.text.y = theme_text(size=8, hjust=1), panel.background = theme_rect(fill="white", colour="white"), title=paste("tagSNP vs Biofeature\n1000GP SNP with R\u00B2 >= ", rsq, sep=""), legend.position = c(0,1), legend.justification=c(0,0))
       #    heatmap.2(
       #              all.s,
       #              na.rm=TRUE,
@@ -1694,7 +1686,14 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
     }
     ### reverse matrix/dataframe x <- x[nrow(x):1, ]
     if(save) {
-      dev.off()
+      ggsave(filename=paste(pathplot, "/FunciSNP.",
+                            package.version("FunciSNP"),
+                            "/plots/FunciSNP_heatmap.eps", sep=""),
+             plot=plot.here, bg = "white",
+             dpi = 600,
+             width = 10, 
+             height = 10,
+             units = "in")
       #	message("\nSee ",paste("FunciSNP.",package.version("FunciSNP"),
       #	 "/plots/",sep=""), "folder in ", pathplot," for heatmap.\n\n")
     } else {
