@@ -1251,6 +1251,10 @@ bedColors <- function(dat, rsq=0, filename, filepath) {
 
 FunciSNPsummaryOverlaps <- function(dat, rsq=0) {
   dat <- dat[which(dat$R.squared >= rsq), ]
+  if(dim(dat)[[1]] == 0) {
+    x <- paste("At rsq > ", rsq, " no potentially correlated SNPs remain", sep="")
+    return(x)
+  } else {
   tag.snps.with.overlaps <- unique(as.character(dat$tag.snp.id))
   require("plyr");
   tag.snp.features <- lapply(tag.snps.with.overlaps, function(x) {
@@ -1287,6 +1291,7 @@ FunciSNPsummaryOverlaps <- function(dat, rsq=0) {
   rownames(overlap.counts)[length(rownames(overlap.counts))] <- 
     "TOTAL # 1000GP SNPs"
   return(overlap.counts)
+  }
 }
 
 
