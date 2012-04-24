@@ -1224,14 +1224,16 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
 }
 
 bedColors <- function(dat, rsq=0, filename, filepath) {
+  jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan",
+                                   "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
   dat <- dat[which(dat$R.squared >= rsq), ]
   tag.snps.with.overlaps <- unique(as.character(dat$tag.snp.id))
   require("plyr")
   corr.snp.counts <- lapply(tag.snps.with.overlaps, function(x) {
-                                  count(as.character(dat[dat$tag.snp.id == x,]$corr.snp.id))})
+                            count(as.character(dat[dat$tag.snp.id == x,]$corr.snp.id))})
   corr.snp.counts <- do.call("rbind", corr.snp.counts)
   max.freq <- max(corr.snp.counts$freq)
-#  corr.snp.counts$score <- ((corr.snp.counts$freq) / (max.freq)) * 1000
+  #  corr.snp.counts$score <- ((corr.snp.counts$freq) / (max.freq)) * 1000
   colors <- t(col2rgb(jet.colors(max.freq)))
   corr.snp.counts$color <- unlist(lapply(corr.snp.counts$freq, function(x) {
                                          do.call(paste, c(as.list(colors[x, ]), sep=","))}))
@@ -1244,7 +1246,6 @@ bedColors <- function(dat, rsq=0, filename, filepath) {
   par(usr = c(0, n, 0, n))
   axis(1, at = c(0:n))
   dev.off()
-  
   return(corr.snp.counts)
 }
 
@@ -1563,7 +1564,6 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
     for( i in 1:length(summary(as.factor(all[,"bio.feature"]))) ){
       bio <- names(summary(as.factor(all[,"bio.feature"])))
       tmp <- all[which(all$bio.feature == bio[i]), ]
-
       ## plot r.2 values
       ggplot(tmp, aes(x=R.squared, fill=factor(r.2))) + 
       geom_histogram(binwidth=0.05) + 
@@ -1589,9 +1589,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
          geom_vline(xintercept = rsq, linetype=2) +
          #geom_abline(intercept = 0, slope = 1) +
          scale_x_continuous("R\u00B2 Values (0-1)", limits=c(0,1)) + 
-         scale_y_continuous(
-                            "Distance to 1000GP SNPs associated with tagSNP (bp)",
-                            formatter="comma") + 
+         scale_y_continuous("Distance to 1000GP SNPs associated with tagSNP (bp)", labels = comma_format()) + 
          scale_colour_manual(values = 
                              c("Yes" = "Red", "No" = "Black")) +
          scale_size_manual(values = c("Yes" = 2, "No" = 1)) +
@@ -1612,15 +1610,18 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
   }
   if(heatmap){
 
-    all.s<- table( dat[which(dat$R.squared>=rsq),"bio.feature"], 
+
+    all.s <- table( dat[which(dat$R.squared>=rsq),"bio.feature"], 
                   dat[which(dat$R.squared>=rsq) ,"tag.snp.id"] )
-    all.s <- as.matrix(all.s)
+    zzzz <<- all.s
+    rownames(all.s) <- paste(rownames(all.s), "\n(n=", rowSums(all.s), ")", sep="")
+    colnames(all.s) <- paste(colnames(all.s), "\n(n=", colSums(all.s), ")", sep="")
     x <- as.matrix(all.s)
     dd.col <- as.dendrogram(hclust(dist(x)))
     col.ord <- order.dendrogram(dd.col)
-    dd.row <- as.dendrogram(hclust(dist(t(x))))
-    row.ord <- order.dendrogram(dd.row)
-    xx <- all.s[col.ord, row.ord]
+#    dd.row <- as.dendrogram(hclust(dist(t(x))))
+#    row.ord <- order.dendrogram(dd.row)
+    xx <- all.s[col.ord, 1:(ncol(all.s))]
     xx_names <- attr(xx, "dimnames")
     df <- as.data.frame(xx)
     colnames(df) <- xx_names[[2]]
@@ -1631,7 +1632,21 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
     all.s <- mdf
     xxxx <<- all.s
     if(isTRUE(heatmap.key)) {
-      plot.here <- ggplot(all.s, aes(variable, sig, label=value)) + geom_tile(aes(fill=value), color="gray") + scale_fill_gradient(low="white", high="palevioletred4", guide=guide_colorbar(direction = "horizontal", barheight = .5, "")) + geom_text(size=2.5) + labs(x = "", y = "") + opts(axis.ticks = theme_blank(), axis.text.x = theme_text(angle=90, hjust = 1, size=8), axis.text.y = theme_text(hjust=1, size=8), panel.background = theme_rect(fill="white", colour="white"), title=paste("tagSNP vs Biofeature\n1000GP SNP with R\u00B2 >= ", rsq, sep=""), legend.position = c(0,1), legend.justification=c(0,0))
+      plot.here <- ggplot(all.s, aes(variable, sig, label=value)) +
+      geom_tile(aes(fill=value), color="gray60") +
+      scale_fill_gradient(low="gray90",
+                          high="palevioletred4",
+                          guide=guide_colorbar(direction = "horizontal", barheight = .5, ""),
+                          name="# of potentially correlated SNPs") +
+      geom_text(size=2.5) +
+      labs(x = "", y = "") +
+      opts(axis.ticks = theme_blank(),
+           axis.text.x = theme_text(angle=90, hjust = 1, size=8),
+           axis.text.y = theme_text(hjust=1, size=8),
+           panel.background = theme_rect(fill="white", colour="black"),
+           title=paste("tagSNP vs Biofeature\n1000GP SNP with R\u00B2 >= ", rsq, sep=""),
+           legend.position = c(0,1),
+           legend.justification=c(0,0))
       #    heatmap.2(
       #              all.s,
       #              na.rm=TRUE,
@@ -1661,7 +1676,20 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
       #                           "R\u00B2 >=", 
       #                           " ", rsq, sep=""))
     } else {
-      plot.here <- ggplot(all.s, aes(variable, sig, label=value)) + geom_tile(aes(fill=value), color="gray") + scale_fill_gradient(low="white", high="palevioletred4", guide=guide_colorbar(direction = "horizontal", barheight = .5, "")) + labs(x = "", y = "") + opts(axis.ticks = theme_blank(), axis.text.x = theme_text(angle=90, hjust = 1, size=8), axis.text.y = theme_text(size=8, hjust=1), panel.background = theme_rect(fill="white", colour="white"), title=paste("tagSNP vs Biofeature\n1000GP SNP with R\u00B2 >= ", rsq, sep=""), legend.position = c(0,1), legend.justification=c(0,0))
+      plot.here <- ggplot(all.s, aes(variable, sig, label=value)) +
+      geom_tile(aes(fill=value), color="gray60") +
+      scale_fill_gradient(low="gray90",
+                          high="palevioletred4",
+                          guide=guide_colorbar(direction = "horizontal", barheight = .5, ""),
+                          name="# of potentially correlated SNPs") +
+      labs(x = "", y = "") +
+      opts(axis.ticks = theme_blank(),
+           axis.text.x = theme_text(angle=90, hjust = 1, size=8),
+           axis.text.y = theme_text(size=8, hjust=1),
+           panel.background = theme_rect(fill="white", colour="black"),
+           title=paste("tagSNP vs Biofeature\n1000GP SNP with R\u00B2 >= ", rsq, sep=""),
+           legend.position = c(0,1),
+           legend.justification=c(0,0))
       #    heatmap.2(
       #              all.s,
       #              na.rm=TRUE,
