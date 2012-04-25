@@ -1210,6 +1210,7 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
     intergenic.rows <- as.numeric(subset(ddd, genomic.feature=="intergenic")[,1])
     if(isTRUE(length(unique(intergenic.rows)) > 0)){
       summary.snp.list[intergenic.rows,"Intergenic"] <- "YES";
+      summary.snp.list[which(summary.snp.list$Promoter == "YES"), "Intergenic"] <- "NO"
       summary.snp.list$Intergenic <- as.factor(summary.snp.list$Intergenic)
     }
     promoter.intergenic.rows <- dimnames(subset(summary.snp.list,
