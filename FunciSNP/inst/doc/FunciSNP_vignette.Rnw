@@ -26,8 +26,9 @@
             gmail POINT com}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
-\title{Using the FunciSNP package\\`Functional Identification of SNPs with\\
-Phenotype by Coincidence with Chromatin Biofeatures'}
+\title{Using the FunciSNP package\\`FunciSNP: An R/Bioconductor Tool \\
+Integrating Functional Non-coding Datasets with Genetic Association Studies to\\
+ Identify Candidate Regulatory SNPs'}
 \maketitle
 %%% Affiliation %%%
 \begin{center}
@@ -44,14 +45,14 @@ California\\Los Angeles, CA, USA
 
 \Rpackage{FunciSNP} assist in identifying putative functional SNP in LD to
 previously annotated GWAS SNPs (tagSNP). Extracting information from the 1000
-genomes database (1000GP) by relative genomic position of GWAS tagSNP currated
+genomes database (1kg) by relative genomic position of GWAS tagSNP currated
 for a particular trait or disease, FunciSNP aims to integrate the two
 information with sequence information provided by peaks identified from
 high-throughput sequencing. FunciSNP assumes user will provide peaks identified
 using any available ChIP peak algorithm, such as FindPeaks, HOMER, or SICER.
-\Rpackage{FunciSNP} will currate all 1000GP SNPs which are in linkage
+\Rpackage{FunciSNP} will currate all 1kg SNPs which are in linkage
 disequilibrium (LD) to a known disease associated tagSNP and more importantly
-determine if the 1000GP SNP in LD to the tagSNP overlaps a genomic biological
+determine if the 1kg SNP in LD to the tagSNP overlaps a genomic biological
 feature.
 
 Correlated SNPs are
@@ -94,7 +95,7 @@ the tagSNPs (>80\%) are found in non-protein coding regions, finding direct
 information on the functional and/or causal variant has been an important
 limitation of GWAS data interpretation.
 
-\subsection{1000 genomes project (1000GP)}
+\subsection{1000 genomes project (1kg)}
 The 1000 genomes project recently released a catalog of most human genomic
 variants (minor allele frequency of >0.1\%) across many different ethnic
 populations. Initially, the 1000 genomes project goal was to sequence up to 1000
@@ -183,7 +184,7 @@ columns are required for each tagSNP:
 
 `Positon' should be the exact postion for each rsID as reported by human genome
 build hg19 (chrom:postion). `rsID' should contain a unique rsID as determined by
-the 1000 genomes database (1000GP)\footnote{Be sure the rsID is located in this
+the 1000 genomes database (1kg)\footnote{Be sure the rsID is located in this
 browser: \url{http://browser.1000genomes.org/}} for each identified `tagSNP'.
 Population should be a three letter code to determine original ethnic population
 for which the associated `tagSNP' was identified. The three letter code should
@@ -222,24 +223,49 @@ Here is an example of three different biofeatures used for this glioma example.
 NRSF and PolII (both transcription factors) where extracted from a recent
 release of ENCODE, as well as promoters of approximately 38,000 gene
 transcription start sites (TSS). Promoters are identified as +1000 to -100 base
-pair of each annotated TSS.
+pair of each annotated TSS. In addition, we include all known DNAseI sites as supplied by ENCODE as well as FAIRE data. In additoin, we used known CTCF sites to differentiate the DNAseI. The DNAseI and FAIRE data were extracted in April of 2012 and they represent the best known regions across several different cell lines. In addition, for the FAIRE data, we selected peaks with p-values less than 0.01.
 
 <<>>=
 ## Full path to the example biological features BED files 
 #  derived from the ENCODE project for Glioblastoma U-87 cell lines.
 glioma.bio <- system.file('extdata',package='FunciSNP');
+#user supplied biofeatures
 as.matrix(list.files(glioma.bio, pattern='.bed$'));
-nrsf.filename <- list.files(glioma.bio, pattern='.bed$')[2];
-pol2.filename <- list.files(glioma.bio, pattern='.bed$')[3];
-prom.filename <- list.files(glioma.bio, pattern='.bed$')[1];
+#FunciSNP builtin biofeatures
+as.matrix(list.files(paste(glioma.bio, "/builtInFeatures", sep=""),
+            pattern='.bed$'));
+nrsf.filename <- list.files(glioma.bio, pattern='.bed$')[1];
+pol2.filename <- list.files(glioma.bio, pattern='.bed$')[2];
+ctcf.filename <- list.files(paste(glioma.bio, "/builtInFeatures", sep=""),
+        pattern='.bed$')[1];
+dnase1.filename <- list.files(paste(glioma.bio, "/builtInFeatures", sep=""),
+        pattern='.bed$')[2];
+dnase1ctcf.filename <- list.files(paste(glioma.bio, "/builtInFeatures", sep=""),
+        pattern='.bed$')[3];
+faire.filename <- list.files(paste(glioma.bio, "/builtInFeatures", sep=""),
+        pattern='.bed$')[4];
+prom.filename <- list.files(paste(glioma.bio, "/builtInFeatures", sep=""),
+        pattern='.bed$')[5];
 Nrsf <- read.delim(file=paste(glioma.bio, nrsf.filename,sep="/"), sep="\t",
 header=FALSE);
 PolII <- read.delim(file=paste(glioma.bio, pol2.filename,sep="/"), sep="\t",
 header=FALSE);
-Promoters <- read.delim(file=paste(glioma.bio, prom.filename,sep="/"), sep="\t",
+Ctcf <- read.delim(file=paste(glioma.bio, "builtInFeatures", ctcf.filename,sep="/"), sep="\t",
+header=FALSE);
+Dnase1 <- read.delim(file=paste(glioma.bio, "builtInFeatures", dnase1.filename,sep="/"), sep="\t",
+header=FALSE);
+Dnase1Ctcf <- read.delim(file=paste(glioma.bio, "builtInFeatures", dnase1ctcf.filename,sep="/"), sep="\t",
+header=FALSE);
+Faire <- read.delim(file=paste(glioma.bio, "builtInFeatures", faire.filename,sep="/"), sep="\t",
+header=FALSE);
+Promoters <- read.delim(file=paste(glioma.bio, "builtInFeatures", prom.filename,sep="/"), sep="\t",
 header=FALSE);
 dim(Nrsf);
 dim(PolII);
+dim(Ctcf);
+dim(Dnase1);
+dim(Dnase1Ctcf);
+dim(Faire);
 dim(Promoters);
 ## Example of what the BED format looks like:
 head(Nrsf);
@@ -287,15 +313,15 @@ glioma;
 @
 
 As you can quickly observe from the above analysis, using 4 tagSNPs position and
-3 different biological features (ChIPseq for `NRSF', `PolII', promoters of
-approx. 38,000 genes) as two types of input, FunciSNP identified 778 1000GP SNPs
-that overlap at least one biofeature. Each 1000GP SNP contains an Rsquare value
+7 different biological features (ChIPseq for `NRSF', `PolII', promoters of
+approx. 38,000 genes, DNAseI sites, DNAseI sites with CTCFs, FAIRE, CTCFs) as two types of input, FunciSNP identified 1809 1kg SNPs
+that overlap at least one biofeature. Each 1kg SNP contains an Rsquare value
 to the associated tagSNP. As a result, the first output (\Robject{glioma}),
 summarizes the analysis subsetted in three different Rsquare values (0.1, 0.5
-and 0.9). If we consider Rsquare cutoff at 0.9 (Rsquare $\ge$ 0.9), 13 1000GP SNPs
-overlapping at least one biofeature. This value represents 1.67\% of the total
-(778). In addition, at this Rsquare cutoff, 2 biological features are
-represented among the 13 1000GP SNPs.
+and 0.9). If we consider Rsquare cutoff at 0.9 (Rsquare $\ge$ 0.9), 14 1kg SNPs
+overlapping at least one biofeature. This value represents 0.77\% of the total
+(1809). In addition, at this Rsquare cutoff, 3 biological features are
+represented among the 14 1kg SNPs.
 
 <<>>=
 summary(glioma);
@@ -303,15 +329,15 @@ summary(glioma);
 
 Running \Rmethod{summary} however will output a slightly different report yet
 just as informative. At three different Rsquare cutoffs (0.1, 0.5, 0.9), the
-summary output illustrates the tagSNP with the total number of 1000GP SNPs
+summary output illustrates the tagSNP with the total number of 1kg SNPs
 overlapping a total number of biofeatures. For example, at Rsquare $\ge$ 0.5,
-tagSNP `rs6010620' is assocated with 40 different 1000GP SNPs which overlap at
-least one biofeature, and 6 of them overlap at least two biofeatures.
+tagSNP `rs6010620' is assocated with 53 different 1kg SNPs which overlap at
+least one biofeature, and 11 of them overlap at least two biofeatures.
 
-Each newly identified 1000GP SNP is now defined as putative functional SNP since
+Each newly identified 1kg SNP is now defined as putative functional SNP since
 they are in LD to an associated tagSNP and they overlap at least one interesting
-biological feature. Thus, each 1000GP SNP can now be defined as
-`\textbf{Func-y-SNP}' or `putative functional SNP.'
+biological feature. Thus, each 1kg SNP can now be defined as
+`\textbf{YAFSNP}' or `putative functional SNP.'
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -320,7 +346,7 @@ biological feature. Thus, each 1000GP SNP can now be defined as
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 All known genomic features (exon, intron, 5'UTR, 3'UTR, promoter, lincRNA or in
-gene desert (intergentic)) are used to annotate each newly identified Func-y-SNP
+gene desert (intergentic)) are used to annotate each newly identified YAFSNP
 as described above. Information stored in this \Robject{glioma.anno} is used for
 all summary plots, table, and to output results in BED format (see following
 sections for more details). The following step will output the data.frame.
@@ -339,7 +365,7 @@ rm(gl.anno);
 @
 
 As you can see, each tagSNP (`tag.snp.id') is associated with an identifiable
-Func-y-SNP (`corr.snp.id') and each are associated with a biological feature
+YAFSNP (`corr.snp.id') and each are associated with a biological feature
 (`bio.feature'). Additional columns are included which assist in summarizing the
 final results.
 
@@ -355,14 +381,14 @@ the results.  Either case, the final results are stored in
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The following sections describe methods to summarize and plot the newly
-identified Func-y-SNPs.
+identified YAFSNPs.
 
-\subsection{Summary table used to describe newly identified Func-y-SNPs}
+\subsection{Summary table used to describe newly identified YAFSNPs}
 
 Using a specified Rsquare value (0-1) to subset the data, a table is generated
-which summarizes the total number of Func-y-SNPs, associated tagSNPs, and number
+which summarizes the total number of YAFSNPs, associated tagSNPs, and number
 of overlapping biofeatures. This will provide user a first look at the total
-number of available Func-y-SNP at a particular Rsquare cutoff.
+number of available YAFSNP at a particular Rsquare cutoff.
 
 The output is very similar to the output generated by calling \Robject{glioma}.
 But instead of getting a summary report three distinct Rsquare cutoffs, you can
@@ -375,8 +401,8 @@ FunciSNPtable(glioma.anno, rsq=0.44);
 @
 
 If `geneSum' argument is set to `TRUE', a list of gene names is reported
-instead which informs on the nearest gene symbols to the set of Func-y-SNPs.
-Only unique gene symbols are reported since multiple distinct Func-y-SNP can be
+instead which informs on the nearest gene symbols to the set of YAFSNPs.
+Only unique gene symbols are reported since multiple distinct YAFSNP can be
 near the same gene.
 
 <<>>=
@@ -386,7 +412,7 @@ FunciSNPtable(glioma.anno, rsq=0.44, geneSum=TRUE);
 \subsection{Summary of correlated SNPs overlapping biofeatures}
 
 \Rmethod{FunciSNPsummaryOverlaps} function helps to determine the
-total number of Func-y-SNPs overlapping a number of different biofeatures. This
+total number of YAFSNPs overlapping a number of different biofeatures. This
 is similar to running \Rmethod{summary} on \Robject{glioma} above, except now
 you can specifically call the function and set a pre-determined `rsq' value to
 subset the data and thereby obtain a more objective and informative result.
@@ -407,8 +433,8 @@ FunciSNPsummaryOverlaps(glioma.anno, rsq=0.44)
 After running \Rmethod{FunciSNPsummaryOverlaps}, the next question one would
 like to know is which correlated SNPs overlapping a number of different
 biofeatures for a number of associated tagSNP. Thus, in the example above, we
-have determined that we are interested in learning more about the Func-y-SNPs
-associated with `rs6010620' and which overlap at least 2 different biofeatures.
+have determined that we are interested in learning more about the YAFSNPs
+associated with `rs6010620' and which overlap at least 3 different biofeatures.
 
 <<>>=
 rs6010620 <- FunciSNPidsFromSummary(glioma.anno, tagsnpid="rs6010620",
@@ -433,7 +459,7 @@ created in with the idea that they can be directly outputted in presentations or
 publication formats.
 
 The following example plots the distribution of the Rsquare values for each
-Func-y-SNP (Figure \ref{fig:glioma_dist.pdf}, page
+YAFSNP (Figure \ref{fig:glioma_dist.pdf}, page
         \pageref{fig:glioma_dist.pdf}). We recommend attempting this plot before
 subsetting any data by a specified rsq value. The distribution helps to identify
 a specific Rsquare value that will provide the most informative discovery.
@@ -448,7 +474,7 @@ dev.off()
 \begin{center}
 \includegraphics{glioma_dist.pdf}
 \caption{\label{fig:glioma_dist.pdf} Distribution of Rsquare values of all 
-Func-y-SNPs. Each marked bin contains the total number of Func-y-SNPs
+YAFSNPs. Each marked bin contains the total number of YAFSNPs
 (correlated SNPs). The sum of all the counts would total the number of
 correlated SNPs.}
 {\footnotesize{}}
@@ -456,22 +482,22 @@ correlated SNPs.}
 \end{figure}
 
 Figure \ref{fig:glioma_dist.pdf} (page \pageref{fig:glioma_dist.pdf})
-illustrates the total number of Func-y-SNPsbinned at different Rsquare cutoffs.
+illustrates the total number of YAFSNPsbinned at different Rsquare cutoffs.
 As you can see in this figure (\ref{fig:glioma_dist.pdf}, page
-        \pageref{fig:glioma_dist.pdf}), there are a total of 11 Func-y-SNP with
+        \pageref{fig:glioma_dist.pdf}), there are a total of 13 YAFSNP with
 an Rsquare $\ge$ 0.9. Since this plot does not take into consideration unique
-Func-y-SNP the number may represent duplicate Func-y-SNP since they may overlap
+YAFSNP the number may represent duplicate YAFSNP since they may overlap
 more than one biological feature.
 
 \subsection{Split by tagSNP}
 
 Using `splitbysnp' argument, the same type of plot as above (Figure
 \ref{fig:glioma_dist.pdf}, page \pageref{fig:glioma_dist.pdf}) is generated,
-      however the total number of Func-y-SNPs are now divided by the associated
+      however the total number of YAFSNPs are now divided by the associated
       tagSNP (Figure \ref{fig:glioma_dist_bysnp.pdf}, page
               \pageref{fig:glioma_dist_bysnp.pdf}). It should be clear from this
-      plot that 3 of the 4 tagSNP have a number of Func-y-SNP with Rsquares
-      $\ge$ 0.5.  And one tagSNP contains many more Func-y-SNP (`rs6010620').
+      plot that 3 of the 4 tagSNP have a number of YAFSNP with Rsquares
+      $\ge$ 0.5.  And one tagSNP contains many more YAFSNP (`rs6010620').
 
 <<>>=
 FunciSNPplot(glioma.anno, splitbysnp=TRUE)
@@ -482,15 +508,15 @@ ggsave("glioma_dist_bysnp.pdf")
 \begin{center}                                                                   
 \includegraphics{glioma_dist_bysnp.pdf}                                          
 \caption{\label{fig:glioma_dist_bysnp.pdf} Distribution of Rsquare values of all 
-     Func-y-SNPs divided by the tagSNP and by its genomic location.}                 
+     YAFSNPs divided by the tagSNP and by its genomic location.}                 
 {\footnotesize{}}                                                                
 \end{center}                                                                     
 \end{figure}
 
-\subsection{Heatmap of 1000GP SNPs by tagSNP vs Biofeature}
+\subsection{Heatmap of 1kg SNPs by tagSNP vs Biofeature}
 
 Now, if you are interested in knowing which biofeature and associated tagSNP
-contains the most number of 1000GP SNPs, run the following.
+contains the most number of 1kg SNPs, run the following.
 
 <<>>=
 pdf("glioma_heatmap.pdf")
@@ -501,7 +527,7 @@ dev.off()
 \begin{figure}[ht!]
 \begin{center}
 \includegraphics{glioma_heatmap.pdf}
-\caption{\label{fig:glioma_heatmap.pdf} Heatmap of the number of 1000GP SNPs by
+\caption{\label{fig:glioma_heatmap.pdf} Heatmap of the number of 1kg SNPs by
     relationship between tagSNP and biofeature.}
 {\footnotesize{}}
 \end{center}
@@ -514,7 +540,7 @@ folder. This is done because this function will generate a summary plot for each
 biofeature. The first plot (Figure \ref{fig:TFBS_Pol2_U87_R2vsDist_riskSNP.pdf},
         page \pageref{fig:TFBS_Pol2_U87_R2vsDist_riskSNP.pdf}) is a scatter plot
 showing the relationship between Rsquare and Distance to tagSNP for each
-Func-y-SNP.
+YAFSNP.
 
 <<>>=
 ## Following will output a series of plots for each biofeature at rsq=0.5
@@ -523,7 +549,7 @@ FunciSNPplot(glioma.anno, tagSummary=TRUE, rsq=0.5)
 
 \begin{figure}[ht!]
 \begin{center}
-\includegraphics{FunciSNP.0.1.8/plots/TFBS_Pol2_U87_R2vsDist_riskSNP.pdf}
+\includegraphics{FunciSNP.0.1.14/plots/TFBS_Pol2_U87_R2vsDist_riskSNP.pdf}
 \caption{\label{fig:TFBS_Pol2_U87_R2vsDist_riskSNP.pdf} Scatter plot 
 showing the relationship between Rsquare and Distance to tagSNP for each 
 getFSNPs}
@@ -533,25 +559,25 @@ getFSNPs}
 
 Figure \ref{fig:TFBS_Pol2_U87_R2vsDist_riskSNP.pdf} on page
 \pageref{fig:TFBS_Pol2_U87_R2vsDist_riskSNP.pdf} helps identify the relative
-postion of all newly identified Func-y-SNP to the associated tagSNP. As
+postion of all newly identified YAFSNP to the associated tagSNP. As
 highlighted in figure \ref{fig:TFBS_Pol2_U87_R2vsDist_riskSNP.pdf}, it is clear
-that tagSNP `rs6010620' contains many more Func-y-SNP with Rsquares $\ge$ 0.5,
+that tagSNP `rs6010620' contains many more YAFSNP with Rsquares $\ge$ 0.5,
      and the majority of them are within 40,000 base pairs of the tagSNP. There
-     are a few Func-y-SNP which are more than 50,000 base pairs away while some
+     are a few YAFSNP which are more than 50,000 base pairs away while some
      are within 5,000 base pairs.
 
 The second plot (Figure \ref{fig:TFBS_Pol2_U87_R2summary_riskSNP.pdf}, page
         \pageref{fig:TFBS_Pol2_U87_R2summary_riskSNP.pdf}) is a histogram
-distribution of total number of Func-y-SNPs at each Rsquare value. This plot is
+distribution of total number of YAFSNPs at each Rsquare value. This plot is
 similar to Figure \ref{fig:glioma_dist_bysnp.pdf} on page
 \pageref{fig:glioma_dist_bysnp.pdf}, except it is further divided by biofeature.
 Each set of plot is further divided by tagSNP to help identify locus with the
-most identifiable Func-y-SNP. This argument is best used in conjunction with a
+most identifiable YAFSNP. This argument is best used in conjunction with a
 `rsq' value.
 
 \begin{figure}[ht!]
 \begin{center}
-\includegraphics{FunciSNP.0.1.8/plots/TFBS_Pol2_U87_R2summary_riskSNP.pdf}
+\includegraphics{FunciSNP.0.1.14/plots/TFBS_Pol2_U87_R2summary_riskSNP.pdf}
 \caption{\label{fig:TFBS_Pol2_U87_R2summary_riskSNP.pdf} Histogram 
 distribution of number of correlated SNPs at each Rsquare value}
 {\footnotesize{}}
@@ -561,11 +587,11 @@ distribution of number of correlated SNPs at each Rsquare value}
 \subsection{Genomic Feature Summary}                                             
                                                                                  
 Using `genomicSum' argument set to `TRUE' will output the overall genomic        
-distribution of the newly identified Func-y-SNPs (Figure                         
+distribution of the newly identified YAFSNPs (Figure                         
         \ref{fig:glioma_genomic_sum_rcut.pdf}, page                                      
         \pageref{fig:glioma_genomic_sum_rcut.pdf}).  Using `rsq' value, the plot
 is         
-divided into all Func-y-SNPs vs subset. This type of plot informs the relative   
+divided into all YAFSNPs vs subset. This type of plot informs the relative   
 enrichment for genomic features.                                                 
                                                                                  
 <<>>=                                                                            
@@ -588,8 +614,8 @@ dev.off()
                                                                                  
 Figure \ref{fig:glioma_genomic_sum_rcut.pdf} on page                             
 \pageref{fig:glioma_genomic_sum_rcut.pdf} illustrates the distribution of the       
-Func-y-SNP by genomic features. It is clear by using an Rsquare cutoff of 0.5,   
-        there is a slight enrichment of Func-y-SNP in introns and exonds and a          
+YAFSNP by genomic features. It is clear by using an Rsquare cutoff of 0.5,   
+        there is a slight enrichment of YAFSNP in introns and exonds and a          
             depletion at promoters and other coding regions as well as
             intergentic       
                 regions.
@@ -605,9 +631,9 @@ Func-y-SNP by genomic features. It is clear by using an Rsquare cutoff of 0.5,
 
 Finally, after evaluating all results using the above tables and plots
 functions, a unique pattern emerges that helps identify a unique cluster of
-tagSNP and biofeature that can identify a set of Func-y-SNPs. To better
+tagSNP and biofeature that can identify a set of YAFSNPs. To better
 visualize and to get a better perspective of the location of each newly
-identified Func-y-SNP, the results can be outputted using \Rmethod{FunciSNPbed}.
+identified YAFSNP, the results can be outputted using \Rmethod{FunciSNPbed}.
 
 \Rmethod{FunciSNPbed} outputs a unique BED file which can be used to view in any
 genomic browser which supports BED formats. To learn more about BED formats, see
@@ -619,10 +645,10 @@ FunciSNPbed(glioma.anno, rsq=0.22);
 # FunciSNPbed(rs6010620, rsq=0.5);
 @
 
-Each tagSNP which is in LD to a corresponding Func-y-SNP overlapping at least
-one biofeature is colored black, while the Func-y-SNP is colored red. The
+Each tagSNP which is in LD to a corresponding YAFSNP overlapping at least
+one biofeature is colored black, while the YAFSNP is colored red. The
 initial position is provided by the first tagSNP and the first linked
-Func-y-SNP. We recommend using UCSC genome browser to view your BED files. This
+YAFSNP. We recommend using UCSC genome browser to view your BED files. This
 is useful so you can view all public and private tracks in relation to FunciSNP
 results. As an example, see Figure \ref{fig:FunciSNP_genome_viewer1.pdf} on page
 \pageref{fig:FunciSNP_genome_viewer1.pdf} or visit this saved UCSC Genome
