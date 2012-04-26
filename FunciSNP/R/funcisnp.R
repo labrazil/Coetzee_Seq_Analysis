@@ -1450,7 +1450,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
   save.height <- save.height * 25.4
 #  setThemeWhite(size = text.size)
   fsnptheme <- theme_set(theme_bw(base_size = text.size))
-  fsnptheme <- theme_update(opts(axis.text.x = theme_text(angle = 90, size = text.size * 0.8)))
+  fsnptheme <- theme_update(opts(axis.text.x = theme_text(angle = 90, size = text.size * 0.8, hjust=1)))
   require(scales)
   if(sum(c(split,tagSummary,heatmap,genomicSum)) == 0){
     split = TRUE;
@@ -1638,11 +1638,11 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
 #    rownames(all.s) <- paste(rownames(all.s), "\n(n=", rowSums(all.s), ")", sep="")
 #    colnames(all.s) <- paste(colnames(all.s), "\n(n=", colSums(all.s), ")", sep="")
     x <- as.matrix(all.s)
-    dd.col <- as.dendrogram(hclust(dist(x)))
-    col.ord <- order.dendrogram(dd.col)
-#    dd.row <- as.dendrogram(hclust(dist(t(x))))
-#    row.ord <- order.dendrogram(dd.row)
-    xx <- all.s[col.ord, 1:(ncol(all.s))]
+#    dd.col <- as.dendrogram(hclust(dist(x)))
+#    col.ord <- order.dendrogram(dd.col)
+    dd.row <- as.dendrogram(hclust(dist(t(x))))
+    row.ord <- order.dendrogram(dd.row)
+    xx <- all.s[1:(nrow(all.s)), row.ord]
     xx_names <- attr(xx, "dimnames")
     df <- as.data.frame(xx)
     colnames(df) <- xx_names[[2]]
@@ -1656,9 +1656,9 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
       geom_tile(aes(fill=value), color="gray60") +
       scale_fill_gradient(low="white",
                           high="palevioletred4",
-                          guide=guide_colorbar(direction = "horizontal", barheight = .5, ""),
+                          guide=guide_colorbar(direction = "horizontal", barheight = .5, "SNP count"),
                           "# of potentially correlated SNPs") +
-      geom_text(size = text.size * 0.4) +
+      geom_text(size = text.size * 0.2) +
       labs(x = "", y = "") +
       opts(axis.ticks = theme_blank(),
 #           axis.text.x = theme_text(angle=90, hjust = 1),
