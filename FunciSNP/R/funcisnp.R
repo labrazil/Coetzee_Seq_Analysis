@@ -342,9 +342,9 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
   onek.genome.server <- ServerCheck(primary.server, verbose = FALSE)
   variants.reference <-
     paste(onek.genome.server,
-          "/ftp/release/20101123/interim_phase1_release/ALL.chr",
+          "/ftp/release/20110521/ALL.chr",
           snp.region$snp.chromosome[snp.region$snp.name == tag.id][1],
-          ".phase1.projectConsensus.genotypes.vcf.gz", sep="")
+          ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
 
   param <- GRanges(seqnames=snp.region$snp.chromosome[snp.region$snp.name ==
                    tag.id][1],
@@ -408,9 +408,9 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
     onek.genome.server <- ServerCheck(primary.server, verbose = FALSE)
     variants.reference <-
       paste(onek.genome.server,
-            "/ftp/release/20101123/interim_phase1_release/ALL.chr",
+            "/ftp/release/20110521/ALL.chr",
             snp.region$snp.chromosome[snp.region$snp.name == tag.id][1],
-            ".phase1.projectConsensus.genotypes.vcf.gz", sep="")
+            ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
     kgeno <- TabixFile(variants.reference)
   }
 
@@ -435,21 +435,25 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
     if (length(chunk[[i]]) == 0) next
     out[[i]] = lapply(chunk[[i]], function(rec) {
                       vec <- strsplit(rec, "\t")[[1]]
-                      meta <- vec[1:9]
-                      calls <- vec[-c(1:9)]
-                      nalt <- strsplit(calls, "")
-                      nums <- lapply(nalt, "[", c(1,3))  # extract the call components
-                      hasmiss <- which(sapply(nums, function(x) any(x == ".")))
-                      nalt <- sapply(nums, function(x) 2-sum(x=="0"))  # this is correct only for diallelic locus; note in doc
-                      if (length(hasmiss)>0) nalt[hasmiss] <- -1
-                      nalt <- nalt+1
-                      chr <- meta[1]
-                      id <- meta[3]
-                      loc <- meta[2]
-                      if (id == "." ) id <- paste("chr", chr, ":", loc, sep="")
-                      x <- list(chr=chr, id=id, loc=loc, ref=meta[4], alt=meta[5], depth=meta[8],
+                      if((nchar(vec[4]) == 1) && (nchar(vec[5]) == 1)) {
+                        meta <- vec[1:9]
+                        calls <- vec[-c(1:9)]
+                        nalt <- strsplit(calls, "")
+                        nums <- lapply(nalt, "[", c(1,3))  # extract the call components
+                        hasmiss <- which(sapply(nums, function(x) any(x == ".")))
+                        nalt <- sapply(nums, function(x) 2-sum(x=="0"))  # this is correct only for diallelic locus; note in doc
+                        if (length(hasmiss)>0) nalt[hasmiss] <- -1
+                        nalt <- nalt+1
+                        chr <- meta[1]
+                        id <- meta[3]
+                        loc <- meta[2]
+                        if (id == "." ) id <- paste("chr", chr, ":", loc, sep="")
+                        x <- list(chr=chr, id=id, loc=loc, ref=meta[4], alt=meta[5], depth=meta[8],
                                 calls=as.raw(nalt), support=meta[1:5])
-                      return(x)
+                        return(x)
+                      } else {
+                        return(NULL)
+                      }
           })
   }
   out <- unlist(out, recursive=FALSE)
@@ -484,9 +488,9 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
       onek.genome.server <- ServerCheck(primary.server, verbose = FALSE)
       variants.reference <-
         paste(onek.genome.server,
-              "/ftp/release/20101123/interim_phase1_release/ALL.chr",
+              "/ftp/release/20110521/ALL.chr",
               snp.region$snp.chromosome[snp.region$snp.name == tag.id][1],
-              ".phase1.projectConsensus.genotypes.vcf.gz", sep="")
+              ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
       kgeno <- TabixFile(variants.reference)
     }
     ##### modified code from GGtools vcf2sm and parsVCFeec to work with remote tabix files
@@ -508,23 +512,26 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
     for (i in 1:length(chunk)) {
       if (length(chunk[[i]]) == 0) next
       out[[i]] = lapply(chunk[[i]], function(rec) {
-                        xxx <- rec
                         vec <- strsplit(rec, "\t")[[1]]
-                        meta <- vec[1:9]
-                        calls <- vec[-c(1:9)]
-                        nalt <- strsplit(calls, "")
-                        nums <- lapply(nalt, "[", c(1,3))  # extract the call components
-                        hasmiss <- which(sapply(nums, function(x) any(x == ".")))
-                        nalt <- sapply(nums, function(x) 2-sum(x=="0"))  # this is correct only for diallelic locus; note in doc
-                        if (length(hasmiss)>0) nalt[hasmiss] <- -1
-                        nalt <- nalt+1
-                        chr <- meta[1]
-                        id <- meta[3]
-                        loc <- meta[2]
-                        if (id == "." ) id <- paste("chr", chr, ":", loc, sep="")
-                        x <- list(chr=chr, id=id, loc=loc, ref=meta[4], alt=meta[5], depth=meta[8],
-                                  calls=as.raw(nalt), support=meta[1:5])
-                        return(x)
+                        if((nchar(vec[4]) == 1) && (nchar(vec[5]) == 1)) {
+                          meta <- vec[1:9]
+                          calls <- vec[-c(1:9)]
+                          nalt <- strsplit(calls, "")
+                          nums <- lapply(nalt, "[", c(1,3))  # extract the call components
+                          hasmiss <- which(sapply(nums, function(x) any(x == ".")))
+                          nalt <- sapply(nums, function(x) 2-sum(x=="0"))  # this is correct only for diallelic locus; note in doc
+                          if (length(hasmiss)>0) nalt[hasmiss] <- -1
+                          nalt <- nalt+1
+                          chr <- meta[1]
+                          id <- meta[3]
+                          loc <- meta[2]
+                          if (id == "." ) id <- paste("chr", chr, ":", loc, sep="")
+                          x <- list(chr=chr, id=id, loc=loc, ref=meta[4], alt=meta[5], depth=meta[8],
+                                    calls=as.raw(nalt), support=meta[1:5])
+                          return(x)
+                        } else {
+                          return(NULL)
+                        }
             })
     }
     out <- unlist(out, recursive=FALSE)
