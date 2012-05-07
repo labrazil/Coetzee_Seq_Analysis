@@ -458,6 +458,10 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
   }
   out <- unlist(out, recursive=FALSE)
   if (length(out) == 0) return(NULL)
+  out.filter <- lapply(out, is.null)
+  out.filter <- unlist(out.filter)
+  out.filter <- !out.filter
+  out <- out[out.filter]
   rsid <- sapply(out, "[[", "id")
   nsnp <- length(out)
   mat <- matrix(as.raw(0), nr=length(sampids), ncol=nsnp)
@@ -470,7 +474,6 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
   ## End Code Adpated from GGtools
   snps.support <-
     t(as.data.frame(snps.support, stringsAsFactors = FALSE))
-
   timer <- 0
   while(match(tag.id, snps.support[, 3], nomatch=0) == 0 && timer < 5) {
     chunk <- try(scanTabix(kgeno, param=param), silent = TRUE)
@@ -508,6 +511,9 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
       tabix.header <- tabix.header[[length(tabix.header)]]
     }
     sampids <- tabix.header[10:length(tabix.header)]
+    rsid <- sapply(out, "[[", "id")
+    nsnp <- length(out)
+    mat <- matrix(as.raw(0), nr=length(sampids), ncol=nsnp)
     out <- list()
     for (i in 1:length(chunk)) {
       if (length(chunk[[i]]) == 0) next
@@ -536,6 +542,10 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
     }
     out <- unlist(out, recursive=FALSE)
     if (length(out) == 0) return(NULL)
+    out.filter <- lapply(out, is.null)
+    out.filter <- unlist(out.filter)
+    out.filter <- !out.filter
+    out <- out[out.filter]
     rsid <- sapply(out, "[[", "id")
     nsnp <- length(out)
     mat <- matrix(as.raw(0), nr=length(sampids), ncol=nsnp)
@@ -553,7 +563,6 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
 
   colnames(snps.support) <- tabix.header[1:5]
   row.names(snps.support) <- NULL
-
   if((match(tag.id, snps.support[, 3], nomatch=0) == 0) || (dim(snps.support)[1]
                                                             != dim(snps.geno)[2])) {
     #message(tag.id)
@@ -1164,6 +1173,8 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
     gr.corr.snp.loc <-
       gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),]
     cat("\nAdding genomic annotations")
+    xxx <<- gr.corr.snp.loc
+    yyy <<- TxDb.Hsapiens.UCSC.hg19.knownGene
     gf.overlaps <- locateVariants(gr.corr.snp.loc,
                                   TxDb.Hsapiens.UCSC.hg19.knownGene,
                                   AllVariants())
@@ -1403,10 +1414,10 @@ FunciSNPbed <- function(dat, rsq, path=getwd(), filename=NULL) {
   d.cor <- (d.cor[,c(1,6,6,5,10,6,6)])
   d.cor$chromosome <- paste("chr",d.cor$chromosome,sep="")
   d.tag$chromosome <- paste("chr",d.tag$chromosome,sep="")
-  d.cor[,3] <- d.cor[,3]+1
-  d.tag[,3] <- d.tag[,3]+1
-  d.cor[,7] <- d.cor[,7]+1
-  d.tag[,7] <- d.tag[,7]+1
+  d.cor[,2] <- d.cor[,2]-1
+  d.tag[,2] <- d.tag[,2]-1
+  d.cor[,6] <- d.cor[,6]-1
+  d.tag[,6] <- d.tag[,6]-1
   d.cor$strand <- "+"
   d.tag$strand <- "+"
   d.cor$color <- NA
@@ -1470,7 +1481,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
   require(ggplot2)
   if(split){
     if(splitbysnp){
-      p <<- ggplot(dat, aes(x = R.squared)) +
+      p <- ggplot(dat, aes(x = R.squared)) +
       geom_histogram(binwidth = 0.05) + 
       geom_vline(xintercept = 0.5, linetype = 2) + 
       scale_x_continuous(
@@ -1566,8 +1577,6 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
     all.ss <- try(dat[which(dat$R.squared < rsq), ], silent = TRUE)
     try(all.s$r.2 <- c("Yes"), silent = TRUE)
     try(all.ss$r.2 <- c("No"), silent = TRUE)
-    xxxx <<- all.s
-    yyyy <<- all.ss
     if(nrow(all.s) > 0 && nrow(all.ss) > 0) {
       all <- try(rbind(all.s, all.ss), silent = TRUE)
     } else {
@@ -1659,7 +1668,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
     mdf$value <- as.numeric(mdf$value)
     all.s <- mdf
     if(isTRUE(heatmap.key)) {
-      plot.here <<- ggplot(all.s, aes(variable, sig, label=value)) +
+      plot.here <- ggplot(all.s, aes(variable, sig, label=value)) +
       geom_tile(aes(fill=value), color="gray60") +
       scale_fill_gradient(low="white",
                           high="palevioletred4",
