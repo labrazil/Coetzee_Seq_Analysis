@@ -1173,8 +1173,6 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
     gr.corr.snp.loc <-
       gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),]
     cat("\nAdding genomic annotations")
-    xxx <<- gr.corr.snp.loc
-    yyy <<- TxDb.Hsapiens.UCSC.hg19.knownGene
     gf.overlaps <- locateVariants(gr.corr.snp.loc,
                                   TxDb.Hsapiens.UCSC.hg19.knownGene,
                                   AllVariants())
