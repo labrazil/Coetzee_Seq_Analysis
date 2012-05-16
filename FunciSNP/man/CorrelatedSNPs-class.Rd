@@ -2,6 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{CorrelatedSNPs-class}
+\alias{class:CorrelatedSNPs}
 \alias{alt.allele<-,CorrelatedSNPs-method}
 \alias{alt.allele,CorrelatedSNPs-method}
 \alias{chr<-,CorrelatedSNPs-method}
@@ -16,6 +17,8 @@
 \alias{ref.allele,CorrelatedSNPs-method}
 \alias{snpid<-,CorrelatedSNPs-method}
 \alias{snpid,CorrelatedSNPs-method}
+\alias{overlapping.features.snps-methods}
+\alias{pop.genotype-methods}
 
 \title{Class \code{"CorrelatedSNPs"}}
 \description{

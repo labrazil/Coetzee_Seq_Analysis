@@ -8,7 +8,7 @@ FunciSNPplot to visualize Func-y-SNP summary.
 FunciSNPplot is a function developed to plot various types of plots to summarize and assist end-user in making informed discoveries of FunciSNP results. Plots can be stored in a folder for future reference.
 }
 \usage{
-FunciSNPplot(dat, rsq = 0, split = FALSE, splitbysnp = FALSE, tagSummary = FALSE, heatmap = FALSE, genomicSum = FALSE, save = FALSE, pathplot=getwd())
+FunciSNPplot(dat, rsq = 0, split = FALSE, splitbysnp = FALSE, tagSummary = FALSE, heatmap = FALSE, heatmap.key = FALSE,genomicSum = FALSE, save = FALSE, pathplot=getwd(), text.size=10, save.width=7, save.height=7)
 }
 
 \arguments{
@@ -30,6 +30,9 @@ FunciSNPplot(dat, rsq = 0, split = FALSE, splitbysnp = FALSE, tagSummary = FALSE
   \item{heatmap}{
 		logical: \code{heatmap} correlation heatmap to visualize the number of correlated SNPs at each tagSNP overlapping each biological feature. Most informative if used with a \code{rsq} value.
 }
+  \item{heatmap.key}{
+		logical: \code{heatmap.key} Places the count of each cell on the heatmap.
+}
   \item{genomicSum}{
 		logical: \code{genomicSum} Stacked bar chart summarizing all correlated SNPs for each of the identified genomie features (exon, intron, 5'UTR, 3'UTR, promoter, lincRNA or in gene desert (intergentic)). Most informative if used with a \code{rsq} value.
 }
@@ -39,6 +42,15 @@ FunciSNPplot(dat, rsq = 0, split = FALSE, splitbysnp = FALSE, tagSummary = FALSE
   \item{pathplot}{
            a character: \code{pathplot} is the path to the folder where to save the plots. Default to getwd() or current working directory.
 }
+  \item{text.size}{
+    Text size passed to graphing functions
+  }
+  \item{save.width}{
+    Width of saved images in inches
+  }
+  \item{save.height}{
+    Height of saved images in inches
+  }
 }
 \details{
 NA

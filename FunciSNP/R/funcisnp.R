@@ -464,7 +464,7 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
   out <- out[out.filter]
   rsid <- sapply(out, "[[", "id")
   nsnp <- length(out)
-  mat <- matrix(as.raw(0), nr=length(sampids), ncol=nsnp)
+  mat <- matrix(as.raw(0), nrow=length(sampids), ncol=nsnp)
   for (i in 1:nsnp) mat[,i] = out[[i]]$calls
   rownames(mat) <- sampids
   colnames(mat) <- rsid
@@ -513,7 +513,7 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
     sampids <- tabix.header[10:length(tabix.header)]
     rsid <- sapply(out, "[[", "id")
     nsnp <- length(out)
-    mat <- matrix(as.raw(0), nr=length(sampids), ncol=nsnp)
+    mat <- matrix(as.raw(0), nrow=length(sampids), ncol=nsnp)
     out <- list()
     for (i in 1:length(chunk)) {
       if (length(chunk[[i]]) == 0) next
@@ -1115,6 +1115,8 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
     ##nearest linc RNAs
     cat("Putative Functional SNPs identified!!\nAnnotation will begin\n~~\n")
     cat("Adding lincRNA")
+    lincRNA <- system.file('extdata/annotation/lincRNA.hg19.rda',package='FunciSNP')
+    load(lincRNA)
     nearest.RNA <-
       annotatePeakInBatch(myPeakList = rd.corr.snp.loc,
                           AnnotationData = lincRNA,
@@ -1137,7 +1139,8 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
     cat(" ... done\n")
     ##nearest TSS (conanical gene)
     cat("Adding gene annotations\n\n")
-#    require("org.Hs.eg.db")
+    refseqgenes <- system.file('extdata/annotation/refseqgenes.rda', package='FunciSNP')
+    load(refseqgenes)
     nearest.TSS <- annotatePeakInBatch(myPeakList = rd.corr.snp.loc,
                                        AnnotationData = refseqgenes,
                                        output="nearestStart")
@@ -1245,7 +1248,6 @@ bedColors <- function(dat, rsq=0, filename, filepath) {
                                    "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
   dat <- dat[which(dat$R.squared >= rsq), ]
   tag.snps.with.overlaps <- unique(as.character(dat$tag.snp.id))
-  require("plyr")
   corr.snp.counts <- lapply(tag.snps.with.overlaps, function(x) {
                             count(as.character(dat[dat$tag.snp.id == x,]$corr.snp.id))})
   corr.snp.counts <- do.call("rbind", corr.snp.counts)
@@ -1254,7 +1256,7 @@ bedColors <- function(dat, rsq=0, filename, filepath) {
   colors <- t(col2rgb(jet.colors(max.freq)))
   corr.snp.counts$color <- unlist(lapply(corr.snp.counts$freq, function(x) {
                                          do.call(paste, c(as.list(colors[x, ]), sep=","))}))
-  png(file=paste(filepath, filename, sep="/"), width=800, height=200)
+  png(filename=paste(filepath, filename, sep="/"), width=800, height=200)
   z <- seq(-1, 1, length = 200)
   n <- max.freq
   image(matrix(z, ncol = 1), col = jet.colors(n), 
@@ -1274,7 +1276,6 @@ FunciSNPsummaryOverlaps <- function(dat, rsq=0) {
     return(x)
   } else {
   tag.snps.with.overlaps <- unique(as.character(dat$tag.snp.id))
-  require("plyr");
   tag.snp.features <- lapply(tag.snps.with.overlaps, function(x) {
                              overlap.counts <- count(as.character(dat[dat$tag.snp.id ==
                                                                   x, ]$corr.snp.id))
@@ -1462,13 +1463,12 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
                           genomicSum = FALSE, save = FALSE, pathplot=getwd(),
                           text.size=10, save.width=7, save.height=7) 
 {
-<<<<<<< Updated upstream
   save.width <- save.width * 25.4
   save.height <- save.height * 25.4
 #  setThemeWhite(size = text.size)
   fsnptheme <- theme_set(theme_bw(base_size = text.size))
   fsnptheme <- theme_update(opts(axis.text.x = theme_text(angle = 90, size = text.size * 0.8, hjust=1)))
-  require(scales)
+#  require(scales)
   if(sum(c(split,tagSummary,heatmap,genomicSum)) == 0){
     split = TRUE;
   }
@@ -1477,7 +1477,6 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
                               package.version("FunciSNP"), "/plots",
                               sep=""), showWarnings = FALSE, recursive=TRUE), silent=TRUE) 
   }
-  require(ggplot2)
   if(split){
     if(splitbysnp){
       p <- ggplot(dat, aes(x = R.squared)) +
@@ -1492,7 +1491,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
               title = "Distribution of 1kgSNPs for each tagSNP\nat R\u00B2 values") + 
          facet_wrap(chromosome ~ tag.snp.id)
          if(save){
-           ggsave(file=paste(pathplot, "/FunciSNP.",
+           ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP.",
                              package.version("FunciSNP"),
                              "/plots/Distribution_for_each_tagSNP.pdf",
                              sep=""),
@@ -1566,8 +1565,6 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
     try(dir.create(path=paste(pathplot, "/FunciSNP.",
                               package.version("FunciSNP"), "/plots",
                               sep=""), showWarnings = FALSE, recursive=TRUE), silent=TRUE)
-    require("ggplot2")
-    require("reshape")
 
     ### ggplot2 plots#####
 
@@ -1605,7 +1602,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
                          bio[i], sep="")) +
          facet_wrap(chromosome ~ tag.snp.id)
 
-         ggsave(file=paste(pathplot, "/FunciSNP.",
+         ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP.",
                            package.version("FunciSNP"), "/plots/",
                            bio[i],"_R2summary_riskSNP.pdf",sep=""),
                 plot=p,
@@ -1631,7 +1628,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
                             "and 1kgSNP\nOverlapping biofeature: ", 
                             bio[i], sep="")) + 
          facet_wrap(chromosome ~ tag.snp.id)
-         ggsave(file=paste(pathplot, "/FunciSNP.",
+         ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP.",
                            package.version("FunciSNP"), "/plots/",
                            bio[i],"_R2vsDist_riskSNP.pdf",sep=""),
                 plot=p,
@@ -1663,7 +1660,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
     colnames(df) <- xx_names[[2]]
     df$sig <- xx_names[[1]]
     df$sig <- with(df, factor(sig, levels=sig, ordered=T))
-    mdf <- melt(df, id.vars="sig")
+    mdf <- reshape::melt(df, id.vars="sig")
     mdf$value <- as.numeric(mdf$value)
     all.s <- mdf
     if(isTRUE(heatmap.key)) {
@@ -1754,7 +1751,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
     }
     ### reverse matrix/dataframe x <- x[nrow(x):1, ]
     if(save) {
-      ggsave(filename=paste(pathplot, "/FunciSNP.",
+      ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP.",
                             package.version("FunciSNP"),
                             "/plots/FunciSNP_heatmap.eps", sep=""),
              plot=plot.here, bg = "white",
@@ -1771,7 +1768,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
   }
   if(genomicSum){
     if(rsq==0){
-      dat.m <- melt(dat[,c(23:28)], 
+      dat.m <- reshape::melt(dat[,c(23:28)], 
                     measure.vars=c("Promoter", 
                                    "utr5", 
                                    "Exon",
@@ -1786,7 +1783,6 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
       dat.m <- rbind(t,tt)
 
 
-      require(ggplot2)
       qd <- ggplot(dat.m, aes(variable, fill=factor(value))) + 
       geom_bar() +
       opts(title = "1kgSNPs distribution across Genomic Features") +
@@ -1797,7 +1793,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
       scale_fill_manual(values = c("1.YES" = "Red", "2.NO" = "Black"),
                         "Overlap")
       if(save){
-        ggsave(file=paste(pathplot, "/FunciSNP.",
+        ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP.",
                           package.version("FunciSNP"),
                           "/plots/Genomic_Summary_All.pdf", sep=""),
                plot=qd,
@@ -1815,7 +1811,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
       t <- dat[which(dat$R.squared >= rsq), ]
       t$r2 <- paste("R\u00B2 >= ", rsq, sep="")
       dat <- rbind(t, dat) 
-      dat.m <- melt(dat[,c(23:29)], 
+      dat.m <- reshape::melt(dat[,c(23:29)], 
                     measure.vars=c("Promoter", 
                                    "utr5", 
                                    "Exon",
@@ -1831,7 +1827,6 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
 
       plot.title = paste("Distribution of 1kgSNP SNPs across Genomic Features\n",
                          " at R\u00B2 cut-off of", rsq, sep=" ")
-      require(ggplot2)
       qp<-ggplot(dat.m, aes(variable, fill=factor(value))) + 
       geom_bar(position="fill") +
       opts(axis.text.x = theme_text(angle = 90, size = text.size*.8, hjust = 1),
@@ -1842,7 +1837,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
       scale_y_continuous("Percent of Total 1kgSNPs at R\u00B2 cut-off") +
       facet_wrap(~ r2)
          if(save){
-           ggsave(file=paste(pathplot, "/FunciSNP.",
+           ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP.",
                              package.version("FunciSNP"),
                              "/plots/Genomic_Summary_by_rsq.", rsq, ".pdf",
                              sep=""),
@@ -1857,241 +1852,6 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
     }
 
   }
-=======
-	if(sum(c(split,tagSummary,heatmap,genomicSum)) == 0){
-		split = TRUE;
-	}
-	require(ggplot2)
-		if(split){
-			if(splitbysnp == TRUE){
-				FunciSNP:::theme_white()
-					ggplot(dat, aes(x = R.squared)) + geom_histogram(binwidth = 0.05) + 
-					geom_vline(xintercept = 0.5, linetype = 2) + 
-					scale_x_continuous("Correlated SNPs R squared to Tag SNP (0-1)") + 
-					scale_y_continuous("Total # of Correlated SNPs associated with tagSNP") + 
-					opts(legend.position = "none", axis.text.y = theme_text(), 
-							axis.text.x = theme_text(angle = 90), 
-							title = "Distribution of correlated SNPs for each tagSNP\n",
-							"at Rsquared values") + 
-					facet_wrap(chromosome ~ tag.snp.id)
-			}else{
-				tt <- count(df = dat, vars = "R.squared")
-					tt <- na.omit(tt)
-					ht <- range(tt[, "freq"])[2]*1.2
-					hh <- dat[,c("corr.snp.id","R.squared")]
-					hh <- na.omit(hh)
-					hh.c <- count(round(hh$R.squared,digits = 1))
-					dimnames(hh.c)[[1]] <- hh.c[,1]
-					k <- c(hh.c["0",2],hh.c["0.1",2],hh.c["0.2",2],hh.c["0.3",2],
-							hh.c["0.4",2],hh.c["0.5",2],hh.c["0.6",2],hh.c["0.7",2],
-							hh.c["0.8",2],hh.c["0.9",2],hh.c["1",2])
-					k[is.na(k)] <- 0;
-
-				plot(tt, 
-						xlim = c(0, 1), 
-						ylim = c(0, ht), 
-						pch = "*", 
-						main = paste("Distribution of Correlated SNPs by Rsq values\n",
-							"Total # of corr. SNPs: ",dim(dat)[1],
-							"\n(with an Rsq value: ", sum(hh.c$freq),
-							"; unique corr. SNPs: ", 
-							length(unique(hh$corr.snp.id)),")", 
-							sep = ""),
-						xlab = "R square values (0-1)", 
-						ylab = "Number of correlated SNPs")
-					abline(v = 0.1, lty = 2, col = "red")
-					abline(v = 0.2, lty = 2, col = "red")
-					abline(v = 0.3, lty = 2, col = "red")
-					abline(v = 0.4, lty = 2, col = "red")
-					abline(v = 0.5, col = "black")
-					abline(v = 0.6, lty = 2, col = "green")
-					abline(v = 0.7, lty = 2, col = "green")
-					abline(v = 0.8, lty = 2, col = "green")
-					abline(v = 0.9, lty = 2, col = "green")
-					abline(h = ht*.90, col = "black", lty = 2)
-					text(0.05, ht*.95, as.character(k[1]+k[2]))
-					text(0.15, ht*.95, as.character(k[3]))
-					text(0.25, ht*.95, as.character(k[4]))
-					text(0.35, ht*.95, as.character(k[5]))
-					text(0.45, ht*.95, as.character(k[6]))
-					text(0.55, ht*.95, as.character(k[7]))
-					text(0.65, ht*.95, as.character(k[8]))
-					text(0.75, ht*.95, as.character(k[9]))
-					text(0.85, ht*.95, as.character(k[10]))
-					text(0.95, ht*.95, as.character(k[11]))
-			}
-		}
-	if(tagSummary){
-## directory used to store plots
-		try(dir.create(path=paste("FunciSNP.",package.version("FunciSNP"),"/plots",
-						sep=""), showWarnings = FALSE, recursive=TRUE), silent=TRUE) 
-			require("ggplot2")
-
-### ggplot2 plots#####
-
-			theme_white()
-
-			all.s <- try(subset(dat, R.squared >= rsq), silent = TRUE)
-			all.ss <- try(subset(dat, R.squared < rsq), silent = TRUE)
-			try(all.s$r.2 <- c("Yes"), silent = TRUE)
-			try(all.ss$r.2 <- c("No"), silent = TRUE)
-			if(nrow(all.s) > 0 && nrow(all.ss) > 0) {
-				all <- try(rbind(all.s, all.ss), silent = TRUE)
-			} else {
-				if(nrow(all.s) > 0 && nrow(all.ss) <= 0) {
-					all <- all.s
-				}
-				if(nrow(all.s) <= 0 && nrow(all.ss) > 0) {
-					all <- all.ss
-				}
-				if(nrow(all.s) <= 1 && nrow(all.ss) <= 0) {
-					return()
-				}
-			}
-		for( i in 1:length(summary(as.factor(all[,"bio.feature"]))) ){
-			bio <- names(summary(as.factor(all[,"bio.feature"])))
-				tmp <- subset(all, bio.feature==bio[i])
-
-## plot r.2 values
-				ggplot(tmp, aes(x=R.squared, fill=factor(r.2))) + 
-				geom_histogram(binwidth=0.05) + 
-				geom_vline(xintercept = rsq, linetype=2) +
-				scale_x_continuous("Rsquare Values (0-1)", limits=c(0,1)) + 
-				scale_y_continuous("Total # of Surrogate SNPs associated with riskSNP") + 
-				scale_fill_manual(values = c("Yes" = "Red", "No" = "Black")) +
-				opts(legend.position = "none", axis.text.y = theme_text(), 
-						axis.text.x = theme_text(angle=90), 
-						title = paste("riskSNP\nOverlapping: ", bio[i], sep="")) + 
-				facet_wrap(~ tag.snp.id)
-
-				ggsave(file=paste("FunciSNP.",package.version("FunciSNP"),"/plots/",
-							bio[i],"_R2summary_riskSNP.pdf",sep=""))
-
-## plot r.2 vs. distance values
-				ggplot(tmp, aes(x=R.squared, y=distance.from.tag, colour=r.2, 
-							size=factor(r.2))) + 
-				geom_point() + 
-				geom_vline(xintercept = rsq, linetype=2) +
-#geom_abline(intercept = 0, slope = 1) +
-				scale_x_continuous("Rsquare Values (0-1)", limits=c(0,1)) + 
-				scale_y_continuous(
-						"Distance to Surrogate SNPs associated with riskSNP (bp)",
-						formatter="comma") + 
-				scale_colour_manual(values = c("Yes" = "Red", "No" = "Black")) +
-				scale_size_manual(values = c("Yes" = 2, "No" = 1)) +
-				opts(legend.position = "none", axis.text.y = theme_text(), 
-						axis.text.x = theme_text(angle=90), 
-						title = paste("Distance between riskSNP\n",
-							"and Surrogate SNP\nOverlapping: ", bio[i], sep="")) + 
-				facet_wrap(~ tag.snp.id)
-				ggsave(file=paste("FunciSNP.",package.version("FunciSNP"),"/plots/",
-							bio[i],"_R2vsDist_riskSNP.pdf",sep=""))
-				cat("Finished plotting ", i, "/",length(bio), "\n")
-		}
-		message("\n\nSee ",
-				paste("FunciSNP.",package.version("FunciSNP"),"/plots/",sep=""),
-				" folder in ", getwd(), " for all plots.\n\n")
-	}
-	if(heatmap){
-		require("gplots")
-			require('matlab')
-## directory used to store plots
-			try(dir.create(path=paste("FunciSNP.",package.version("FunciSNP"),"/plots",
-							sep=""), showWarnings = FALSE, recursive=TRUE), silent=TRUE)
-			all.s<-(table( subset(dat,R.squared>=rsq)[,"bio.feature"], 
-						subset(dat,R.squared>=rsq)[,"tag.snp.id"] ))
-			all.s <- as.matrix(all.s)
-			if(save) png(filename=paste("FunciSNP.",package.version("FunciSNP"),
-						"/plots/FunciSNP_heatmap.png",sep=""), bg = "white", width=3000, 
-					height=3000)
-				heatmap.2(
-						all.s,
-						na.rm=TRUE,
-						scale="none",
-#RowSideColor=probe.cc,
-#ColSideColors=cc.col,
-						col=jet.colors(max(all.s,na.rm=T)),
-#col=redgreen(75),
-						key=T,
-						symkey=FALSE,
-						density.info="none",
-						trace="none",
-						Rowv=F,
-						Colv=T,
-						cexRow=1,
-						cexCol=1,
-						keysize=0.5,
-						dendrogram=c("none"),
-						main = paste("Rsquare values >= ",rsq)
-#labCol=NULL
-					 )
-					 if(save) dev.off()
-						 if(save) message("\nSee ",paste("FunciSNP.",package.version("FunciSNP"),
-									 "/plots/",sep=""), "folder in ", getwd()," for heatmap.\n\n")
-
-	}
-	if(genomicSum){
-		if(rsq==0){
-			dat.m <- melt(dat[,c(23:28)], 
-					measure.vars=c("Promoter", 
-						"utr5", 
-						"Exon",
-						"Intron",
-						"utr3",
-						"Intergenic"))
-
-				t <- subset(dat.m, value=="NO")
-				t$value <- "2.NO"
-				tt <- subset(dat.m, value!="NO")
-				tt$value <- "1.YES"
-				dat.m <- rbind(t,tt)
-
-
-				require(ggplot2)
-				FunciSNP:::theme_white()
-				ggplot(dat.m, aes(variable, fill=factor(value))) + 
-				geom_bar() +
-				opts(title = "Correlated SNPs distribution across genomic features", 
-             axis.text.x = theme_text(angle=330)) +
-				scale_fill_manual(values = c("1.YES" = "Red", "2.NO" = "Black"), "Overlap") +
-        guides(fill = guide <- legend(keywidth = .5, keyheight = 1) +
-#scale_x_continuous("Genomic Features") +
-				scale_y_continuous("Total count of correlated SNPs")
-
-		} else {
-
-			dat$r2 <- paste("R squared < ", rsq,sep="")
-				t <- subset(dat, R.squared>=rsq)
-				t$r2 <- paste("R squared >= ", rsq,sep="")
-				dat <- rbind(t, subset(dat, R.squared<rsq)) 
-				dat.m <- melt(dat[,c(23:29)], 
-						measure.vars=c("Promoter", 
-							"utr5", 
-							"Exon",
-							"Intron",
-							"utr3",
-							"Intergenic"))
-
-				t <- subset(dat.m, value=="NO")
-				t$value <- "2.NO"
-				tt <- subset(dat.m, value!="NO")
-				tt$value <- "1.YES"
-				dat.m <- rbind(t,tt)
-
-				require(ggplot2)
-				FunciSNP:::theme_white()
-				ggplot(dat.m, aes(variable, fill=factor(value))) + 
-				geom_bar(position="fill") +
-				opts(title = paste("Distribution of corr. SNPs across genomic features\n",
-							" at Rsquared cutoff of", rsq, sep=" ")) +
-				scale_fill_manual(values = c("1.YES" = "Red", "2.NO" = "Black"), "Overlap") +
-#scale_x_continuous("Genomic Features") +
-				scale_y_continuous("Percent of Total correlated SNPs at Rsquared cutoff") +
-				facet_wrap(~ r2)
-		}
-
-	}
->>>>>>> Stashed changes
 }
 
 ### generic functions used above ####
