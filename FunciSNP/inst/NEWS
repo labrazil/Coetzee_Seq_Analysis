@@ -1,2 +1,8 @@
+Package: FunciSNP
+=================
+
+Version: 0.2.0 [2012-05-18]
+o   Initial Bioconductor release. New citation included. 
+
 Version: 0.1.0 [2012-02-12]
 o   Created. Initial build and release of FunciSNP. 

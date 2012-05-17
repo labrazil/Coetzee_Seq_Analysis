@@ -33,10 +33,10 @@ FunciSNPbed outputs a unique BED file which can be used to view in any genomic b
 BED file is outputed as a tab-deliminated file in the specified 'path' folder. See example below.
 }
 \references{
-	Coetzee SG et al. submitted for review. 2012
+	SG. Coetzee, SK. Rhie, BP. Berman, GA. Coetzee and H. Noushmehr, \emph{FunciSNP: An R/Bioconductor Tool Integrating Functional Non-coding Datasets with Genetic Association Studies to Identify Candidate Regulatory SNPs}, Nucleic Acids Research, In press, 2012 (doi:10.1093/nar/GKS542).
 }
 \author{
-	Simon G. Coetzee; Houtan Noushmehr, PhD
+	Simon G. Coetzee (maintainer: scoetzee@gmail.com); Houtan Noushmehr, PhD (houtan@usp.br)
 }
 \note{
 NA

@@ -20,10 +20,10 @@
 \newcommand{\Rclass}[1]{{\textit{#1}}}
 \newcommand{\Rmethod}[1]{{\textit{#1}}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\author{Simon G. Coetzee$^\ddagger$\footnote{scoetzee NEAR gmail POINT com},
+\author{Simon G. Coetzee$^\dagger$, $^\ddagger$\footnote{scoetzee NEAR gmail POINT com},
     Suhn K. Rhie$^\ddagger$, Benjamin P. Berman$^\ddagger$,\\Gerhard A.
-        Coetzee$^\ddagger$ and Houtan Noushmehr$^\ddagger$\footnote{houtana NEAR
-            gmail POINT com}}
+        Coetzee$^\ddagger$ and Houtan Noushmehr$^\dagger$, $^\ddagger$\footnote{houtan NEAR
+            usp POINT br}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \title{Using the FunciSNP package\\`FunciSNP: An R/Bioconductor Tool \\
@@ -32,6 +32,9 @@ Integrating Functional Non-coding Datasets with Genetic Association Studies to\\
 \maketitle
 %%% Affiliation %%%
 \begin{center}
+$^\dagger$Faculdade de Medicina de Ribeir\tilde{a}o Preto\\Departmento de
+Gen\acute{e}tica\\Universidade de S\tilde{a}o Paulo\\Ribeir\tilde{a}o Preto,
+S\tilde{a}o Paulo, BRASIL\\
 $^\ddagger$Norris Cancer Center\\Keck School of Medicine\\University of Southern
 California\\Los Angeles, CA, USA
 \end{center}
@@ -685,4 +688,7 @@ toLatex(sessionInfo())
 document was proudly made using \LaTeX and \textbf{Sweave}.
 
 hn
+
+See our recent paper about FunciSNP, published in Nucleic Acids Research (doi:
+10.1093/nar/GKS542) in 2012.
 \end{document}
