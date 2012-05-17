@@ -32,9 +32,9 @@ Integrating Functional Non-coding Datasets with Genetic Association Studies to\\
 \maketitle
 %%% Affiliation %%%
 \begin{center}
-$^\dagger$Faculdade de Medicina de Ribeir\tilde{a}o Preto\\Departmento de
-Gen\acute{e}tica\\Universidade de S\tilde{a}o Paulo\\Ribeir\tilde{a}o Preto,
-S\tilde{a}o Paulo, BRASIL\\
+$^\dagger$Faculdade de Medicina de Ribeir$\tilde{a}$o Preto\\Departmento de
+Gen$\acute{e}$tica\\Universidade de S$\tilde{a}$o Paulo\\Ribeir$\tilde{a}$o Preto,
+S$\tilde{a}$o Paulo, BRASIL\\
 $^\ddagger$Norris Cancer Center\\Keck School of Medicine\\University of Southern
 California\\Los Angeles, CA, USA
 \end{center}
@@ -552,7 +552,7 @@ FunciSNPplot(glioma.anno, tagSummary=TRUE, rsq=0.5)
 
 \begin{figure}[ht!]
 \begin{center}
-\includegraphics{FunciSNP.0.1.14/plots/TFBS_Pol2_U87_R2vsDist_riskSNP.pdf}
+\includegraphics{FunciSNP.0.2.0/plots/TFBS_Pol2_U87_R2vsDist_riskSNP.pdf}
 \caption{\label{fig:TFBS_Pol2_U87_R2vsDist_riskSNP.pdf} Scatter plot 
 showing the relationship between Rsquare and Distance to tagSNP for each 
 getFSNPs}
@@ -580,7 +580,7 @@ most identifiable YAFSNP. This argument is best used in conjunction with a
 
 \begin{figure}[ht!]
 \begin{center}
-\includegraphics{FunciSNP.0.1.14/plots/TFBS_Pol2_U87_R2summary_riskSNP.pdf}
+\includegraphics{FunciSNP.0.2.0/plots/TFBS_Pol2_U87_R2summary_riskSNP.pdf}
 \caption{\label{fig:TFBS_Pol2_U87_R2summary_riskSNP.pdf} Histogram 
 distribution of number of correlated SNPs at each Rsquare value}
 {\footnotesize{}}
@@ -672,7 +672,7 @@ GWAS hits.}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Questions or comments, please contact Simon G. Coetzee (scoetzee NEAR gmail 
- POINT com) or Houtan Noushmehr, PhD (houtana NEAR gmail POINT com).
+ POINT com) or Houtan Noushmehr, PhD (houtan NEAR usp POINT br).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
