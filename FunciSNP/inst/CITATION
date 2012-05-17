@@ -18,7 +18,7 @@ bibentry("unpublished",
          note         = "Nucleic Acids Research (in press)",
          doi          = "10.1093/nar/GKS542",
          textVersion = 
-         paste("Simon G. Coetzee, Suhn K. Rhie, Benjamin P. Berman, Gerhard A. Coetzee, and Houtan Noushmehr (2012)", 
+         paste("Simon G. Coetzee, Suhn K. Rhie, Benjamin P. Berman, Gerhard A. Coetzee, and Houtan Noushmehr (2012) ", 
                "FunciSNP: An R/Bioconductor Tool Integrating Functional Non-coding Datasets with Genetic Association Studies to Identify Candidate Regulatory SNPs ",
                "Nucleic Acids Research (in press)",
                sep=""),
