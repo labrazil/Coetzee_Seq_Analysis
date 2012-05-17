@@ -10,8 +10,8 @@ The package includes functions to identify and annotate putative functional SNPs
     \tabular{ll}{
 Package: \tab FunciSNP\cr
              Type: \tab Package\cr
-             Version: \tab 0.1.7\cr
-             Date: \tab 2012-12-12\cr
+             Version: \tab 0.2.0\cr
+             Date: \tab 2012-05-18\cr
              License: \tab GPL-3\cr
              LazyLoad: \tab yes\cr
 }
@@ -20,11 +20,8 @@ Package: \tab FunciSNP\cr
 	SG. Coetzee, SK. Rhie, BP. Berman, GA. Coetzee and H. Noushmehr, \emph{FunciSNP: An R/Bioconductor Tool Integrating Functional Non-coding Datasets with Genetic Association Studies to Identify Candidate Regulatory SNPs}, Nucleic Acids Research, In press, 2012 (doi:10.1093/nar/GKS542).
 }
 \author{
-Simon Coetzee and Houtan Noushmehr, PhD
-    
-
-Maintainer:
-    Simon G. Coetzee <scoetzee@gmail.com>
+Simon G. Coetzee (maintainer: scoetzee@gmail.com); Houtan Noushmehr, PhD
+(houtan@usp.br)
 }
 
 \seealso{
