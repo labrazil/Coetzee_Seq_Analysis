@@ -1,6 +1,6 @@
 ## FunciSNP Code
 ## Author: Simon G. Coetzee; Houtan Noushmehr, PhD
-## scoetzee@gmail.com; houtana@gmail.com
+## scoetzee@gmail.com; houtan@usp.br
 ## 310.570.2362
 ## All rights reversed.
 
@@ -1898,7 +1898,7 @@ yapply <- function(X,FUN, ...) {
 
 ## FunciSNP Code                                                                 
 ## Author: Simon G. Coetzee; Houtan Noushmehr, PhD                               
-## scoetzee@gmail.com; houtana@gmail.com                                         
+## scoetzee@gmail.com; houtan@usp.br                                         
 ## 310.570.2362                                                                  
 ## All rights reversed.
 

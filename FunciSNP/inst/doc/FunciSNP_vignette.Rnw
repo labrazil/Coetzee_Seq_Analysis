@@ -20,9 +20,9 @@
 \newcommand{\Rclass}[1]{{\textit{#1}}}
 \newcommand{\Rmethod}[1]{{\textit{#1}}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\author{Simon G. Coetzee$^\dagger$, $^\ddagger$\footnote{scoetzee NEAR gmail POINT com},
+\author{Simon G. Coetzee$^\circ$$^\ddagger$\footnote{scoetzee NEAR gmail POINT com},
     Suhn K. Rhie$^\ddagger$, Benjamin P. Berman$^\ddagger$,\\Gerhard A.
-        Coetzee$^\ddagger$ and Houtan Noushmehr$^\dagger$, $^\ddagger$\footnote{houtan NEAR
+        Coetzee$^\ddagger$ and Houtan Noushmehr$^\circ$$^\ddagger$\footnote{houtan NEAR
             usp POINT br}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
@@ -32,9 +32,9 @@ Integrating Functional Non-coding Datasets with Genetic Association Studies to\\
 \maketitle
 %%% Affiliation %%%
 \begin{center}
-$^\dagger$Faculdade de Medicina de Ribeir$\tilde{a}$o Preto\\Departmento de
+$^\circ$Faculdade de Medicina de Ribeir$\tilde{a}$o Preto\\Departmento de
 Gen$\acute{e}$tica\\Universidade de S$\tilde{a}$o Paulo\\Ribeir$\tilde{a}$o Preto,
-S$\tilde{a}$o Paulo, BRASIL\\
+S$\tilde{a}$o Paulo, BRASIL\\ -- \\
 $^\ddagger$Norris Cancer Center\\Keck School of Medicine\\University of Southern
 California\\Los Angeles, CA, USA
 \end{center}
@@ -683,12 +683,7 @@ Questions or comments, please contact Simon G. Coetzee (scoetzee NEAR gmail
 <<results=tex,echo=false>>=                                                      
 toLatex(sessionInfo())                                                           
 @ 
-
-\textcopyleft  2012. All rights reversed (\textbf{respect the work})! This
-document was proudly made using \LaTeX and \textbf{Sweave}.
-
-hn
-
-See our recent paper about FunciSNP, published in Nucleic Acids Research (doi:
-10.1093/nar/GKS542) in 2012.
+Our recent paper describing FunciSNP can be found in the Journal Nucleic Acids
+Research (doi:10.1093/nar/GKS542).\\
+This document was proudly made using \LaTeX and \textbf{Sweave}.
 \end{document}
