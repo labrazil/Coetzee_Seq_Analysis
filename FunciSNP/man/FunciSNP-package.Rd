@@ -10,7 +10,7 @@ The package includes functions to identify and annotate putative functional SNPs
     \tabular{ll}{
 Package: \tab FunciSNP\cr
              Type: \tab Package\cr
-             Version: \tab 0.2.0\cr
+             Version: \tab 0.99.0\cr
              Date: \tab 2012-05-18\cr
              License: \tab GPL-3\cr
              LazyLoad: \tab yes\cr

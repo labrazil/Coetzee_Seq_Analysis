@@ -552,7 +552,7 @@ FunciSNPplot(glioma.anno, tagSummary=TRUE, rsq=0.5)
 
 \begin{figure}[ht!]
 \begin{center}
-\includegraphics{FunciSNP.0.2.0/plots/TFBS_Pol2_U87_R2vsDist_riskSNP.pdf}
+\includegraphics{FunciSNP.0.99.0/plots/TFBS_Pol2_U87_R2vsDist_riskSNP.pdf}
 \caption{\label{fig:TFBS_Pol2_U87_R2vsDist_riskSNP.pdf} Scatter plot 
 showing the relationship between Rsquare and Distance to tagSNP for each 
 getFSNPs}
@@ -580,7 +580,7 @@ most identifiable YAFSNP. This argument is best used in conjunction with a
 
 \begin{figure}[ht!]
 \begin{center}
-\includegraphics{FunciSNP.0.2.0/plots/TFBS_Pol2_U87_R2summary_riskSNP.pdf}
+\includegraphics{FunciSNP.0.99.0/plots/TFBS_Pol2_U87_R2summary_riskSNP.pdf}
 \caption{\label{fig:TFBS_Pol2_U87_R2summary_riskSNP.pdf} Histogram 
 distribution of number of correlated SNPs at each Rsquare value}
 {\footnotesize{}}
