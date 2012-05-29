@@ -1,0 +1,14 @@
+Package: FunciSNP.data
+Type: Package
+Title: Various data sets for use with the FunciSNP package
+Version: 0.99.0
+Date: 2012-05-18
+Author: Simon G. Coetzee <simon@simoncoetzee.com> and Houtan Noushmehr, PhD <houtan@usp.br>
+Maintainer: Simon G. Coetzee <scoetzee@gmail.com>
+biocViews: Infrastructure, DataRepresentation, DataImport, SequenceMatching, Annotation
+Depends: R (>= 2.14.0), FunciSNP
+Description: Data sets needed for FunciSNP to integrate information from GWAS, 1000genomes and chromatin feature, in order to identify functional SNP in coding or non-coding regions. 
+License: GPL-3
+URL: http://coetzeeseq.usc.edu/publication/Coetzee_SG_et_al_2012/
+LazyData: yes
+Packaged: 2012-05-18 10:29:59 UTC

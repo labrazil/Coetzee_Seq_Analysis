@@ -1,0 +1,4 @@
+Package: FunciSNP
+=================
+Version: 0.99.0 [2012-05-29]
+o   Created experimental package to address issues and comments by BioC curator.
