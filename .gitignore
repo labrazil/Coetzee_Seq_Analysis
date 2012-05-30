@@ -1,3 +1,5 @@
+.gitignore
+MISC
 reinstall.funcisnp.sh
 *.tar.gz
 FunciSNP.data.Rcheck
