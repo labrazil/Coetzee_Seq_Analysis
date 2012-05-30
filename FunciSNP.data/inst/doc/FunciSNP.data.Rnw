@@ -1,9 +1,9 @@
 %\VignetteIndexEntry{FunciSNP Vignette}
-%\VignetteDepends{FunciSNP}
+%\VignetteDepends{FunciSNP.data}
 %\VignetteKeywords{SNP}
 %\VignetteKeywords{Functional}
 %\VignetteKeywords{GWAS}
-%\VignettePackage{FunciSNP}
+%\VignettePackage{FunciSNP.data}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[12pt,fullpage]{article}
 \usepackage{amsmath,epsfig,fullpage}

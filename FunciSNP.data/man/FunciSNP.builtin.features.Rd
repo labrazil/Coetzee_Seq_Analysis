@@ -17,7 +17,13 @@ created to be used in the vignette for the \pkg{FunciSNP} pacakge.
 
 }
 \usage{
-	data()
+
+ctcf_only
+encode_dnase1_only
+encode_dnase1_with_ctcf
+encode_faire
+known_gene_promoters
+
 }
 \details{
 	Each data set was extracted from the ENCODE and/or UCSC table browser on
@@ -37,7 +43,6 @@ Association Studies to Identify Candidate Regulatory SNPs., Nucleic Acids
 Research, In press, 2012 (doi:10.1093/nar/gks542).
 }
 \examples{
-data(FunciSNP.builtin.features)
 dim(ctcf_only);
 dim(encode_dnase1_only);
 dim(encode_dnase1_with_ctcf);

@@ -304,14 +304,14 @@ getFSNPs <- function(snp.regions.file, bio.features.loc = NULL,
           if(identical(bio.features.loc, NULL)) {
             bio.features.file <- NULL
             if(built.in.biofeatures) bio.features.file <-
-              list.files(system.file('extdata/builtInFeatures',package='FunciSNP'),
+              list.files(system.file('extdata',package='FunciSNP.data'),
                          pattern="known.bed$", full.names = TRUE)
           } else {
             bio.features.file <- list.files(bio.features.loc, pattern="*.bed$",
                                             full.names = TRUE)
             if(built.in.biofeatures) {
               bio.features.file.known <-
-                list.files(system.file('extdata/builtInFeatures',package='FunciSNP'),
+                list.files(system.file('extdata',package='FunciSNP.data'),
                            pattern="known.bed$", full.names = TRUE)
               bio.features.file <- c(bio.features.file, bio.features.file.known)
             }
@@ -1017,8 +1017,8 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
     ##nearest linc RNAs
     cat("Putative Functional SNPs identified!!\nAnnotation will begin\n~~\n")
     cat("Adding lincRNA")
-    lincRNA <- system.file('extdata/annotation/lincRNA.hg19.rda',package='FunciSNP')
-    load(lincRNA)
+#    lincRNA <- system.file('extdata/annotation/lincRNA.hg19.rda',package='FunciSNP')
+#    load(lincRNA)
     nearest.RNA <-
       annotatePeakInBatch(myPeakList = rd.corr.snp.loc,
                           AnnotationData = lincRNA,
@@ -1040,9 +1040,9 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
       as.factor(summary.snp.list$nearest.lincRNA.coverage)
     cat(" ... done\n")
     ##nearest TSS (conanical gene)
-    cat("Adding gene annotations\n\n")
-    refseqgenes <- system.file('extdata/annotation/refseqgenes.rda', package='FunciSNP')
-    load(refseqgenes)
+    cat("Adding gene annotations")
+#    refseqgenes <- system.file('extdata/annotation/refseqgenes.rda', package='FunciSNP')
+#    load(refseqgenes)
     nearest.TSS <- annotatePeakInBatch(myPeakList = rd.corr.snp.loc,
                                        AnnotationData = refseqgenes,
                                        output="nearestStart")
@@ -1072,7 +1072,7 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
     summary.snp.list$nearest.TSS.distancetoFeature <- NA
     summary.snp.list$nearest.TSS.distancetoFeature <-
       elementMetadata(nearest.TSS)[, "distancetoFeature"]
-    #cat(" ... done\n")
+    cat(" ... done\n")
     ## overlap genomic features (intergenic, utr5, utr3, intron, exon
     gr.corr.snp.loc <-
       gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),]
