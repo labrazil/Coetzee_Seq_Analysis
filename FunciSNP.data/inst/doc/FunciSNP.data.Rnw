@@ -1,0 +1,60 @@
+%\VignetteIndexEntry{FunciSNP Vignette}
+%\VignetteDepends{FunciSNP}
+%\VignetteKeywords{SNP}
+%\VignetteKeywords{Functional}
+%\VignetteKeywords{GWAS}
+%\VignettePackage{FunciSNP}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[12pt,fullpage]{article}
+\usepackage{amsmath,epsfig,fullpage}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage[authoryear,round]{natbib}
+%\usepackage[OT1]{fonitenc}
+\usepackage{Sweave}
+\usepackage{textcomp}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\textit{#1}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\author{Simon G. Coetzee$^\circ$$^\ddagger$\footnote{scoetzee NEAR gmail POINT com},
+    Suhn K. Rhie$^\ddagger$, Benjamin P. Berman$^\ddagger$,\\Gerhard A.
+        Coetzee$^\ddagger$ and Houtan Noushmehr$^\circ$$^\ddagger$\footnote{houtan NEAR
+            usp POINT br}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\title{Using the FunciSNP data package\\`FunciSNP: An R/Bioconductor Tool \\
+Integrating Functional Non-coding Datasets with Genetic Association Studies to\\
+ Identify Candidate Regulatory SNPs'}
+\maketitle
+%%% Affiliation %%%
+\begin{center}
+$^\circ$Faculdade de Medicina de Ribeir$\tilde{a}$o Preto\\Departmento de
+Gen$\acute{e}$tica\\Universidade de S$\tilde{a}$o Paulo\\Ribeir$\tilde{a}$o Preto,
+S$\tilde{a}$o Paulo, BRASIL\\ -- \\
+$^\ddagger$Norris Cancer Center\\Keck School of Medicine\\University of Southern
+California\\Los Angeles, CA, USA
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tableofcontents
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\sloppy
+\SweaveOpts{keep.source=TRUE}
+
+<<echo=FALSE, eval=FALSE>>=
+options(width = 80)
+@
+
+\section{Introduction}
+This is a simple data package, to be used with the \Rpackage{FunciSNP} package. Please refer to the \Rpackage{FunciSNP} vignette for more details.
+
+\end{document}

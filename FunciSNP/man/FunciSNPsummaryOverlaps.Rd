@@ -1,34 +1,22 @@
 \name{FunciSNPsummaryOverlaps}
 \alias{FunciSNPsummaryOverlaps}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-%%  ~~function to do ... ~~
-coming}
+\title{Summarizes FunciSNP results by overlaps}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
-placeholder<<<<<}
+This will summarize the total number of YAFSNPs identified by the number of biofeatures per tagSNP}
 \usage{
 FunciSNPsummaryOverlaps(dat, rsq = 0)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
-  \item{dat}{
-%%     ~~Describe \code{datplaceholder<<<<<} here~~
-placeholder<<<<<}
-  \item{rsq}{
-%%     ~~Describe \code{rsqplaceholder<<<<<} here~~
-placeholder<<<<<}
-placeholder<<<<<}
+  \item{dat}{FunciSNP data object}
+  \item{rsq}{Rsquare value used to filter the summary report}
+
+}
 \details{
-%%  ~~ If necessary, more details than the description above ~~
-placeholder<<<<<}
+}
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 placeholder<<<<<}{Description of 'comp1'placeholder<<<<<}
-%%  \item{comp2 placeholder<<<<<}{Description of 'comp2'placeholder<<<<<}
-%% ...
-placeholder<<<<<}
+}
 \references{
     SG. Coetzee, SK. Rhie, BP. Berman, GA. Coetzee and H. Noushmehr, FunciSNP: An R/Bioconductor Tool Integrating Functional Non-coding Datasets with Genetic Association Studies to Identify Candidate Regulatory SNPs., Nucleic Acids Research, In press, 2012 (doi:10.1093/nar/gks542).
 }
@@ -44,7 +32,8 @@ NA
 \code{\link{getFSNPs}}, \code{\link{FunciSNPplot}}, \code{\link{FunciSNPAnnotateSummary}}, \code{\link{FunciSNPtable}}, \code{\link{FunciSNPbed}}
 }
 \examples{
-##coming soon.
+data(glioma);
+FunciSNPsummaryOveralps(glioma, rsq = 0.2);
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

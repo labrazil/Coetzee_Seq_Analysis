@@ -1,0 +1,4 @@
+29 May 2012: pumadata 0.99.0
+
+The first version of the FunciSNP.data package was created, with a view to becoming part
+of the Bioconductor project.

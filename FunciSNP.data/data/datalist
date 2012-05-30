@@ -1,0 +1,7 @@
+CTCF_only.known.bed
+EncodeDnaseI_only.known.bed
+EncodeDnaseI_withCTCF.known.bed
+EncodeFaire.known.bed
+knownGene.Promoters.known.bed
+lincRNA.hg19.rda
+refseqgenes.rda
