@@ -13,10 +13,6 @@ FunciSNPsummaryOverlaps(dat, rsq = 0)
   \item{rsq}{Rsquare value used to filter the summary report}
 
 }
-\details{
-}
-\value{
-}
 \references{
     SG. Coetzee, SK. Rhie, BP. Berman, GA. Coetzee and H. Noushmehr, FunciSNP: An R/Bioconductor Tool Integrating Functional Non-coding Datasets with Genetic Association Studies to Identify Candidate Regulatory SNPs., Nucleic Acids Research, In press, 2012 (doi:10.1093/nar/gks542).
 }
@@ -33,7 +29,7 @@ NA
 }
 \examples{
 data(glioma);
-FunciSNPsummaryOveralps(glioma, rsq = 0.2);
+FunciSNPsummaryOverlaps(glioma, rsq = 0.2);
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
