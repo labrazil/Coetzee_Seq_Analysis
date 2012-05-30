@@ -239,29 +239,14 @@ as.matrix(list.files(paste(glioma.bio, "/builtInFeatures", sep=""),
             pattern='.bed$'));
 nrsf.filename <- list.files(glioma.bio, pattern='.bed$')[1];
 pol2.filename <- list.files(glioma.bio, pattern='.bed$')[2];
-ctcf.filename <- list.files(paste(glioma.bio, "/builtInFeatures", sep=""),
-        pattern='.bed$')[1];
-dnase1.filename <- list.files(paste(glioma.bio, "/builtInFeatures", sep=""),
-        pattern='.bed$')[2];
-dnase1ctcf.filename <- list.files(paste(glioma.bio, "/builtInFeatures", sep=""),
-        pattern='.bed$')[3];
-faire.filename <- list.files(paste(glioma.bio, "/builtInFeatures", sep=""),
-        pattern='.bed$')[4];
-prom.filename <- list.files(paste(glioma.bio, "/builtInFeatures", sep=""),
-        pattern='.bed$')[5];
+Ctcf <- ctcf_only
+Dnase1 <- encode_dnase1_only
+Dnase1Ctcf <- encode_dnase1_with_ctcf
+Faire <- encode_faire
+Promoters <- known_gene_promoters
 Nrsf <- read.delim(file=paste(glioma.bio, nrsf.filename,sep="/"), sep="\t",
 header=FALSE);
 PolII <- read.delim(file=paste(glioma.bio, pol2.filename,sep="/"), sep="\t",
-header=FALSE);
-Ctcf <- read.delim(file=paste(glioma.bio, "builtInFeatures", ctcf.filename,sep="/"), sep="\t",
-header=FALSE);
-Dnase1 <- read.delim(file=paste(glioma.bio, "builtInFeatures", dnase1.filename,sep="/"), sep="\t",
-header=FALSE);
-Dnase1Ctcf <- read.delim(file=paste(glioma.bio, "builtInFeatures", dnase1ctcf.filename,sep="/"), sep="\t",
-header=FALSE);
-Faire <- read.delim(file=paste(glioma.bio, "builtInFeatures", faire.filename,sep="/"), sep="\t",
-header=FALSE);
-Promoters <- read.delim(file=paste(glioma.bio, "builtInFeatures", prom.filename,sep="/"), sep="\t",
 header=FALSE);
 dim(Nrsf);
 dim(PolII);

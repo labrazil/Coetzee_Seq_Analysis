@@ -1069,7 +1069,6 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
     summary.snp.list$nearest.TSS.coverage <- elementMetadata(nearest.TSS)[, "insideFeature"]
     summary.snp.list$nearest.TSS.coverage <-
       as.factor(summary.snp.list$nearest.TSS.coverage)
-xxx <<- summary.snp.list
     summary.snp.list$nearest.TSS.distancetoFeature <- NA
     summary.snp.list$nearest.TSS.distancetoFeature <-
       elementMetadata(nearest.TSS)[, "distancetoFeature"]
