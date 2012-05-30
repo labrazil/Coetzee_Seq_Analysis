@@ -669,6 +669,6 @@ Questions or comments, please contact Simon G. Coetzee (scoetzee NEAR gmail
 toLatex(sessionInfo())                                                           
 @ 
 Our recent paper describing FunciSNP can be found in the Journal Nucleic Acids
-Research (doi:10.1093/nar/GKS542).\\
+Research (doi:10.1093/nar/gks542).\\
 This document was proudly made using \LaTeX and \textbf{Sweave}.
 \end{document}
