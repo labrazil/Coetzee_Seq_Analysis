@@ -275,7 +275,7 @@ getFSNPs <- function(snp.regions.file, bio.features.loc = NULL,
             if(built.in.biofeatures) {
               (length(list.files(bio.features.loc,
                                  pattern="*.bed$",
-                                 full.names=FALSE))) + 4
+                                 full.names=FALSE))) + 5
             } else {
               length(list.files(bio.features.loc,
                                 pattern="*.bed$",
@@ -286,8 +286,8 @@ getFSNPs <- function(snp.regions.file, bio.features.loc = NULL,
                                            full.names=FALSE)),
 
             if(built.in.biofeatures) {
-            builtins <- gsub(".bed$", ", ", list.files(system.file('extdata/builtInFeatures',
-                                                                   package='FunciSNP'),
+            builtins <- gsub(".bed$", ", ", list.files(system.file('extdata',
+                                                                   package='FunciSNP.data'),
                                               pattern="*.bed$",
                                               full.names=FALSE))
             builtins[length(builtins)] <- sub(", $", "", builtins[length(builtins)])

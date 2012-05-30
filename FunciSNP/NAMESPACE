@@ -12,6 +12,7 @@ import(ggplot2)
 importFrom(VariantAnnotation, locateVariants, AllVariants)
 importFrom(reshape, melt.data.frame, melt.array, melt.list, melt)
 import(scales)
+import(FunciSNP.data)
 
 exportMethods(
     "alt.allele<-", "alt.allele",

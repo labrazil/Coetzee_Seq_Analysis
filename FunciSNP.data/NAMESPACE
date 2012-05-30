@@ -1,1 +1,2 @@
+importFrom(rtracklayer, import.bed)
 exportPattern(".")
