@@ -7,9 +7,13 @@
 \alias{alt.allele,CorrelatedSNPs-method}
 \alias{chr<-,CorrelatedSNPs-method}
 \alias{chr,CorrelatedSNPs-method}
+\alias{overlapping.features<-}
 \alias{overlapping.features<-,CorrelatedSNPs-method}
+\alias{overlapping.features}
 \alias{overlapping.features,CorrelatedSNPs-method}
+\alias{pop.genotype<-}
 \alias{pop.genotype<-,CorrelatedSNPs-method}
+\alias{pop.genotype}
 \alias{pop.genotype,CorrelatedSNPs-method}
 \alias{position<-,CorrelatedSNPs-method}
 \alias{position,CorrelatedSNPs-method}
@@ -17,8 +21,6 @@
 \alias{ref.allele,CorrelatedSNPs-method}
 \alias{snpid<-,CorrelatedSNPs-method}
 \alias{snpid,CorrelatedSNPs-method}
-\alias{overlapping.features.snps-methods}
-\alias{pop.genotype-methods}
 
 \title{Class \code{"CorrelatedSNPs"}}
 \description{
@@ -26,6 +28,33 @@ Class for CorrelatedSNPs
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("CorrelatedSNPs", ...)}.
+}
+\usage{
+\S4method{alt.allele}{CorrelatedSNPs}(x)
+\S4method{alt.allele}{CorrelatedSNPs}(x) <- value
+\S4method{chr}{CorrelatedSNPs}(x)
+\S4method{chr}{CorrelatedSNPs}(x) <- value
+\S4method{overlapping.features}{CorrelatedSNPs}(x)
+\S4method{overlapping.features}{CorrelatedSNPs}(x) <- value
+\S4method{pop.genotype}{CorrelatedSNPs}(x, population)
+\S4method{pop.genotype}{CorrelatedSNPs}(x) <- value
+\S4method{position}{CorrelatedSNPs}(x)
+\S4method{position}{CorrelatedSNPs}(x) <- value
+\S4method{ref.allele}{CorrelatedSNPs}(x)
+\S4method{ref.allele}{CorrelatedSNPs}(x) <- value
+\S4method{snpid}{CorrelatedSNPs}(x)
+\S4method{snpid}{CorrelatedSNPs}(x) <- value
+}
+\arguments{
+  \item{x}{
+    The CorrelatedSNPs object from/on which to get/set snp information.
+  }
+  \item{value}{
+    Examine the section "Slots" for the values taken by each method.
+  }
+  \item{population}{
+    Population for which to set/get genotype information, either "AFR", "AMR", "ASN", "EUR" or "ALL".
+  }
 }
 \section{Slots}{
   \describe{

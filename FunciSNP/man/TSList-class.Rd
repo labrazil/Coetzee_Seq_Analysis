@@ -22,11 +22,6 @@ Objects can be created by calls of the form \code{new("TSList", ...)}.
     \item{\code{metadata}:}{Object of class \code{"list"} ~~ }
   }
 }
-\section{Extends}{
-%Class \code{"\linkS4class{List}"}, directly.
-%Class \code{"\linkS4class{Vector}"}, by class "List", distance 2.
-%Class \code{"\linkS4class{Annotated}"}, by class "List", distance 3.
-}
 \section{Methods}{
   \describe{
     \item{show}{\code{signature(object = "TSList")}: ... }

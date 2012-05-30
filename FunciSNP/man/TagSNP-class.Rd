@@ -4,53 +4,101 @@
 
 \alias{TagSNP-class}
 \alias{class:TagSNP}
-\alias{alt.allele-methods}
+\alias{alt.allele<-}
 \alias{alt.allele<-,TagSNP-method}
+\alias{alt.allele}
 \alias{alt.allele,TagSNP-method}
-\alias{chr-methods}
 \alias{chr<-,TagSNP-method}
+\alias{chr<-}
 \alias{chr,TagSNP-method}
-\alias{correlated.snps-methods}
+\alias{chr}
 \alias{correlated.snps<-,TagSNP-method}
+\alias{correlated.snps<-}
 \alias{correlated.snps,TagSNP-method}
-\alias{genotype-methods}
+\alias{correlated.snps}
 \alias{genotype<-,TagSNP-method}
+\alias{genotype<-}
 \alias{genotype,TagSNP-method}
-\alias{population-methods}
+\alias{genotype}
 \alias{population<-,TagSNP-method}
+\alias{population<-}
 \alias{population,TagSNP-method}
-\alias{position-methods}
+\alias{population}
 \alias{position<-,TagSNP-method}
+\alias{position<-}
 \alias{position,TagSNP-method}
-\alias{ref.allele-methods}
+\alias{position}
 \alias{ref.allele<-,TagSNP-method}
+\alias{ref.allele<-}
 \alias{ref.allele,TagSNP-method}
+\alias{ref.allele}
 \alias{show,TagSNP-method}
-\alias{snpid-methods}
 \alias{snpid<-,TagSNP-method}
+\alias{snpid<-}
 \alias{snpid,TagSNP-method}
-\alias{yafsnp.rsq-methods}
+\alias{snpid}
 \alias{yafsnp.rsq<-,TagSNP-method}
+\alias{yafsnp.rsq<-}
 \alias{yafsnp.rsq,TagSNP-method}
-\alias{yafsnp.dprime-methods}
+\alias{yafsnp.rsq}
 \alias{yafsnp.dprime<-,TagSNP-method}
+\alias{yafsnp.dprime<-}
 \alias{yafsnp.dprime,TagSNP-method}
-\alias{yafsnp.pvalue-methods}
+\alias{yafsnp.dprime}
 \alias{yafsnp.pvalue<-,TagSNP-method}
+\alias{yafsnp.pvalue<-}
 \alias{yafsnp.pvalue,TagSNP-method}
-\alias{AFR.overlapping.snps.geno-methods}
+\alias{yafsnp.pvalue}
 \alias{AFR.overlapping.snps.geno,TagSNP-method}
-\alias{AMR.overlapping.snps.geno-methods}
+\alias{AFR.overlapping.snps.geno}
 \alias{AMR.overlapping.snps.geno,TagSNP-method}
-\alias{ASN.overlapping.snps.geno-methods}
+\alias{AMR.overlapping.snps.geno}
 \alias{ASN.overlapping.snps.geno,TagSNP-method}
-\alias{EUR.overlapping.snps.geno-methods}
+\alias{ASN.overlapping.snps.geno}
 \alias{EUR.overlapping.snps.geno,TagSNP-method}
+\alias{EUR.overlapping.snps.geno}
 
 
 \title{Class \code{"TagSNP"}}
 \description{
-hello%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+  In the code snippets below, \code{x} is a \code{TagSNP} object.
+  for the usage of \code{alt.allele}, \code{chr}, \code{position}, \code{ref.allele}, and \code{snpid} for the object \code{CorrelatedSNPs}, see \code{?CorrelatedSNPs-class}
+}
+\usage{
+\S4method{alt.allele}{TagSNP}(x)
+\S4method{alt.allele}{TagSNP}(x) <- value
+\S4method{chr}{TagSNP}(x)
+\S4method{chr}{TagSNP}(x) <- value
+\S4method{correlated.snps}{TagSNP}(x)
+\S4method{correlated.snps}{TagSNP}(x) <- value
+\S4method{genotype}{TagSNP}(x)
+\S4method{genotype}{TagSNP}(x) <- value
+\S4method{population}{TagSNP}(x)
+\S4method{population}{TagSNP}(x) <- value
+\S4method{position}{TagSNP}(x)
+\S4method{position}{TagSNP}(x) <- value
+\S4method{ref.allele}{TagSNP}(x)
+\S4method{ref.allele}{TagSNP}(x) <- value
+\S4method{snpid}{TagSNP}(x)
+\S4method{snpid}{TagSNP}(x) <- value
+\S4method{yafsnp.rsq}{TagSNP}(x)
+\S4method{yafsnp.rsq}{TagSNP}(x) <- value
+\S4method{yafsnp.dprime}{TagSNP}(x)
+\S4method{yafsnp.dprime}{TagSNP}(x) <- value
+\S4method{yafsnp.pvalue}{TagSNP}(x)
+\S4method{yafsnp.pvalue}{TagSNP}(x) <- value
+\S4method{AFR.overlapping.snps.geno}{TagSNP}(x)
+\S4method{AMR.overlapping.snps.geno}{TagSNP}(x)
+\S4method{ASN.overlapping.snps.geno}{TagSNP}(x)
+\S4method{EUR.overlapping.snps.geno}{TagSNP}(x)
+}
+\arguments{
+  \item{x}{
+    The TagSNP object from/on which to get/set snp information.
+  }
+  \item{value}{
+    Examine the section "Slots" for the values taken by each method.
+  }
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("TagSNP", ...)}.

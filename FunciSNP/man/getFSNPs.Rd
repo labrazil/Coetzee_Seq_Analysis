@@ -13,7 +13,7 @@ getFSNPs(snp.regions.file, bio.features.loc = NULL,
                      built.in.biofeatures = TRUE,
                      par.threads=detectCores()/2,
                      verbose = par.threads < 2, method.p = "BH",
-                     reduce.by.features = TRUE, search.window = 200000)
+                     search.window = 200000)
 
 }
 \arguments{
@@ -37,9 +37,6 @@ getFSNPs(snp.regions.file, bio.features.loc = NULL,
 	\item{method.p}{
 		method: p-value correction (or adjustment) method (see ?p.adjust). Default set at "BH" (Benjamini & Hochberg (1995)).
 	
-	}
-	\item{reduce.by.features}{
-		logical: If set to TRUE, then only correlated SNPs overlapping biological features will be filtered and used to calculate Rsquared, Dprime, distance and p-value.  In addition, only these correlated SNPs will be used to generate plots and summary analysis.  If set to FALSE, all correlated SNPs regardless of overlap with biological features will have an associated Rsquare, Dprime, distance and p-value associated with the tag-SNP as defined by the 'search.window'.	
 	}
 	\item{search.window}{
 		an integer: genomic window size used to extract all available correlated SNPs from the 1000 genomes db. The window size is centered around the tagSNP position as defined in the regions.file.

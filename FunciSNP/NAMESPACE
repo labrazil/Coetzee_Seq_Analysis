@@ -14,33 +14,38 @@ importFrom(reshape, melt.data.frame, melt.array, melt.list, melt)
 import(scales)
 
 exportMethods(
-#    "alt.allele<-", "alt.allele",
-#    "chr<-",
-#    "chr",
-#    "correlated.snps<-",
-#    "correlated.snps",
-#    "yafsnp.dprime<-",
-#    "yafsnp.dprime",
-#    "genotype<-",
-#    "genotype",
-#    "pop.genotype",
-#    "pop.genotype<-",
-#    "overlapping.features<-",
-#    "overlapping.features",
-#    "population<-",
-#    "population",
-#    "position<-",
-#    "position",
-#    "ref.allele<-",
-#    "ref.allele",
-#    "yafsnp.rsq<-",
-#    "yafsnp.rsq",
-#    "yafsnp.pvalue",
-#    "yafsnp.pvalue<-",
-#    "snpid<-",
-#    "snpid"
+    "alt.allele<-", "alt.allele",
+    "chr<-", "chr",
+    "correlated.snps<-", "correlated.snps",
+    "yafsnp.dprime<-", "yafsnp.dprime",
+    "genotype<-", "genotype",
+    "pop.genotype", "pop.genotype<-",
+    "overlapping.features<-", "overlapping.features",
+    "population<-", "population",
+    "position<-", "position",
+    "ref.allele<-", "ref.allele",
+    "yafsnp.rsq<-", "yafsnp.rsq",
+    "yafsnp.pvalue", "yafsnp.pvalue<-",
+    "snpid<-", "snpid"
 )
 
 exportClasses(CorrelatedSNPs, TagSNP, TSList)
 
-export(getFSNPs, FunciSNPAnnotateSummary, FunciSNPplot, FunciSNPbed, FunciSNPtable, FunciSNPsummaryOverlaps, FunciSNPidsFromSummary)
+export(
+#functions
+    getFSNPs, FunciSNPAnnotateSummary, FunciSNPplot, FunciSNPbed, FunciSNPtable, FunciSNPsummaryOverlaps, FunciSNPidsFromSummary,
+#methods
+    "alt.allele<-", "alt.allele",
+    "chr<-", "chr",
+    "correlated.snps<-", "correlated.snps",
+    "yafsnp.dprime<-", "yafsnp.dprime",
+    "genotype<-", "genotype",
+    "pop.genotype", "pop.genotype<-",
+    "overlapping.features<-", "overlapping.features",
+    "population<-", "population",
+    "position<-", "position",
+    "ref.allele<-", "ref.allele",
+    "yafsnp.rsq<-", "yafsnp.rsq",
+    "yafsnp.pvalue", "yafsnp.pvalue<-",
+    "snpid<-", "snpid"
+    )
