@@ -5,7 +5,7 @@
 Will output a summary report from FunciSNP at specified Rsquare cut-offs.
 }
 \description{
-Using a specified Rsquare value (0-1) to subset the data, a table is generated which summarizes the total number of Func-y-SNPs, associated tagSNPs, and number of overlapping biofeatures.
+Using a specified Rsquare value (0-1) to subset the data, a table is generated which summarizes the total number of YAFSNPs, associated tagSNPs, and number of overlapping biofeatures.
 }
 \usage{
 FunciSNPtable(dat, rsq, geneSum = FALSE)
@@ -19,11 +19,11 @@ FunciSNPtable(dat, rsq, geneSum = FALSE)
             an interger (0-1): \code{rsq} is the Rsquared cutoff used to subset.
 }
   \item{geneSum}{
-            logical: \code{geneSum} is set to FALSE. Setting to TRUE will output a list of Gene names which are nearest to the Func-y-SNP.
+            logical: \code{geneSum} is set to FALSE. Setting to TRUE will output a list of Gene names which are nearest to the YAFSNP.
 }
 }
 \details{
-Using a specified Rsquare value (0-1) to subset the data, a table is generated which summarizes the total number of Func-y-SNPs, associated tagSNPs, and number of overlapping biofeatures. This will provide user a first look at the total number of available Func-y-SNP at a particular Rsquare cutoff.  If geneSum is set to TRUE, a list of gene names is reported instead.
+Using a specified Rsquare value (0-1) to subset the data, a table is generated which summarizes the total number of YAFSNPs, associated tagSNPs, and number of overlapping biofeatures. This will provide user a first look at the total number of available YAFSNP at a particular Rsquare cutoff.  If geneSum is set to TRUE, a list of gene names is reported instead.
 }
 \value{
 Standard output which summarizes FunciSNP results.

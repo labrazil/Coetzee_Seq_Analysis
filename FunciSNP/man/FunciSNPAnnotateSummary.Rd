@@ -2,10 +2,10 @@
 \alias{FunciSNPAnnotateSummary}
 
 \title{
-Genomic Annotation of Func-y-SNPs.
+Genomic Annotation of YAFSNPs.
 }
 \description{
-This will annotate all identified Func-y-SNP for it's distance to the nearest known TSS, whether it overlapps a known exon, intron, 5'UTR, 3'UTR, promoter, lincRNA or in gene desert (intergentic) regions.
+This will annotate all identified YAFSNP for it's distance to the nearest known TSS, whether it overlapps a known exon, intron, 5'UTR, 3'UTR, promoter, lincRNA or in gene desert (intergentic) regions.
 }
 \usage{
 FunciSNPAnnotateSummary(snp.list)
@@ -17,7 +17,7 @@ FunciSNPAnnotateSummary(snp.list)
 }
 }
 \details{
-All known genomic features (exon, intron, 5'UTR, 3'UTR, promoter, lincRNA or in gene desert (intergentic)) are used to annotate the newly identified Func-y-SNP. Information described in this data.frame is used for all summary plots, table, and bed file generations.
+All known genomic features (exon, intron, 5'UTR, 3'UTR, promoter, lincRNA or in gene desert (intergentic)) are used to annotate the newly identified YAFSNP. Information described in this data.frame is used for all summary plots, table, and bed file generations.
 }
 \value{
 data.frame with rows for each correlated SNP.

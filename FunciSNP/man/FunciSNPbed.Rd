@@ -2,10 +2,10 @@
 \alias{FunciSNPbed}
 
 \title{
-Creates a BED file to view Func-y-SNPs in your favorite genome browser
+Creates a BED file to view YAFSNPs in your favorite genome browser
 }
 \description{
-FunciSNPbed will output a BED file to a specified folder. The BED file is in standard UCSC Genome Browser format (\url{http://genome.ucsc.edu/FAQ/FAQformat}). Each tagSNP is colored black and each Func-y-SNP is colored red.
+FunciSNPbed will output a BED file to a specified folder. The BED file is in standard UCSC Genome Browser format (\url{http://genome.ucsc.edu/FAQ/FAQformat}). Each tagSNP is colored black and each YAFSNP is colored red.
 
 }
 \usage{
@@ -27,7 +27,7 @@ FunciSNPbed(dat, rsq, path = getwd(), filename = NULL)
 }
 }
 \details{
-FunciSNPbed outputs a unique BED file which can be used to view in any genomic browser compatible with BED formats. To learn more about BED formats, see UCSC Genome Browser FAQ (\url{http://genome.ucsc.edu/FAQ/FAQformat}). Each tagSNP which is in LD to a corresponding Func-y-SNP overlapping at least one biofeature is colored black, while the Func-y-SNP is colored red. The initial position is provided by the first tagSNP and the first linked Func-y-SNP. We recommend using UCSC genome browser to view your BED files. This is useful so you can view all public and private tracks in relation to FunciSNP results.
+FunciSNPbed outputs a unique BED file which can be used to view in any genomic browser compatible with BED formats. To learn more about BED formats, see UCSC Genome Browser FAQ (\url{http://genome.ucsc.edu/FAQ/FAQformat}). Each tagSNP which is in LD to a corresponding YAFSNP overlapping at least one biofeature is colored black, while the YAFSNP is colored red. The initial position is provided by the first tagSNP and the first linked YAFSNP. We recommend using UCSC genome browser to view your BED files. This is useful so you can view all public and private tracks in relation to FunciSNP results.
 }
 \value{
 BED file is outputed as a tab-deliminated file in the specified 'path' folder. See example below.

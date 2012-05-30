@@ -2,7 +2,7 @@
 \alias{FunciSNPplot}
 
 \title{
-FunciSNPplot to visualize Func-y-SNP summary.
+FunciSNPplot to visualize YAFSNP summary.
 }
 \description{
 FunciSNPplot is a function developed to plot various types of plots to summarize and assist end-user in making informed discoveries of FunciSNP results. Plots can be stored in a folder for future reference.
@@ -25,7 +25,7 @@ FunciSNPplot(dat, rsq = 0, split = FALSE, splitbysnp = FALSE, tagSummary = FALSE
 		logical: \code{splitbysnp} is similar to \code{split} but instead split the distribution by tagSNP.
 }
   \item{tagSummary}{
-		logical: \code{tagSummary} Will output two plots per biofeature. The first one is a scatter plot showing the relationship between Rsquare and Distance to tagSNP for each Func-y-SNP. The second plot is a histogram distribution of number of correlated SNPs at each Rsquare value. Each set of plot is further divided by tagSNP. Best if used with \code{rsq} value.
+		logical: \code{tagSummary} Will output two plots per biofeature. The first one is a scatter plot showing the relationship between Rsquare and Distance to tagSNP for each YAFSNP. The second plot is a histogram distribution of number of correlated SNPs at each Rsquare value. Each set of plot is further divided by tagSNP. Best if used with \code{rsq} value.
 }
   \item{heatmap}{
 		logical: \code{heatmap} correlation heatmap to visualize the number of correlated SNPs at each tagSNP overlapping each biological feature. Most informative if used with a \code{rsq} value.

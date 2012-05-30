@@ -45,7 +45,7 @@ getFSNPs(snp.regions.file, bio.features.loc = NULL,
 \details{
 This is the main funtion of FunciSNP. It will identify correlated SNPs which are in linkage disequilibrium (LD) to a known disease associated tagSNP. It will also determine if the correlated SNP in LD to the tagSNP overlaps a genomic biological feature. Correlated SNPs are directly imported from the current public release of the 1000 genomes database. 1000 genomes ftp servers available for the 1000 genomes public data: 1) National Center for Biotechnology Information (NCBI) \url{ftp://ftp-trace.ncbi.nih.gov/1000genomes/}; 2) European Bioinformatics Institute (EBI) \url{ftp://ftp.1000genomes.ebi.ac.uk/vol1/}.
 
-Correlated SNPs in LD to a tagSNP and overlapping genomic biological features are known as putative functional SNPs (also defined as 'Func-y-SNP' elsewhere in the package.).  
+Correlated SNPs in LD to a tagSNP and overlapping genomic biological features are known as putative functional SNPs (also defined as 'YAFSNP' elsewhere in the package.).  
 
 %Using the location of a known tag-Single Nucleotide Polymorphisms (SNP) associated with a particular phenotype (e.g. disease, trait), FunciSNP will extract all available SNP from the 1000 Genomes Project within a selected window size (in bp, centered on each tag SNP). In addition, using the location of known biological features (e.g. statistically significant peaks identified by ChIP-seq, Chromatin ImmunoPrecipitation followed by genome-wide sequencing), correlated SNPs overlapping each peak is identified and further analyzed. The correlated SNPs overlapping a biological peak are then used to calculate the Rsquared, Dprime, p-value (as determined by fisher's exact test) and distance to the associated tag-SNP.
 }
