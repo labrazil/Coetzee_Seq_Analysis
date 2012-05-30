@@ -3,3 +3,5 @@ reinstall.funcisnp.sh
 FunciSNP.data.Rcheck
 FunciSNP.Rcheck
 reinstall.funcisnp.alpha.sh
+.RData
+.Rhistory
