@@ -668,7 +668,7 @@ Questions or comments, please contact Simon G. Coetzee (scoetzee NEAR gmail
 <<results=tex,echo=false>>=                                                      
 toLatex(sessionInfo())                                                           
 @ 
-Our recent paper describing FunciSNP can be found in the Journal Nucleic Acids
+Our recent paper describing FunciSNP and FunciSNP.data can be found in the Journal Nucleic Acids
 Research (doi:10.1093/nar/gks542).\\
 This document was proudly made using \LaTeX and \textbf{Sweave}.
 \end{document}

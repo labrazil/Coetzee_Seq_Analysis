@@ -54,7 +54,30 @@ California\\Los Angeles, CA, USA
 options(width = 80)
 @
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 This is a simple data package, to be used with the \Rpackage{FunciSNP} package. Please refer to the \Rpackage{FunciSNP} vignette for more details.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Contact information}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Questions or comments, please contact Simon G. Coetzee (scoetzee NEAR gmail 
+ POINT com) or Houtan Noushmehr, PhD (houtan NEAR usp POINT br).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{sessionInfo}                                                            
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<<results=tex,echo=false>>=                                                      
+toLatex(sessionInfo())                                                           
+@ 
+Our recent paper describing FunciSNP and FunciSNP.data can be found in the Journal Nucleic Acids
+Research (doi:10.1093/nar/gks542).\\
+This document was proudly made using \LaTeX and \textbf{Sweave}.
 \end{document}
