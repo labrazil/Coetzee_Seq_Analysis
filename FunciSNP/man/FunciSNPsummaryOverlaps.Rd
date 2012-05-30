@@ -29,7 +29,8 @@ NA
 }
 \examples{
 data(glioma);
-FunciSNPsummaryOverlaps(glioma, rsq = 0.2);
+glioma.anno <- FunciSNPAnnotateSummary(glioma);
+FunciSNPsummaryOverlaps(glioma.anno, rsq = 0.2);
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
