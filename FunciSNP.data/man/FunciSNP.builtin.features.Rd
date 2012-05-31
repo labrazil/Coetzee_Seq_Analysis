@@ -1,4 +1,5 @@
 \name{FunciSNP.builtin.features}
+\alias{FunciSNP.data}
 \alias{FunciSNP.builtin.features}
 \alias{ctcf_only}
 \alias{encode_dnase1_only}

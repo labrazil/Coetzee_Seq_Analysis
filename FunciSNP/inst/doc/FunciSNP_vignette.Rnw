@@ -128,16 +128,13 @@ characterized cancer cell lines such as MCF7 (breast cancer), HCT116 (colon
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Currently, there are two options to obtain a copy of \Rpackage{FunciSNP}: 
+To obtain a copy of \Rpackage{FunciSNP}, you will need to install BiocInstaller
+via Bioconductor: 
 
-\begin{itemize}
-\item Download current source code from Coetzee's
-lab\footnote{\url{http://coetzeeseq.usc.edu/publication/Coetzee_SG_et_al_2012/}}
-\item Download and install from
-Bioconductor\footnote{\url{http://www.bioconductor.org}}
-\end{itemize}
+library(BiocInstaller);
+biocLite("FunciSNP");
 
-If you download the source code from either method above, you can install
+If you download the source code from the bioconductor page which lists FunciSNP, you can install
 \Rpackage{FunciSNP} by following the instructions described in R CRAN. By
 installing \Rpackage{FunciSNP} from source, the package assumes you have all the
 required libraries installed.

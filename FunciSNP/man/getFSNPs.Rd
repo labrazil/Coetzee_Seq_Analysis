@@ -1,7 +1,7 @@
 \name{getFSNPs}
 \alias{getFSNPs}
 \alias{glioma}
-\alias{lincRNA.hg19}
+\alias{FunciSNP.data}
 \title{
 Functional Identification of SNPs with Phenotype by Coincidence with Chromatin Biofeatures	
 }

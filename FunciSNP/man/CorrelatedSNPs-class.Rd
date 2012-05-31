@@ -1,6 +1,7 @@
 \name{CorrelatedSNPs-class}
 \Rdversion{1.1}
 \docType{class}
+\alias{CorrelatedSNPs}
 \alias{CorrelatedSNPs-class}
 \alias{class:CorrelatedSNPs}
 \alias{alt.allele<-,CorrelatedSNPs-method}

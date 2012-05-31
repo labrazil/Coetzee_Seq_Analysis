@@ -1,6 +1,7 @@
 \name{TSList-class}
 \Rdversion{1.1}
 \docType{class}
+\alias{TSList}
 \alias{TSList-class}
 \alias{show,TSList-method}
 \alias{summary,TSList-method}

@@ -2,6 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 
+\alias{TagSNP}
 \alias{TagSNP-class}
 \alias{class:TagSNP}
 \alias{alt.allele<-}
