@@ -58,17 +58,23 @@ ReadRegionsFile <- function(regions.file, search.window=200000) {
 ServerCheck <- function(primary.server, verbose=TRUE) {
   ncbi <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/"
   ebi <- "ftp://ftp.1000genomes.ebi.ac.uk/vol1/"
+  apollo <- "ftp://asclepius.hsc.usc.edu/"
   test.file <- "ftp/release/20110521/phase1_integrated_calls.20101123.ALL.panel"
   if(primary.server == "ebi"){
     primary.server <- ebi
-    secondary.server <- ncbi
+    secondary.server <- apollo
     primary.server.name <- "ebi"
-    secondary.server.name <- "ncbi"
-  } else {
+    secondary.server.name <- "apollo"
+  } else if (primary.server == "ncbi") {
     primary.server <- ncbi
     secondary.server <- ebi
     primary.server.name <- "ncbi"
     secondary.server.name <- "ebi"
+  } else if (primary.server == "apollo") {
+    primary.server <- apollo
+    secondary.server <- ncbi
+    primary.server.name <- "apollo"
+    secondary.server.name <- "ncbi"
   }
   if(verbose) {
     message("trying ", primary.server.name, " as 1000 genomes server\n")
@@ -242,7 +248,7 @@ getFSNPs <- function(snp.regions.file, bio.features.loc = NULL,
                      built.in.biofeatures = TRUE,
                      par.threads=detectCores()/2,
                      verbose = par.threads < 2, method.p = "BH",
-                     search.window = 200000 ) {
+                     search.window = 200000, server="ncbi" ) {
   message("\n",
           "| | _  |  _  _ __  _    _|_ _ \n",
           "|^|(/_ | (_ (_)|||(/_    |_(_)\n",
@@ -295,7 +301,7 @@ getFSNPs <- function(snp.regions.file, bio.features.loc = NULL,
             }
             )
   }
-  primary.server <- sample(c("ncbi", "ebi"), size=1)
+  primary.server <- server
   snp.region <- ReadRegionsFile(snp.regions.file, search.window)
   message("          Number of TagSNPs Interrogated:   ", nrow(snp.region),
           " representing ", length(unique(snp.region$snp.name)), " unique tagSNPs")
@@ -343,7 +349,7 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
   tag.id <- snpid(snp.list[[tag.snp.name]])
   window.size <- prettyNum(window.size, big.mark=",", scientific = FALSE)
   if(verbose) message("loading ", tag.id, " window size: ", window.size, " bp")
-  primary.server <- sample(c("ncbi", "ebi"), size=1, prob=c(1,2))
+  primary.server <- primary.server
   onek.genome.server <- ServerCheck(primary.server, verbose = FALSE)
   variants.reference <-
     paste(onek.genome.server,
@@ -407,7 +413,9 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
     wait.time <- sample(primes, size=1)
     if(primary.server == "ncbi") {
       primary.server <- "ebi"
-    } else {
+    } else if (primary.server == "ebi") {
+      primary.server <- "apollo"
+    } else if (primary.server == "apollo") {
       primary.server <- "ncbi"
     }
     onek.genome.server <- ServerCheck(primary.server, verbose = FALSE)
@@ -490,7 +498,9 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
       wait.time <- sample(primes, size=1)
       if(primary.server == "ncbi") {
         primary.server <- "ebi"
-      } else {
+      } else if (primary.server == "ebi") {
+        primary.server <- "apollo"
+      } else if (primary.server == "apollo") {
         primary.server <- "ncbi"
       }
       onek.genome.server <- ServerCheck(primary.server, verbose = FALSE)
