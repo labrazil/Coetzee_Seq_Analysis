@@ -1367,8 +1367,9 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
   save.width <- save.width * 25.4
   save.height <- save.height * 25.4
 #  setThemeWhite(size = text.size)
-  fsnptheme <- theme_set(theme_bw(base_size = text.size))
-  fsnptheme <- theme_update(opts(axis.text.x = theme_text(angle = 90, size = text.size * 0.8, hjust=1)))
+#  fsnptheme <- theme_set(theme_bw(base_size = text.size))
+  fsnptheme <- theme_bw(base_size = text.size) + theme(axis.text.x = element_text(angle = 90, size = text.size * 0.8, hjust=1))
+  theme_set(fsnptheme)
 #  require(scales)
   if(sum(c(split,tagSummary,heatmap,genomicSum)) == 0){
     split = TRUE;
@@ -1383,13 +1384,12 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
       p <- ggplot(dat, aes(x = R.squared)) +
       geom_histogram(binwidth = 0.05) + 
       geom_vline(xintercept = 0.5, linetype = 2) + 
+      ggtitle("Distribution of 1kgSNPs for each tagSNP\nat R\u00B2 values") +
       scale_x_continuous(
                          "1kgSNPs R\u00B2 to tagSNP (0-1)") + 
          scale_y_continuous(
                             "Total # of 1kgSNPs associated with tagSNP") + 
-         opts(legend.position = "none", 
-         #  legend.key.size = units(.7, "cm"),
-              title = "Distribution of 1kgSNPs for each tagSNP\nat R\u00B2 values") + 
+         theme(legend.position = "none") + 
          facet_wrap(chromosome ~ tag.snp.id)
          if(save){
            ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP.",
@@ -1497,10 +1497,10 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
       scale_x_continuous("R\u00B2 Values (0-1)", limits=c(0,1)) + 
       scale_y_continuous("Total # of 1kgSNPs associated with riskSNP") + 
       scale_fill_manual(values = c("Yes" = "Red", "No" = "Black")) +
-      opts(legend.position = "none",
-           title = paste("Distribution of 1kgSNPs R\u00B2",
+      ggtitle(paste("Distribution of 1kgSNPs R\u00B2",
                          "\ndivided by tagSNP & Overlapping biofeature:\n ", 
-                         bio[i], sep="")) +
+                         bio[i], sep="")) + 
+      theme(legend.position = "none") +
          facet_wrap(chromosome ~ tag.snp.id)
 
          ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP.",
@@ -1524,10 +1524,10 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
          scale_colour_manual(values = 
                              c("Yes" = "Red", "No" = "Black")) +
          scale_size_manual(values = c("Yes" = 2, "No" = 1)) +
-         opts(legend.position = "none",
-              title = paste("Distance between tagSNP ",
+         ggtitle(paste("Distance between tagSNP ",
                             "and 1kgSNP\nOverlapping biofeature: ", 
-                            bio[i], sep="")) + 
+                            bio[i], sep="")) +
+         theme(legend.position = "none") +
          facet_wrap(chromosome ~ tag.snp.id)
          ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP.",
                            package.version("FunciSNP"), "/plots/",
@@ -1573,11 +1573,11 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
                           "# of potentially correlated SNPs") +
       geom_text(size = text.size * 0.2) +
       labs(x = "", y = "") +
-      opts(axis.ticks = theme_blank(),
+      ggtitle(paste("tagSNP vs Biofeature\n1kgSNP with R\u00B2 >= ", rsq, sep="")) +
+      theme(axis.ticks = element_blank(),
 #           axis.text.x = theme_text(angle=90, hjust = 1),
 #           axis.text.y = theme_text(hjust=1),
-           panel.background = theme_rect(fill="white", colour="white"),
-           title=paste("tagSNP vs Biofeature\n1kgSNP with R\u00B2 >= ", rsq, sep=""),
+           panel.background = element_rect(fill="white", colour="white"),
            legend.position = c(0,1),
            legend.justification=c(0,0))
       #    heatmap.2(
@@ -1616,11 +1616,11 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
                           guide=guide_colorbar(direction = "horizontal", barheight = .5, ""),
                           "# of potentially correlated SNPs") +
       labs(x = "", y = "") +
-      opts(axis.ticks = theme_blank(),
+      ggtitle(paste("tagSNP vs Biofeature\n1kgSNP with R\u00B2 >= ", rsq, sep="")) +
+      theme(axis.ticks = element_blank(),
 #           axis.text.x = theme_text(angle=90, hjust = 1),
 #           axis.text.y = theme_text(hjust=1),
-           panel.background = theme_rect(fill="white", colour="white"),
-           title=paste("tagSNP vs Biofeature\n1kgSNP with R\u00B2 >= ", rsq, sep=""),
+           panel.background = element_rect(fill="white", colour="white"),
            legend.position = c(0,1),
            legend.justification=c(0,0))
       #    heatmap.2(
@@ -1686,8 +1686,8 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
 
       qd <- ggplot(dat.m, aes(variable, fill=factor(value))) + 
       geom_bar() +
-      opts(title = "1kgSNPs distribution across Genomic Features") +
-      opts(axis.text.x = theme_text(angle = 90, size = text.size*.8, hjust = 1)) +
+      ggtitle("1kgSNPs distribution across Genomic Features") +
+      theme(axis.text.x = element_text(angle = 90, size = text.size*.8, hjust = 1)) +
       guides(fill = guide_legend(keywidth = .5, keyheight = 1)) +
       scale_x_discrete("") +
       scale_y_continuous("Total count of 1kgSNPs") +
@@ -1730,8 +1730,8 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
                          " at R\u00B2 cut-off of", rsq, sep=" ")
       qp<-ggplot(dat.m, aes(variable, fill=factor(value))) + 
       geom_bar(position="fill") +
-      opts(axis.text.x = theme_text(angle = 90, size = text.size*.8, hjust = 1),
-           title = plot.title) +
+      ggtitle(plot.title) +
+      theme(axis.text.x = element_text(angle = 90, size = text.size*.8, hjust = 1)) +
       guides(fill = guide_legend(keywidth = .5, keyheight = 1)) +
       scale_x_discrete("") +
       scale_fill_manual(values = c("1.YES" = "Red", "2.NO" = "Black"),"Overlap") +
@@ -1762,8 +1762,8 @@ vlookup <- function(val, df, col){
 
 setThemeWhite <- function(size = 10) {
 theme.white <- theme_set(theme_grey(base_size = size))
-theme.white <- theme_update(plot.background = theme_blank(),
-                            panel.background = theme_rect(colour="black", size=.5))
+theme.white <- theme_update(plot.background = element_blank(),
+                            panel.background = element_rect(colour="black", size=.5))
 theme_set(theme.white)
 }
 
