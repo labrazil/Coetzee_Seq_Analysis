@@ -5,6 +5,7 @@
 ## All rights reversed.
 
 ReadRegionsFile <- function(regions.file, search.window=200000) {
+    stop("Sorry, funcisnp not ready atm")
   # Reads a tab seperated regions file in the form
   # chr:loc snp_name    ethnicity
   # 8:130685457 rs4295627 EUR
@@ -421,7 +422,7 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
                         nalt <- sapply(nums, function(x) 2-sum(x=="0"))  # this is correct only for diallelic locus; note in doc
                         if (length(hasmiss)>0) nalt[hasmiss] <- -1
                         nalt <- nalt+1
-                        if (meta[3] == "." ) meta[3] <- paste("chr", chr, ":", loc, sep="")
+                        if (meta[3] == "." ) meta[3] <- paste("chr", chr, ":", meta[2], sep="")
                         x <- list(chr=meta[1], id=meta[3], loc=meta[2], ref=meta[4], alt=meta[5],
                                 calls=as.raw(nalt))
                         return(x)
