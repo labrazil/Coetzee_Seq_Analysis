@@ -687,10 +687,13 @@ FilteredLDTesting <- function(tag.snp.complete, verbose = TRUE) {
     corr.snp.depth <- (dim(eval(parse(text=(paste(population(tag.snp.complete),
                                                   ".overlapping.snps.geno(tag.snp.complete)",
                                                   sep="")))))[2]) - 1
+    corr.snp.depth <<- corr.snp.depth
+    test <<- EUR.overlapping.snps.geno(tag.snp.complete)
     yafsnp.rsq(tag.snp.complete) <-
       ld(eval(parse(text=(paste(population(tag.snp.complete),
                                 ".overlapping.snps.geno(tag.snp.complete)",
-                                sep="")))), stats="R.squared",
+                                sep="")))),
+         stats="R.squared",
          depth=corr.snp.depth)
     yafsnp.dprime(tag.snp.complete) <-
       ld(eval(parse(text=(paste(population(tag.snp.complete),
@@ -955,193 +958,202 @@ FunciSNPAnnotateSummary <- function(snp.list){
 }
 
 AnnotateSummary <- function(snp.list, verbose=TRUE) {
-  if(identical(snp.list, NULL)) {
-    return(NULL)
-  } else{
+        if(identical(snp.list, NULL)) {
+                return(NULL)
+        } else{
 
-    summary.snp.list <- lapply(snp.list, SNPSummary)
-    summary.snp.list <- summary.snp.list[!sapply(summary.snp.list, is.null)]
-    summary.snp.list <- IRanges::unlist(GRangesList(summary.snp.list))
+                summary.snp.list <- lapply(snp.list, SNPSummary)
+                summary.snp.list <- summary.snp.list[!sapply(summary.snp.list, is.null)]
+                summary.snp.list <- IRanges::unlist(GRangesList(summary.snp.list))
 
-    names(summary.snp.list) <-
-      paste(names(summary.snp.list),
-            elementMetadata(summary.snp.list)[, "feature"],
-            sep=".")
-    ### Taking only unique entries from summary.snp.list
-    ### There can be duplicate row names when bio features have overlapping
-    ### peaks especially when there are replicates
+                names(summary.snp.list) <-
+                        paste(names(summary.snp.list),
+                              elementMetadata(summary.snp.list)[, "feature"],
+                              sep=".")
+                ### Taking only unique entries from summary.snp.list
+                ### There can be duplicate row names when bio features have overlapping
+                ### peaks especially when there are replicates
 
-    summary.snp.list <- summary.snp.list[
-                                         which(!(duplicated(names(summary.snp.list)))), ]
+                summary.snp.list <- summary.snp.list[
+                                                     which(!(duplicated(names(summary.snp.list)))), ]
 
-    summary.snp.list <- as.data.frame(summary.snp.list)
-    summary.snp.list$width <- NULL
-    summary.snp.list$strand <- NULL
+                summary.snp.list <- as.data.frame(summary.snp.list)
+                summary.snp.list$width <- NULL
+                summary.snp.list$strand <- NULL
 
-    colnames(summary.snp.list) <- c("chromosome",
-                                    "bio.feature.start",
-                                    "bio.feature.end",
-                                    "bio.feature",
-                                    "corr.snp.id",
-                                    "corr.snp.position",
-                                    "tag.snp.id",
-                                    "tag.snp.position",
-                                    "D.prime",
-                                    "R.squared",
-                                    "p.value",
-                                    "distance.from.tag",
-                                    "population.count",
-                                    "population")
+                colnames(summary.snp.list) <- c("chromosome",
+                                                "bio.feature.start",
+                                                "bio.feature.end",
+                                                "bio.feature",
+                                                "corr.snp.id",
+                                                "corr.snp.position",
+                                                "tag.snp.id",
+                                                "tag.snp.position",
+                                                "D.prime",
+                                                "R.squared",
+                                                "p.value",
+                                                "distance.from.tag",
+                                                "population.count",
+                                                "population")
 
-    gr.corr.snp.loc <- GRanges(seqnames=summary.snp.list$chromosome,
-                               ranges=IRanges(start=summary.snp.list$corr.snp.position,
-                                              width=1),
-                               snpid=rownames(summary.snp.list)
-                               )
-    x <- strsplit(as.character(summary.snp.list$chromosome), split="chr")
+                gr.corr.snp.loc <- GRanges(seqnames=summary.snp.list$chromosome,
+                                           ranges=IRanges(start=summary.snp.list$corr.snp.position,
+                                                          width=1),
+                                           snpid=rownames(summary.snp.list)
+                                           )
+                x <- strsplit(as.character(summary.snp.list$chromosome), split="chr")
 
-    summary.snp.list$chromosome <- sapply(x, "[", 2)
+                summary.snp.list$chromosome <- sapply(x, "[", 2)
 
-    rd.corr.snp.loc <- RangedData(space=summary.snp.list$chromosome,
-                                  ranges=IRanges(start=summary.snp.list$corr.snp.position,
-                                                 width=1),
-                                  snpid=rownames(summary.snp.list)
-                                  )
-    rownames(rd.corr.snp.loc) <- rd.corr.snp.loc$snpid
-    rd.corr.snp.loc$snpid <- NULL
+                rd.corr.snp.loc <- RangedData(space=summary.snp.list$chromosome,
+                                              ranges=IRanges(start=summary.snp.list$corr.snp.position,
+                                                             width=1),
+                                              snpid=rownames(summary.snp.list)
+                                              )
+                rownames(rd.corr.snp.loc) <- rd.corr.snp.loc$snpid
+                rd.corr.snp.loc$snpid <- NULL
 
-    data(TSS.human.GRCh37, package='ChIPpeakAnno')
-#    data(refseqgenes, package='FunciSNP')
-#    data(lincRNA.hg19, package='FunciSNP')
+                data(TSS.human.GRCh37, package='ChIPpeakAnno')
+                #    data(refseqgenes, package='FunciSNP')
+                #    data(lincRNA.hg19, package='FunciSNP')
 
-    ##nearest linc RNAs
-    cat("Putative Functional SNPs identified!!\nAnnotation will begin\n~~\n")
-    cat("Adding lincRNA")
-#    lincRNA <- system.file('extdata/annotation/lincRNA.hg19.rda',package='FunciSNP')
-#    load(lincRNA)
-    nearest.RNA <-
-      annotatePeakInBatch(myPeakList = rd.corr.snp.loc,
-                          AnnotationData = lincRNA,
-                          output="nearestStart")
-    summary.snp.list$nearest.lincRNA.ID <- NA
-    summary.snp.list[nearest.RNA$peak, ]$nearest.lincRNA.ID <-
-      nearest.RNA$feature
-    summary.snp.list$nearest.lincRNA.ID <-
-      as.factor(summary.snp.list$nearest.lincRNA.ID)
+                ##nearest linc RNAs
+                cat("Putative Functional SNPs identified!!\nAnnotation will begin\n~~\n")
+                cat("Adding lincRNA")
+                #    lincRNA <- system.file('extdata/annotation/lincRNA.hg19.rda',package='FunciSNP')
+                #    load(lincRNA)
+                nearest.RNA <-
+                        annotatePeakInBatch(myPeakList = rd.corr.snp.loc,
+                                            AnnotationData = lincRNA,
+                                            output="nearestStart")
+                summary.snp.list$nearest.lincRNA.ID <- NA
+                summary.snp.list[nearest.RNA$peak, ]$nearest.lincRNA.ID <-
+                        nearest.RNA$feature
+                summary.snp.list$nearest.lincRNA.ID <-
+                        as.factor(summary.snp.list$nearest.lincRNA.ID)
 
-    summary.snp.list$nearest.lincRNA.distancetoFeature <- NA
-    summary.snp.list[nearest.RNA$peak, ]$nearest.lincRNA.distancetoFeature <-
-      nearest.RNA$distancetoFeature
+                summary.snp.list$nearest.lincRNA.distancetoFeature <- NA
+                summary.snp.list[nearest.RNA$peak, ]$nearest.lincRNA.distancetoFeature <-
+                        nearest.RNA$distancetoFeature
 
-    summary.snp.list$nearest.lincRNA.coverage <- NA
-    summary.snp.list[nearest.RNA$peak, ]$nearest.lincRNA.coverage <-
-      nearest.RNA$insideFeature
-    summary.snp.list$nearest.lincRNA.coverage <-
-      as.factor(summary.snp.list$nearest.lincRNA.coverage)
-    cat(" ... done\n")
-    ##nearest TSS (conanical gene)
-    cat("Adding gene annotations")
-#    refseqgenes <- system.file('extdata/annotation/refseqgenes.rda', package='FunciSNP')
-#    load(refseqgenes)
-    nearest.TSS <- annotatePeakInBatch(myPeakList = rd.corr.snp.loc,
-                                       AnnotationData = refseqgenes,
-                                       output="nearestStart")
-    nearest.TSS <- as(nearest.TSS, "GRanges")
-    nearest.TSS <- nearest.TSS[order(elementMetadata(nearest.TSS)[, "peak"]), ]
-    summary.snp.list <- summary.snp.list[order(row.names(summary.snp.list)), ]
+                summary.snp.list$nearest.lincRNA.coverage <- NA
+                summary.snp.list[nearest.RNA$peak, ]$nearest.lincRNA.coverage <-
+                        nearest.RNA$insideFeature
+                summary.snp.list$nearest.lincRNA.coverage <-
+                        as.factor(summary.snp.list$nearest.lincRNA.coverage)
+                cat(" ... done\n")
+                ##nearest TSS (conanical gene)
+                cat("Adding gene annotations")
+                #    refseqgenes <- system.file('extdata/annotation/refseqgenes.rda', package='FunciSNP')
+                #    load(refseqgenes)
+                
 
-    summary.snp.list$nearest.TSS.refseq <- NA
-    summary.snp.list$nearest.TSS.refseq <- elementMetadata(nearest.TSS)[, "feature"]
-    summary.snp.list$nearest.TSS.refseq <-
-      as.factor(summary.snp.list$nearest.TSS.refseq)
-    
-    summary.snp.list$nearest.TSS.GeneSymbol <- NA
-    summary.snp.list$nearest.TSS.GeneSymbol <- refseqgenes$genesymbol[match(summary.snp.list$nearest.TSS.refseq, refseqgenes$names)]
-    summary.snp.list$nearest.TSS.GeneSymbol <-
-      as.factor(summary.snp.list$nearest.TSS.GeneSymbol)
-    
-    summary.snp.list$nearest.TSS.ensembl <- NA
-    summary.snp.list$nearest.TSS.ensembl <- refseqgenes$ensembl[match(summary.snp.list$nearest.TSS.refseq, refseqgenes$names)]
-    summary.snp.list$nearest.TSS.ensembl <-
-      as.factor(summary.snp.list$nearest.TSS.ensembl)
+                nearest.TSS <- annotatePeakInBatch(myPeakList = rd.corr.snp.loc,
+                                                   AnnotationData = refseqgenes,
+                                                   output="nearestStart")
+                nearest.TSS <- as(nearest.TSS, "GRanges")
+                nearest.TSS <- nearest.TSS[order(elementMetadata(nearest.TSS)[, "peak"]), ]
+                summary.snp.list <- summary.snp.list[order(row.names(summary.snp.list)), ]
 
-    summary.snp.list$nearest.TSS.coverage <- NA
-    summary.snp.list$nearest.TSS.coverage <- elementMetadata(nearest.TSS)[, "insideFeature"]
-    summary.snp.list$nearest.TSS.coverage <-
-      as.factor(summary.snp.list$nearest.TSS.coverage)
-    summary.snp.list$nearest.TSS.distancetoFeature <- NA
-    summary.snp.list$nearest.TSS.distancetoFeature <-
-      elementMetadata(nearest.TSS)[, "distancetoFeature"]
-    cat(" ... done\n")
-    ## overlap genomic features (intergenic, utr5, utr3, intron, exon
-    gr.corr.snp.loc <-
-      gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),]
-    cat("\nAdding genomic annotations")
-    gf.overlaps <- locateVariants(gr.corr.snp.loc,
-                                  TxDb.Hsapiens.UCSC.hg19.knownGene,
-                                  AllVariants())
-    #cat(" ... done")
-    #genomic.feature <- as.character(gf.overlaps$Location)
-    #queryRow <-(gf.overlaps$queryHits)
-    genomic.feature <- genomic.feature <- as.character(elementMetadata(gf.overlaps)[, "location" ])
-    queryRow <- elementMetadata(gf.overlaps)[, "queryID"]
-    ddd <-(cbind(queryRow, genomic.feature)) ## used for identifying intergenic
+                summary.snp.list$nearest.TSS.refseq <- NA
+                summary.snp.list$nearest.TSS.refseq <- elementMetadata(nearest.TSS)[, "feature"]
+                summary.snp.list$nearest.TSS.refseq <-
+                        as.factor(summary.snp.list$nearest.TSS.refseq)
 
-    ## create set columns with null values ('NO')
-    summary.snp.list$Promoter <- "NO"
-    summary.snp.list$utr5 <- "NO"
-    summary.snp.list$Exon <- "NO"
-    summary.snp.list$Intron <- "NO"
-    summary.snp.list$utr3 <- "NO"
-    summary.snp.list$Intergenic <- "NO"
+                summary.snp.list$nearest.TSS.GeneSymbol <- NA
+                summary.snp.list$nearest.TSS.GeneSymbol <- refseqgenes$genesymbol[match(summary.snp.list$nearest.TSS.refseq, refseqgenes$names)]
+                summary.snp.list$nearest.TSS.GeneSymbol <-
+                        as.factor(summary.snp.list$nearest.TSS.GeneSymbol)
 
-    ## promoter defined
-    promoter.state <- subset(summary.snp.list, (nearest.TSS.distancetoFeature <
-                                                100) & (nearest.TSS.distancetoFeature > -1000))
-    if(dim(promoter.state)[1] > 0) summary.snp.list[rownames(promoter.state),
-                                                    ]$Promoter <- "YES"
-    summary.snp.list$Promoter <- as.factor(summary.snp.list$Promoter)
-    ## utr5 defined
-    utr5.rows <- as.numeric(subset(ddd, genomic.feature=="fiveUTR")[,1])
-    if(isTRUE(length(unique(utr5.rows)) > 0)){
-      summary.snp.list[utr5.rows,"utr5"] <- "YES"; 
-      summary.snp.list$utr5 <- as.factor(summary.snp.list$utr5)
-    }
-    ## exon defined
-    exon.rows <- as.numeric(subset(ddd, genomic.feature=="coding")[,1])
-    if(isTRUE(length(unique(exon.rows)) > 0)){
-      summary.snp.list[exon.rows,"Exon"] <- "YES";
-      summary.snp.list$Exon <- as.factor(summary.snp.list$Exon)
-    }
-    ## intron defined
-    intron.rows <- as.numeric(subset(ddd, genomic.feature=="intron")[,1])
-    if(isTRUE(length(unique(intron.rows)) > 0)){
-      summary.snp.list[unique(intron.rows),"Intron"] <- "YES";
-      summary.snp.list$Intron <- as.factor(summary.snp.list$Intron)
-    }
-    ## utr3 defined
-    utr3.rows <- as.numeric(subset(ddd, genomic.feature=="threeUTR")[,1])
-    if(isTRUE(length(unique(utr3.rows)) > 0)){
-      summary.snp.list[utr3.rows,"utr3"] <- "YES";
-      summary.snp.list$utr3 <- as.factor(summary.snp.list$utr3)
-    }
+                summary.snp.list$nearest.TSS.ensembl <- NA
+                summary.snp.list$nearest.TSS.ensembl <- refseqgenes$ensembl[match(summary.snp.list$nearest.TSS.refseq, refseqgenes$names)]
+                summary.snp.list$nearest.TSS.ensembl <-
+                        as.factor(summary.snp.list$nearest.TSS.ensembl)
 
-    ## intergenic defined
-    intergenic.rows <- as.numeric(subset(ddd, genomic.feature=="intergenic")[,1])
-    if(isTRUE(length(unique(intergenic.rows)) > 0)){
-      summary.snp.list[intergenic.rows,"Intergenic"] <- "YES";
-      summary.snp.list[which(summary.snp.list$Promoter == "YES"), "Intergenic"] <- "NO"
-      summary.snp.list$Intergenic <- as.factor(summary.snp.list$Intergenic)
-    }
-    promoter.intergenic.rows <- dimnames(subset(summary.snp.list,
-                                                Intergenic=="YES" & Promoter=="YES"))[[1]]
-    if(isTRUE(length(promoter.intergenic.rows) > 0)){
-      summary.snp.list[promoter.intergenic.rows,"Intergenic"] <- "NO";
-    }
-    cat(" ... done\n\nNow do the Funci Dance!\n");
-    return(summary.snp.list)
+                summary.snp.list$nearest.TSS.coverage <- NA
+                summary.snp.list$nearest.TSS.coverage <- elementMetadata(nearest.TSS)[, "insideFeature"]
+                summary.snp.list$nearest.TSS.coverage <-
+                        as.factor(summary.snp.list$nearest.TSS.coverage)
+                summary.snp.list$nearest.TSS.distancetoFeature <- NA
+                summary.snp.list$nearest.TSS.distancetoFeature <-
+                        elementMetadata(nearest.TSS)[, "distancetoFeature"]
+                cat(" ... done\n")
+                ## overlap genomic features (intergenic, utr5, utr3, intron, exon
+                txdb <-  TxDb.Hsapiens.UCSC.hg19.knownGene::TxDb.Hsapiens.UCSC.hg19.knownGene
+                #gr.corr.snp.loc <<-
+                #        gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),]
+                cat("\nAdding genomic annotations")
+                gf.overlaps <- locateVariants(query=gr.corr.snp.loc,
+                                              subject=TxDb.Hsapiens.UCSC.hg19.knownGene:::TxDb.Hsapiens.UCSC.hg19.knownGene,
+                                              region=AllVariants(),
+                                              ignore.strand=TRUE)
+                #cat(" ... done")
+                #genomic.feature <- as.character(gf.overlaps$Location)
+                #queryRow <-(gf.overlaps$queryHits)
+                genomic.feature <- as.character(elementMetadata(gf.overlaps)[, "LOCATION" ])
+                queryRow <- elementMetadata(gf.overlaps)[, "QUERYID"]
+                ddd <-(cbind(queryRow, genomic.feature)) ## used for identifying intergenic
 
-  }
+                ## create set columns with null values ('NO')
+                summary.snp.list$Promoter <- "NO"
+                summary.snp.list$utr5 <- "NO"
+                summary.snp.list$Exon <- "NO"
+                summary.snp.list$Intron <- "NO"
+                summary.snp.list$utr3 <- "NO"
+                summary.snp.list$Intergenic <- "NO"
+
+                ## promoter defined
+                #    promoter.state <- subset(summary.snp.list, (nearest.TSS.distancetoFeature <
+                #                                                100) & (nearest.TSS.distancetoFeature > -1000))
+                #    if(dim(promoter.state)[1] > 0) summary.snp.list[rownames(promoter.state),
+                #
+                # Promoter 2000 bp down 200 bp up
+                Promoter.rows <- as.numeric(subset(ddd, genomic.feature=="promoter")[,1])
+                if(isTRUE(length(unique(Promoter.rows)) > 0)){
+                        summary.snp.list[Promoter.rows,"utr5"] <- "YES"; 
+                        summary.snp.list$Promoter <- as.factor(summary.snp.list$Promoter)
+                }
+                ## utr5 defined
+                utr5.rows <- as.numeric(subset(ddd, genomic.feature=="fiveUTR")[,1])
+                if(isTRUE(length(unique(utr5.rows)) > 0)){
+                        summary.snp.list[utr5.rows,"utr5"] <- "YES"; 
+                        summary.snp.list$utr5 <- as.factor(summary.snp.list$utr5)
+                }
+                ## exon defined
+                exon.rows <- as.numeric(subset(ddd, genomic.feature=="coding")[,1])
+                if(isTRUE(length(unique(exon.rows)) > 0)){
+                        summary.snp.list[exon.rows,"Exon"] <- "YES";
+                        summary.snp.list$Exon <- as.factor(summary.snp.list$Exon)
+                }
+                ## intron defined
+                intron.rows <- as.numeric(subset(ddd, genomic.feature=="intron")[,1])
+                if(isTRUE(length(unique(intron.rows)) > 0)){
+                        summary.snp.list[unique(intron.rows),"Intron"] <- "YES";
+                        summary.snp.list$Intron <- as.factor(summary.snp.list$Intron)
+                }
+                ## utr3 defined
+                utr3.rows <- as.numeric(subset(ddd, genomic.feature=="threeUTR")[,1])
+                if(isTRUE(length(unique(utr3.rows)) > 0)){
+                        summary.snp.list[utr3.rows,"utr3"] <- "YES";
+                        summary.snp.list$utr3 <- as.factor(summary.snp.list$utr3)
+                }
+
+                ## intergenic defined
+                intergenic.rows <- as.numeric(subset(ddd, genomic.feature=="intergenic")[,1])
+                if(isTRUE(length(unique(intergenic.rows)) > 0)){
+                        summary.snp.list[intergenic.rows,"Intergenic"] <- "YES";
+                        summary.snp.list[which(summary.snp.list$Promoter == "YES"), "Intergenic"] <- "NO"
+                        summary.snp.list$Intergenic <- as.factor(summary.snp.list$Intergenic)
+                }
+                promoter.intergenic.rows <- dimnames(subset(summary.snp.list,
+                                                            Intergenic=="YES" & Promoter=="YES"))[[1]]
+                if(isTRUE(length(promoter.intergenic.rows) > 0)){
+                        summary.snp.list[promoter.intergenic.rows,"Intergenic"] <- "NO";
+                }
+                cat(" ... done\n\nNow do the Funci Dance!\n");
+                return(summary.snp.list)
+
+        }
 }
 
 bedColors <- function(dat, rsq=0, filename, filepath) {
