@@ -56,29 +56,36 @@ ReadRegionsFile <- function(regions.file, search.window=200000) {
 }
 
 ServerCheck <- function(primary.server, verbose=TRUE) {
-  ncbi <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/"
-  ebi <- "ftp://ftp.1000genomes.ebi.ac.uk/vol1/"
-  test.file <- "ftp/release/20110521/phase1_integrated_calls.20101123.ALL.panel"
-  if(primary.server == "ebi"){
-    primary.server <- ebi
-    secondary.server <- ncbi
-    primary.server.name <- "ebi"
-    secondary.server.name <- "ncbi"
-  } else {
-    primary.server <- ncbi
-    secondary.server <- ebi
-    primary.server.name <- "ncbi"
-    secondary.server.name <- "ebi"
-  }
-  if(verbose) {
-    message("trying ", primary.server.name, " as 1000 genomes server\n")
-  }
-  server.up <- try(url(paste(primary.server, test.file, sep=""), open = "rt"),
-                   silent=T)
-  server.error <- inherits(server.up, "try-error")
-  if(server.error) {
-    if(verbose) warning(primary.server.name, " failed \ntrying ",
-                        secondary.server.name,
+    ncbi <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/"
+    ebi <- "ftp://ftp.1000genomes.ebi.ac.uk/vol1/"
+    apollo <- "ftp://asclepius.hsc.usc.edu/1000genomes/"
+    test.file <- "ftp/release/20110521/phase1_integrated_calls.20101123.ALL.panel"
+    if(primary.server == "ebi"){
+        primary.server <- ebi
+        secondary.server <- ncbi
+        primary.server.name <- "ebi"
+        secondary.server.name <- "ncbi"
+    } else if(primary.server == "ncbi"){
+        primary.server <- ncbi
+        secondary.server <- ebi
+        primary.server.name <- "ncbi"
+        secondary.server.name <- "apollo"
+    } else if(primary.server == "apollo"){
+        primary.server <- apollo
+        secondary.server <- ebi
+        primary.server.name <- "ncbi"
+        secondary.server.name <- "ebi"
+    }
+
+    if(verbose) {
+        message("trying ", primary.server.name, " as 1000 genomes server\n")
+    }
+    server.up <- try(url(paste(primary.server, test.file, sep=""), open = "rt"),
+                     silent=T)
+    server.error <- inherits(server.up, "try-error")
+    if(server.error) {
+        if(verbose) warning(primary.server.name, " failed \ntrying ",
+                            secondary.server.name,
                         " as 1000 genomes server")
     rm(server.error)
     server.up <- try(url(paste(secondary.server, test.file, sep=""),
@@ -206,7 +213,7 @@ getFSNPs <- function(snp.regions.file, bio.features.loc = NULL,
                      built.in.biofeatures = TRUE,
                      par.threads=detectCores()/2,
                      verbose = par.threads < 2, method.p = "BH",
-                     search.window = 200000 ) {
+                     search.window = 200000, primary.server="ebi" ) {
   message("\n",
           "| | _  |  _  _ __  _    _|_ _ \n",
           "|^|(/_ | (_ (_)|||(/_    |_(_)\n",
@@ -259,7 +266,6 @@ getFSNPs <- function(snp.regions.file, bio.features.loc = NULL,
             }
             )
   }
-  primary.server <- sample(c("ncbi", "ebi"), size=1)
   snp.region <- ReadRegionsFile(snp.regions.file, search.window)
   message("          Number of TagSNPs Interrogated:   ", nrow(snp.region),
           " representing ", length(unique(snp.region$snp.name)), " unique tagSNPs")
@@ -308,7 +314,6 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
   tag.id <- snpid(snp.list[[tag.snp.name]])
   window.size <- prettyNum(window.size, big.mark=",", scientific = FALSE)
   if(verbose) message("loading ", tag.id, " window size: ", window.size, " bp")
-  primary.server <- sample(c("ncbi", "ebi"), size=1, prob=c(1,2))
   onek.genome.server <- ServerCheck(primary.server, verbose = FALSE)
   variants.reference <-
     paste(onek.genome.server,
@@ -371,16 +376,18 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
     chunk <- try(scanTabix(kgeno, param=param), silent = TRUE)
     wait.time <- sample(primes, size=1)
     if(primary.server == "ncbi") {
-      primary.server <- "ebi"
-    } else {
-      primary.server <- "ncbi"
+        primary.server <- "ebi"
+    } else if(primary.server == "ebi"){
+        primary.server <- "apollo"
+    } else if(primary.server == "apollo"){
+        primary.server <- "ncbi"
     }
     onek.genome.server <- ServerCheck(primary.server, verbose = FALSE)
     variants.reference <-
-      paste(onek.genome.server,
-            "/ftp/release/20110521/ALL.chr",
-            snp.region$snp.chromosome[snp.region$snp.name == tag.id][1],
-            ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
+        paste(onek.genome.server,
+              "/ftp/release/20110521/ALL.chr",
+              snp.region$snp.chromosome[snp.region$snp.name == tag.id][1],
+              ".phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz", sep="")
     kgeno <- TabixFile(variants.reference)
   }
 
@@ -388,9 +395,9 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
   ##### modified code from GGtools vcf2sm and parsVCFrec to work with remote tabix files
   if (Rsamtools:::isOpen(kgeno)) Rsamtools:::close.TabixFile(kgeno)
   Rsamtools:::open.TabixFile(kgeno)
-#  tabix.header <-
-#    try(strsplit(headerTabix(kgeno)$header, split="\t"),
-#        silent = TRUE)
+  #  tabix.header <-
+  #    try(strsplit(headerTabix(kgeno)$header, split="\t"),
+  #        silent = TRUE)
 #  tabix.header <- tabix.header[[length(tabix.header)]]
 #  while(inherits(tabix.header, "try-error")){
 #    Sys.sleep(wait.time)
