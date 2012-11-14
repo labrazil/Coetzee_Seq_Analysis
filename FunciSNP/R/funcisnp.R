@@ -1245,8 +1245,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
     split = TRUE;
   }
   if(save){
-    try(dir.create(path=paste(pathplot, "/FunciSNP.",
-                              package.version("FunciSNP"), "/plots",
+    try(dir.create(path=paste(pathplot, "/FunciSNP", "/plots",
                               sep=""), showWarnings = FALSE, recursive=TRUE), silent=TRUE) 
   }
   if(split){
@@ -1262,8 +1261,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
          theme(legend.position = "none") + 
          facet_wrap(chromosome ~ tag.snp.id)
          if(save){
-           ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP.",
-                             package.version("FunciSNP"),
+           ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP",
                              "/plots/Distribution_for_each_tagSNP.pdf",
                              sep=""),
                   plot=p,
@@ -1289,8 +1287,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
              hh.c["0.9",2], hh.c["1",2])
       k[is.na(k)] <- 0;
       if(save){
-        pdf(file=paste(pathplot, "/FunciSNP.",
-                       package.version("FunciSNP"),
+        pdf(file=paste(pathplot, "/FunciSNP",
                        "/plots/Distribution_for_all_tagSNP.pdf",
                        sep=""), width=10, height=10)
       }
@@ -1333,8 +1330,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
     }
   }
   if(tagSummary){
-    try(dir.create(path=paste(pathplot, "/FunciSNP.",
-                              package.version("FunciSNP"), "/plots",
+    try(dir.create(path=paste(pathplot, "/FunciSNP", "/plots",
                               sep=""), showWarnings = FALSE, recursive=TRUE), silent=TRUE)
 
     ### ggplot2 plots#####
@@ -1373,8 +1369,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
       theme(legend.position = "none") +
          facet_wrap(chromosome ~ tag.snp.id)
 
-         ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP.",
-                           package.version("FunciSNP"), "/plots/",
+         ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP", "/plots/",
                            bio[i],"_R2summary_riskSNP.pdf",sep=""),
                 plot=p,
              dpi = 600,
@@ -1399,8 +1394,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
                             bio[i], sep="")) +
          theme(legend.position = "none") +
          facet_wrap(chromosome ~ tag.snp.id)
-         ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP.",
-                           package.version("FunciSNP"), "/plots/",
+         ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP", "/plots/",
                            bio[i],"_R2vsDist_riskSNP.pdf",sep=""),
                 plot=p,
              dpi = 600,
@@ -1410,7 +1404,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
          cat("Finished plotting ", i, "/",length(bio), "\n")
     }
     message("\n\nSee ",
-            paste("FunciSNP.",package.version("FunciSNP"),"/plots/",sep=""),
+            paste("FunciSNP","/plots/",sep=""),
             " folder in ", pathplot, " for all plots.\n\n")
   }
   if(heatmap){
@@ -1522,8 +1516,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
     }
     ### reverse matrix/dataframe x <- x[nrow(x):1, ]
     if(save) {
-      ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP.",
-                            package.version("FunciSNP"),
+      ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP",
                             "/plots/FunciSNP_heatmap.eps", sep=""),
              plot=plot.here, bg = "white",
              dpi = 600,
@@ -1564,8 +1557,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
       scale_fill_manual(values = c("1.YES" = "Red", "2.NO" = "Black"),
                         "Overlap")
       if(save){
-        ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP.",
-                          package.version("FunciSNP"),
+        ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP",
                           "/plots/Genomic_Summary_All.pdf", sep=""),
                plot=qd,
                dpi = 600,
@@ -1608,8 +1600,7 @@ FunciSNPplot <- function (dat, rsq = 0, split = FALSE, splitbysnp = FALSE,
       scale_y_continuous("Percent of Total 1kgSNPs at R\u00B2 cut-off") +
       facet_wrap(~ r2)
          if(save){
-           ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP.",
-                             package.version("FunciSNP"),
+           ggplot2::ggsave(filename=paste(pathplot, "/FunciSNP",
                              "/plots/Genomic_Summary_by_rsq.", rsq, ".pdf",
                              sep=""),
                   plot=qp,
