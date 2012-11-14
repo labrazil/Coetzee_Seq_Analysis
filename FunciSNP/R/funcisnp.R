@@ -5,7 +5,6 @@
 ## All rights reversed.
 
 ReadRegionsFile <- function(regions.file, search.window=200000) {
-    stop("Sorry, funcisnp not ready atm")
   # Reads a tab seperated regions file in the form
   # chr:loc snp_name    ethnicity
   # 8:130685457 rs4295627 EUR
@@ -422,7 +421,7 @@ PullInVariants <- function(tag.snp.name, snp.list, primary.server, snp.region,
                         nalt <- sapply(nums, function(x) 2-sum(x=="0"))  # this is correct only for diallelic locus; note in doc
                         if (length(hasmiss)>0) nalt[hasmiss] <- -1
                         nalt <- nalt+1
-                        if (meta[3] == "." ) meta[3] <- paste("chr", chr, ":", meta[2], sep="")
+                        if (meta[3] == "." ) meta[3] <- paste("chr", meta[1], ":", meta[2], sep="")
                         x <- list(chr=meta[1], id=meta[3], loc=meta[2], ref=meta[4], alt=meta[5],
                                 calls=as.raw(nalt))
                         return(x)
@@ -940,12 +939,11 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
                         elementMetadata(nearest.TSS)[, "distancetoFeature"]
                 cat(" ... done\n")
                 ## overlap genomic features (intergenic, utr5, utr3, intron, exon
-                txdb <-  TxDb.Hsapiens.UCSC.hg19.knownGene::TxDb.Hsapiens.UCSC.hg19.knownGene
                 #gr.corr.snp.loc <<-
                 #        gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),]
                 cat("\nAdding genomic annotations")
                 gf.overlaps <- locateVariants(query=gr.corr.snp.loc,
-                                              subject=TxDb.Hsapiens.UCSC.hg19.knownGene:::TxDb.Hsapiens.UCSC.hg19.knownGene,
+                                              subject=TxDb.Hsapiens.UCSC.hg19.knownGene,
                                               region=AllVariants(),
                                               ignore.strand=TRUE)
                 #cat(" ... done")
@@ -954,7 +952,6 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
                 genomic.feature <- as.character(elementMetadata(gf.overlaps)[, "LOCATION" ])
                 queryRow <- elementMetadata(gf.overlaps)[, "QUERYID"]
                 ddd <-(cbind(queryRow, genomic.feature)) ## used for identifying intergenic
-
                 ## create set columns with null values ('NO')
                 summary.snp.list$Promoter <- "NO"
                 summary.snp.list$utr5 <- "NO"
@@ -971,7 +968,7 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
                 # Promoter 2000 bp down 200 bp up
                 Promoter.rows <- as.numeric(subset(ddd, genomic.feature=="promoter")[,1])
                 if(isTRUE(length(unique(Promoter.rows)) > 0)){
-                        summary.snp.list[Promoter.rows,"utr5"] <- "YES"; 
+                        summary.snp.list[Promoter.rows,"Promoter"] <- "YES"; 
                         summary.snp.list$Promoter <- as.factor(summary.snp.list$Promoter)
                 }
                 ## utr5 defined
@@ -1003,13 +1000,13 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
                 intergenic.rows <- as.numeric(subset(ddd, genomic.feature=="intergenic")[,1])
                 if(isTRUE(length(unique(intergenic.rows)) > 0)){
                         summary.snp.list[intergenic.rows,"Intergenic"] <- "YES";
-                        summary.snp.list[which(summary.snp.list$Promoter == "YES"), "Intergenic"] <- "NO"
+#                        summary.snp.list[which(summary.snp.list$Promoter == "YES"), "Intergenic"] <- "NO"
                         summary.snp.list$Intergenic <- as.factor(summary.snp.list$Intergenic)
                 }
                 promoter.intergenic.rows <- dimnames(subset(summary.snp.list,
                                                             Intergenic=="YES" & Promoter=="YES"))[[1]]
                 if(isTRUE(length(promoter.intergenic.rows) > 0)){
-                        summary.snp.list[promoter.intergenic.rows,"Intergenic"] <- "NO";
+                    summary.snp.list[promoter.intergenic.rows,"Intergenic"] <- "NO";
                 }
                 cat(" ... done\n\nNow do the Funci Dance!\n");
                 return(summary.snp.list)
@@ -1018,14 +1015,14 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
 }
 
 bedColors <- function(dat, rsq=0, filename, filepath) {
-  jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan",
-                                   "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
-  dat <- dat[which(dat$R.squared >= rsq), ]
-  tag.snps.with.overlaps <- unique(as.character(dat$tag.snp.id))
-  corr.snp.counts <- lapply(tag.snps.with.overlaps, function(x) {
-                            count(as.character(dat[dat$tag.snp.id == x,]$corr.snp.id))})
-  corr.snp.counts <- do.call("rbind", corr.snp.counts)
-  max.freq <- max(corr.snp.counts$freq)
+    jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan",
+                                     "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
+    dat <- dat[which(dat$R.squared >= rsq), ]
+    tag.snps.with.overlaps <- unique(as.character(dat$tag.snp.id))
+    corr.snp.counts <- lapply(tag.snps.with.overlaps, function(x) {
+                              count(as.character(dat[dat$tag.snp.id == x,]$corr.snp.id))})
+    corr.snp.counts <- do.call("rbind", corr.snp.counts)
+    max.freq <- max(corr.snp.counts$freq)
   #  corr.snp.counts$score <- ((corr.snp.counts$freq) / (max.freq)) * 1000
   colors <- t(col2rgb(jet.colors(max.freq)))
   corr.snp.counts$color <- unlist(lapply(corr.snp.counts$freq, function(x) {
