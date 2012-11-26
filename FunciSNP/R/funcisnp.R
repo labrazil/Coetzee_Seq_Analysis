@@ -939,8 +939,8 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
                         elementMetadata(nearest.TSS)[, "distancetoFeature"]
                 cat(" ... done\n")
                 ## overlap genomic features (intergenic, utr5, utr3, intron, exon
-                #gr.corr.snp.loc <<-
-                #        gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),]
+                gr.corr.snp.loc <<-
+                        gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),]
                 cat("\nAdding genomic annotations")
                 gf.overlaps <- locateVariants(query=gr.corr.snp.loc,
                                               subject=TxDb.Hsapiens.UCSC.hg19.knownGene,
