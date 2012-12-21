@@ -768,6 +768,7 @@ corr.snp.depth <- (dim(tag.snp.complete)[2]) - 1
   names(haplotype.table.snps) <- names(snp.list)
   raw.p <- lapply(haplotype.table.snps, function(x) {
                   if(sum(x, na.rm = TRUE) > 0) {
+                    x <- round(x)
                     ## done b/c many tables have cells with < 5 values
                     return(suppressWarnings(fisher.test(x)$p.value))
                   } else {
@@ -906,7 +907,7 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
                 cat("Adding gene annotations")
                 #    refseqgenes <- system.file('extdata/annotation/refseqgenes.rda', package='FunciSNP')
                 #    load(refseqgenes)
-                
+               txdb <<- TxDb.Hsapiens.UCSC.hg19.knownGene 
 
                 nearest.TSS <- annotatePeakInBatch(myPeakList = rd.corr.snp.loc,
                                                    AnnotationData = refseqgenes,
@@ -939,13 +940,22 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
                         elementMetadata(nearest.TSS)[, "distancetoFeature"]
                 cat(" ... done\n")
                 ## overlap genomic features (intergenic, utr5, utr3, intron, exon
-                gr.corr.snp.loc <<-
-                        gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),]
+                chroms <- append(unlist(lapply(as.character(1:22), function(x) {paste("chr", x, sep="")})), 'chrX')
                 cat("\nAdding genomic annotations")
-                gf.overlaps <- locateVariants(query=gr.corr.snp.loc,
-                                              subject=TxDb.Hsapiens.UCSC.hg19.knownGene,
-                                              region=AllVariants(),
-                                              ignore.strand=TRUE)
+                myenv <- new.env()
+                gr.corr.snp.loc <<- gr.corr.snp.loc
+                gf.overlaps.utr5 <<- locateVariants(query=gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),],
+                                                    subject=txdb,
+                                                    region=FiveUTRVariants(),
+                                                    cache=myenv)
+                gf.overlaps.utr3 <<- locateVariants(query=gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),],
+                                                    subject=txdb,
+                                                    region=ThreeUTRVariants(),
+                                                    cache=myenv)
+                gf.overlaps <<- locateVariants(query=gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),],
+                                               subject=txdb,
+                                               region=AllVariants(),
+                                               cache=myenv)
                 #cat(" ... done")
                 #genomic.feature <- as.character(gf.overlaps$Location)
                 #queryRow <-(gf.overlaps$queryHits)
@@ -966,9 +976,9 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
                 #    if(dim(promoter.state)[1] > 0) summary.snp.list[rownames(promoter.state),
                 #
                 # Promoter 2000 bp down 200 bp up
-                Promoter.rows <- as.numeric(subset(ddd, genomic.feature=="promoter")[,1])
-                if(isTRUE(length(unique(Promoter.rows)) > 0)){
-                        summary.snp.list[Promoter.rows,"Promoter"] <- "YES"; 
+                promoter.rows <- as.numeric(subset(ddd, genomic.feature=="promoter")[,1])
+                if(isTRUE(length(unique(promoter.rows)) > 0)){
+                        summary.snp.list[promoter.rows,"Promoter"] <- "YES"; 
                         summary.snp.list$Promoter <- as.factor(summary.snp.list$Promoter)
                 }
                 ## utr5 defined
@@ -986,7 +996,7 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
                 ## intron defined
                 intron.rows <- as.numeric(subset(ddd, genomic.feature=="intron")[,1])
                 if(isTRUE(length(unique(intron.rows)) > 0)){
-                        summary.snp.list[unique(intron.rows),"Intron"] <- "YES";
+                        summary.snp.list[intron.rows,"Intron"] <- "YES";
                         summary.snp.list$Intron <- as.factor(summary.snp.list$Intron)
                 }
                 ## utr3 defined
@@ -1003,11 +1013,11 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
 #                        summary.snp.list[which(summary.snp.list$Promoter == "YES"), "Intergenic"] <- "NO"
                         summary.snp.list$Intergenic <- as.factor(summary.snp.list$Intergenic)
                 }
-                promoter.intergenic.rows <- dimnames(subset(summary.snp.list,
-                                                            Intergenic=="YES" & Promoter=="YES"))[[1]]
-                if(isTRUE(length(promoter.intergenic.rows) > 0)){
-                    summary.snp.list[promoter.intergenic.rows,"Intergenic"] <- "NO";
-                }
+#                promoter.intergenic.rows <- dimnames(subset(summary.snp.list,
+#                                                            Intergenic=="YES" & Promoter=="YES"))[[1]]
+#                if(isTRUE(length(promoter.intergenic.rows) > 0)){
+#                    summary.snp.list[promoter.intergenic.rows,"Intergenic"] <- "NO";
+#                }
                 cat(" ... done\n\nNow do the Funci Dance!\n");
                 return(summary.snp.list)
 
