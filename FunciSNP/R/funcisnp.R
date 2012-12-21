@@ -943,16 +943,15 @@ AnnotateSummary <- function(snp.list, verbose=TRUE) {
                 chroms <- append(unlist(lapply(as.character(1:22), function(x) {paste("chr", x, sep="")})), 'chrX')
                 cat("\nAdding genomic annotations")
                 myenv <- new.env()
-                gr.corr.snp.loc <<- gr.corr.snp.loc
-                gf.overlaps.utr5 <<- locateVariants(query=gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),],
+                gf.overlaps.utr5 <- locateVariants(query=gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),],
                                                     subject=txdb,
                                                     region=FiveUTRVariants(),
                                                     cache=myenv)
-                gf.overlaps.utr3 <<- locateVariants(query=gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),],
+                gf.overlaps.utr3 <- locateVariants(query=gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),],
                                                     subject=txdb,
                                                     region=ThreeUTRVariants(),
                                                     cache=myenv)
-                gf.overlaps <<- locateVariants(query=gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),],
+                gf.overlaps <- locateVariants(query=gr.corr.snp.loc[order(elementMetadata(gr.corr.snp.loc)[,"snpid"]),],
                                                subject=txdb,
                                                region=AllVariants(),
                                                cache=myenv)
